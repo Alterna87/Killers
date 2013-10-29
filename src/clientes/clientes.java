@@ -24,6 +24,10 @@ import java.awt.event.ItemEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.JScrollPane;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 @SuppressWarnings("unused")
 public class clientes extends JFrame {
@@ -44,7 +48,7 @@ public class clientes extends JFrame {
 	private JTextField txtMail;
 	private JTextField txtrfc;
 	private JComboBox<String> cmbTipoCliente;
-	public JComboBox cmbBusqueda;
+	public JComboBox<String> cmbBusqueda;
 	public DefaultTableModel model;
 	/**
 	 * Launch the application.
@@ -56,6 +60,7 @@ public class clientes extends JFrame {
 	private JTextField txtbusPaterno;
 	private JTextField txtbusMaterno;
 	private JTable table;
+	private JTextField txtTipoCliente;
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -184,6 +189,11 @@ public class clientes extends JFrame {
 		cmbTipoCliente = new JComboBox<String>();
 		cmbTipoCliente.setBounds(98, 134, 86, 20);
 		panel.add(cmbTipoCliente);
+		
+		txtTipoCliente = new JTextField();
+		txtTipoCliente.setBounds(98, 134, 86, 20);
+		panel.add(txtTipoCliente);
+		txtTipoCliente.setColumns(10);
 		cmbTipoCliente.addItem("Comercio");
 		cmbTipoCliente.addItem("Casa-Habitacion");
 		cmbTipoCliente.addItem("Industria");
@@ -233,9 +243,14 @@ public class clientes extends JFrame {
 		});
 		contentPane.add(btnGuardar);
 		
-		JButton btnEliminar = new JButton("Eliminar");
-		btnEliminar.setBounds(311, 11, 89, 23);
-		contentPane.add(btnEliminar);
+		JButton btnActualizar = new JButton("Actualizar");
+		btnActualizar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				Actualizar();
+			}
+		});
+		btnActualizar.setBounds(311, 11, 89, 23);
+		contentPane.add(btnActualizar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.setBounds(407, 11, 89, 23);
@@ -261,20 +276,11 @@ public class clientes extends JFrame {
 		txtbusPaterno.setColumns(10);
 		
 		final JLabel lblApellidoMaterno_1 = new JLabel("Apellido Materno:");
-		lblApellidoMaterno_1.setBounds(424, 247, 96, 14);
+		lblApellidoMaterno_1.setBounds(424, 247, 111, 14);
 		contentPane.add(lblApellidoMaterno_1);
 		
-		JButton btnBuscar = new JButton("Buscar");
-		btnBuscar.setBounds(232, 216, 89, 23);
-		btnBuscar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				BusquedaTabla();
-			}
-		});
-		contentPane.add(btnBuscar);
-		
 		txtbusMaterno = new JTextField();
-		txtbusMaterno.setBounds(518, 244, 107, 20);
+		txtbusMaterno.setBounds(530, 244, 107, 20);
 		contentPane.add(txtbusMaterno);
 		txtbusMaterno.setColumns(10);
 		
@@ -295,21 +301,77 @@ public class clientes extends JFrame {
 		contentPane.add(cmbBusqueda);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(-5, 298, 810, 165);
+		scrollPane.setBounds(10, 298, 810, 165);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent evt) {
+				txtTipoCliente.setVisible(true);
+				Object combo= cmbTipoCliente.getSelectedItem();
+				String tipo= String.valueOf(combo);
+				if(evt.getButton()==1){
+					int fila=table.getSelectedRow();
+					try{
+						String actualizar="SELECT * FROM clientes WHERE num_cliente='"+table.getValueAt(fila, 0)+"'";
+						sent=conn.createStatement();
+						ResultSet rs=sent.executeQuery(actualizar);
+						rs.next();
+						txtNombre.setText(rs.getString("nombre"));
+						txtApePaterno.setText(rs.getString("apellidopaterno"));
+						txtApeMaterno.setText(rs.getString("apellidomaterno"));
+						txtEmpresa.setText(rs.getString("empresa"));
+						txtDireccion.setText(rs.getString("direccion"));
+						txtReferencia.setText(rs.getString("referencia"));
+						txtTelefono.setText(rs.getString("Telefono"));
+						txtTipoCliente.setText(rs.getString("tipocliente"));
+						txtCelular.setText(rs.getString("celular"));
+						txtMail.setText(rs.getString("email"));
+						txtrfc.setText(rs.getString("rfc"));
+					}catch(Exception e){
+						
+						
+					}
+				}
+			}
+		});
 		table.setFillsViewportHeight(true);
 		scrollPane.setViewportView(table);
-
 		
-	
+		final JButton btnBuscarEmpresa = new JButton("Buscar");
+		btnBuscarEmpresa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				BusquedaTablaEmpresa();
+			}
+		});
+		btnBuscarEmpresa.setBounds(232, 214, 89, 23);
+		contentPane.add(btnBuscarEmpresa);
+		
+		final JButton btnBuscarNum = new JButton("Buscar");
+		btnBuscarNum.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				BuscarTablaNumero();
+			}
+		});
+		btnBuscarNum.setBounds(230, 214, 89, 23);
+		contentPane.add(btnBuscarNum);
+		
+		final JButton btnBuscarPersona = new JButton("Buscar");
+		btnBuscarPersona.setBounds(230, 214, 89, 23);
+		contentPane.add(btnBuscarPersona);
+		btnBuscarPersona.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			BusquedaTablaPersona();
+			}
+		});
+		cmbBusqueda.addItem(" ");
 		cmbBusqueda.addItem("Persona");
 		cmbBusqueda.addItem("Empresa");
 		cmbBusqueda.addItem("Num Cliente");
 		cmbBusqueda.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				if(cmbBusqueda.getSelectedIndex()==0){
+				if(cmbBusqueda.getSelectedIndex()==1){
 					lblNombrebus.setVisible(true);
 					lblEmpresabus.setVisible(false);
 					lblNumCliente.setVisible(false);
@@ -318,10 +380,14 @@ public class clientes extends JFrame {
 					txtbusPaterno.setVisible(true);
 					txtbusMaterno.setVisible(true);
 					txtbusNombre.requestFocus();
+					btnBuscarPersona.setVisible(true);
+					btnBuscarEmpresa.setVisible(false);
+					btnBuscarNum.setVisible(false);
+				
 					
 					
 				} else {
-					if(cmbBusqueda.getSelectedIndex()==1){
+					if(cmbBusqueda.getSelectedIndex()==2){
 						lblNombrebus.setVisible(false);
 						lblEmpresabus.setVisible(true);
 						lblNumCliente.setVisible(false);
@@ -330,8 +396,12 @@ public class clientes extends JFrame {
 						txtbusPaterno.setVisible(false);
 						txtbusMaterno.setVisible(false);
 						txtbusNombre.requestFocus();
+						btnBuscarPersona.setVisible(false);
+						btnBuscarEmpresa.setVisible(true);
+						btnBuscarNum.setVisible(false);
 						
-					} else {if(cmbBusqueda.getSelectedIndex()==2){
+						
+					} else {if(cmbBusqueda.getSelectedIndex()==3){
 						lblNombrebus.setVisible(false);
 						lblEmpresabus.setVisible(false);
 						lblNumCliente.setVisible(true);
@@ -340,6 +410,23 @@ public class clientes extends JFrame {
 						txtbusPaterno.setVisible(false);
 						txtbusMaterno.setVisible(false);
 						txtbusNombre.requestFocus();
+						btnBuscarEmpresa.setVisible(false);
+						btnBuscarPersona.setVisible(false);
+						btnBuscarNum.setVisible(true);
+					
+						
+					} else {
+						lblNombrebus.setVisible(false);
+						lblEmpresabus.setVisible(false);
+						lblNumCliente.setVisible(false);
+						lblApellidoPaterno.setVisible(false);
+						lblApellidoMaterno_1.setVisible(false);
+						txtbusNombre.setVisible(false);
+						txtbusPaterno.setVisible(false);
+						txtbusMaterno.setVisible(false);
+						btnBuscarPersona.setVisible(false);
+						btnBuscarEmpresa.setVisible(false);
+						btnBuscarNum.setVisible(false);
 						
 					}
 				}
@@ -347,11 +434,16 @@ public class clientes extends JFrame {
 				}
 			}
 		});
+
+		btnBuscarPersona.setVisible(false);
+		btnBuscarEmpresa.setVisible(false);
+		btnBuscarNum.setVisible(false);
 		lblNombrebus.setVisible(true);
 		lblEmpresabus.setVisible(false);
 		lblNumCliente.setVisible(false);
 		lblApellidoPaterno.setVisible(true);
 		lblApellidoMaterno_1.setVisible(true);
+		txtTipoCliente.setVisible(false);
 		Desabilitar();
 		conn= bd.getConnect();
 		
@@ -388,15 +480,15 @@ public class clientes extends JFrame {
 		txtNombre.requestFocus();
 	}
 	
-	void BusquedaTabla(){
+	void BusquedaTablaPersona(){
 		try{
-			String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail","Tipo Cliente"};
+		String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail","Tipo Cliente"};
 		model= new DefaultTableModel(null, titulos);
-		
+	
 		String consulta="SELECT * FROM clientes WHERE nombre='"+txtbusNombre.getText()+"'";
 		sent=conn.createStatement();
-		ResultSet rs= sent.executeQuery(consulta);
 		String[] regreso= new String[10];
+		ResultSet rs= sent.executeQuery(consulta);
 		while (rs.next()){
 			regreso[0]=rs.getString("num_cliente");
 			regreso[1]=rs.getString("nombre");
@@ -408,8 +500,9 @@ public class clientes extends JFrame {
 			regreso[7]=rs.getString("celular");
 			regreso[8]=rs.getString("email");
 			regreso[9]=rs.getString("tipocliente");
-			model.addRow(regreso);
+			model.addRow(regreso); 
 		}
+	
 		table.setModel(model);
 		
 		
@@ -417,6 +510,104 @@ public class clientes extends JFrame {
 			JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
 		
 		}
+
 		
 	}
+ void BusquedaTablaEmpresa(){
+	 try{
+			String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail","Tipo Cliente"};
+			model= new DefaultTableModel(null, titulos);
+		
+			String consulta="SELECT * FROM clientes WHERE empresa='"+txtbusNombre.getText()+"'";
+			sent=conn.createStatement();
+			String[] regreso= new String[10];
+			ResultSet rs= sent.executeQuery(consulta);
+			while (rs.next()){
+				regreso[0]=rs.getString("num_cliente");
+				regreso[1]=rs.getString("nombre");
+				regreso[2]=rs.getString("direccion");
+				regreso[3]=rs.getString("referencia");
+				regreso[4]=rs.getString("rfc");
+				regreso[5]=rs.getString("empresa");
+				regreso[6]=rs.getString("telefono");
+				regreso[7]=rs.getString("celular");
+				regreso[8]=rs.getString("email");
+				regreso[9]=rs.getString("tipocliente");
+				model.addRow(regreso); 
+			}
+		
+			table.setModel(model);
+			
+			
+			} catch(Exception e){
+				JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
+			
+			}
+
+	 
+	 
+ }
+ 
+  void BuscarTablaNumero(){
+		 try{
+				String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail","Tipo Cliente"};
+				model= new DefaultTableModel(null, titulos);
+			
+				String consulta="SELECT * FROM clientes WHERE num_cliente='"+txtbusNombre.getText()+"' AND apellidopaterno='"+txtbusPaterno.getText()+"' AND apellidomaterno='"+txtbusMaterno.getText()+"'";
+				sent=conn.createStatement();
+				String[] regreso= new String[10];
+				ResultSet rs= sent.executeQuery(consulta);
+				while (rs.next()){
+					regreso[0]=rs.getString("num_cliente");
+					regreso[1]=rs.getString("nombre");
+					regreso[2]=rs.getString("direccion");
+					regreso[3]=rs.getString("referencia");
+					regreso[4]=rs.getString("rfc");
+					regreso[5]=rs.getString("empresa");
+					regreso[6]=rs.getString("telefono");
+					regreso[7]=rs.getString("celular");
+					regreso[8]=rs.getString("email");
+					regreso[9]=rs.getString("tipocliente");
+					model.addRow(regreso); 
+				}
+			
+				table.setModel(model);
+				
+				
+				} catch(Exception e){
+					JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
+				
+				}
+  }
+  
+    void Actualizar(){
+    	txtTipoCliente.setVisible(false);
+    	Object combo= cmbTipoCliente.getSelectedItem();
+		String tipo= String.valueOf(combo);
+
+	try {
+		String SQL="UPDATE clientes SET nombre=?, apellidopaterno=?, apellidomaterno, empresa=?, direccion=?, refrencia=?, telefono=?, celular=?, email=?, rfc=?"+
+	"WHERE num_cliente=?";
+		PreparedStatement ps= conn.prepareStatement(SQL);
+		ps.setString(1, txtNombre.getText());
+		ps.setString(2, txtApePaterno.getText());
+		ps.setString(3, txtApeMaterno.getText());
+		ps.setString(4, txtEmpresa.getText());
+		ps.setString(5, txtDireccion.getText());
+		ps.setString(6, txtReferencia.getText());
+		ps.setString(7, txtTelefono.getText());
+		ps.setString(8, txtCelular.getText());
+		ps.setString(9,tipo);
+		ps.setString(10, txtMail.getText());
+		ps.setString(11, txtrfc.getText());
+		int n=ps.executeUpdate();
+		if(n>0){
+			JOptionPane.showMessageDialog(null, "Datos guardados correctamente");
+		}
+	} catch(SQLException e) {
+		JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
+		
+	}	 
+	  
+  }
 }
