@@ -67,6 +67,7 @@ public class clientes extends JFrame {
 				try {
 					clientes frame = new clientes();
 					frame.setVisible(true);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
