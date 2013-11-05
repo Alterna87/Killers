@@ -431,6 +431,17 @@ public class clientes extends JFrame {
 		contentPane.add(lblApellidoPaterno);
 		
 		txtbusPaterno = new JTextField();
+		txtbusPaterno.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent evt) {
+				char c=evt.getKeyChar();
+				if(c<'a'|| c>'z' || c<'A' ||c>'z') evt.consume();
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				txtbusPaterno.setText(txtbusPaterno.getText().toUpperCase());
+			}
+		});
 		txtbusPaterno.setBounds(328, 244, 86, 20);
 		contentPane.add(txtbusPaterno);
 		txtbusPaterno.setColumns(10);
