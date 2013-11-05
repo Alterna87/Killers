@@ -51,6 +51,7 @@ public class clientes extends JFrame {
 	private JTextField txtrfc;
 	private JComboBox<String> cmbTipoCliente;
 	public JComboBox<String> cmbBusqueda;
+	public JLabel validacion;
 	public DefaultTableModel model;
 	/**
 	 * Launch the application.
@@ -62,7 +63,6 @@ public class clientes extends JFrame {
 	private JTextField txtbusPaterno;
 	private JTextField txtbusMaterno;
 	private JTable table;
-	private JTextField txtTipoCliente;
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -278,10 +278,6 @@ public class clientes extends JFrame {
 		cmbTipoCliente = new JComboBox<String>();
 		cmbTipoCliente.setBounds(98, 134, 128, 20);
 		panel.add(cmbTipoCliente);
-		txtTipoCliente = new JTextField();
-		txtTipoCliente.setBounds(98, 134, 86, 20);
-		panel.add(txtTipoCliente);
-		txtTipoCliente.setColumns(10);
 		cmbTipoCliente.addItem("CASA-HABITACION");
 		cmbTipoCliente.addItem("COMERCIO");
 		cmbTipoCliente.addItem("INDUSTRIA");
@@ -442,16 +438,27 @@ public class clientes extends JFrame {
 				txtbusPaterno.setText(txtbusPaterno.getText().toUpperCase());
 			}
 		});
-		txtbusPaterno.setBounds(328, 244, 86, 20);
+		txtbusPaterno.setBounds(332, 247, 140, 20);
 		contentPane.add(txtbusPaterno);
 		txtbusPaterno.setColumns(10);
 		
 		final JLabel lblApellidoMaterno_1 = new JLabel("Apellido Materno:");
-		lblApellidoMaterno_1.setBounds(424, 247, 111, 14);
+		lblApellidoMaterno_1.setBounds(508, 247, 111, 14);
 		contentPane.add(lblApellidoMaterno_1);
 		
 		txtbusMaterno = new JTextField();
-		txtbusMaterno.setBounds(530, 244, 107, 20);
+		txtbusMaterno.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				txtbusMaterno.setText(txtbusMaterno.getText().toUpperCase());
+			}
+			@Override
+			public void keyTyped(KeyEvent evt) {
+				char c=evt.getKeyChar();
+				if(c<'a'|| c>'z' || c<'A' ||c>'z') evt.consume();
+			}
+		});
+		txtbusMaterno.setBounds(617, 244, 107, 20);
 		contentPane.add(txtbusMaterno);
 		txtbusMaterno.setColumns(10);
 		
@@ -480,7 +487,6 @@ public class clientes extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent evt) {
 				btnActualizar.setEnabled(true);
-				txtTipoCliente.setVisible(true);
 				Object combo= cmbTipoCliente.getSelectedItem();
 				String tipo= String.valueOf(combo);
 				if(evt.getButton()==1){
@@ -497,7 +503,7 @@ public class clientes extends JFrame {
 						txtDireccion.setText(rs.getString("direccion"));
 						txtReferencia.setText(rs.getString("referencia"));
 						txtTelefono.setText(rs.getString("Telefono"));
-						txtTipoCliente.setText(rs.getString("tipocliente"));
+						cmbTipoCliente.setSelectedItem(rs.getString("tipocliente"));
 						txtCelular.setText(rs.getString("celular"));
 						txtMail.setText(rs.getString("email"));
 						txtrfc.setText(rs.getString("rfc"));
@@ -618,7 +624,6 @@ public class clientes extends JFrame {
 		lblNumCliente.setVisible(false);
 		lblApellidoPaterno.setVisible(true);
 		lblApellidoMaterno_1.setVisible(true);
-		txtTipoCliente.setVisible(false);
 		Desabilitar();
 		conn= bd.getConnect();
 		
@@ -657,13 +662,31 @@ public class clientes extends JFrame {
 	
 	void BusquedaTablaPersona(){
 		try{
+			Clean();
+				if(txtbusNombre.getText().equals("")) {
+				txtbusNombre.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
+				validacion.setText("Llene los campos"); }
+				else {
+			
+			if(txtbusPaterno.getText().equals("")) {
+				txtbusPaterno.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
+				validacion.setText("Llene los campos"); }
+			else {	
+				
+			if(txtbusMaterno.getText().equals("")) {
+				txtbusMaterno.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
+				validacion.setText("Llene los campos");	}		
+			
+			else { 
+		Bordes();		
 		String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail","Tipo Cliente"};
 		model= new DefaultTableModel(null, titulos);
-	
-		String consulta="SELECT * FROM clientes WHERE nombre='"+txtbusNombre.getText()+"'";
+		String consulta="SELECT * FROM clientes WHERE nombre='"+txtbusNombre.getText()+"' AND apellidopaterno='"+txtbusPaterno.getText()+"'"+
+		"OR apellidomaterno='"+txtbusMaterno.getText()+"'";
 		sent=conn.createStatement();
 		String[] regreso= new String[10];
 		ResultSet rs= sent.executeQuery(consulta);
+	
 		while (rs.next()){
 			regreso[0]=rs.getString("num_cliente");
 			regreso[1]=rs.getString("nombre");
@@ -675,21 +698,30 @@ public class clientes extends JFrame {
 			regreso[7]=rs.getString("celular");
 			regreso[8]=rs.getString("email");
 			regreso[9]=rs.getString("tipocliente");
-			model.addRow(regreso); 
+			model.addRow(regreso);
 		}
-	
 		table.setModel(model);
-		
-		
-		} catch(Exception e){
+			 }
+				}
+	
+	 
+		} }catch(Exception e){
 			JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
 		
 		}
-
+	
 		
 	}
  void BusquedaTablaEmpresa(){
 	 try{
+		 Clean();
+		 if(txtbusNombre.getText().equals("")) {
+			 txtbusNombre.setBorder(BorderFactory.createLineBorder(Color.RED,1));
+			 validacion.setText("Introduce la empresa");
+			 
+		 } else {
+			 Bordes();
+	
 			String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail","Tipo Cliente"};
 			model= new DefaultTableModel(null, titulos);
 		
@@ -713,7 +745,7 @@ public class clientes extends JFrame {
 		
 			table.setModel(model);
 			
-			
+		 }
 			} catch(Exception e){
 				JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
 			
@@ -725,6 +757,12 @@ public class clientes extends JFrame {
  
   void BuscarTablaNumero(){
 		 try{
+			 if(txtbusNombre.getText().equals("")) {
+				 txtbusNombre.setBorder(BorderFactory.createLineBorder(Color.RED,1));
+				 validacion.setText("Introduce el Numero del Cliente");
+				 
+			 } else {
+				 Bordes();
 				String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail","Tipo Cliente"};
 				model= new DefaultTableModel(null, titulos);
 			
@@ -748,7 +786,7 @@ public class clientes extends JFrame {
 			
 				table.setModel(model);
 				
-				
+			 }
 				} catch(Exception e){
 					JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
 				
@@ -756,7 +794,7 @@ public class clientes extends JFrame {
   }
   
     void Actualizar(){
-    	txtTipoCliente.setVisible(false);
+    	
     	Object combo= cmbTipoCliente.getSelectedItem();
 		String tipo= String.valueOf(combo);
 
@@ -795,6 +833,9 @@ public class clientes extends JFrame {
     	txtDireccion.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));
     	txtEmpresa.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));
     	txtrfc.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));	
+    	txtbusNombre.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));	
+    	txtbusPaterno.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));	
+    	txtbusMaterno.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));	
     }
       
       void Clean(){
