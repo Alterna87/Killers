@@ -8,6 +8,8 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.Color;
+
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -80,7 +82,7 @@ public class clientes extends JFrame {
 	 */
 	public clientes() {
 		setTitle("Killers-Clientes");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 843, 559);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -88,7 +90,7 @@ public class clientes extends JFrame {
 		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(21, 44, 578, 165);
+		panel.setBounds(21, 44, 774, 165);
 		panel.setBorder(new TitledBorder(null, "Datos del Cliente", TitledBorder.LEADING, TitledBorder.TOP, null, Color.RED));
 		contentPane.add(panel);
 		panel.setLayout(null);
@@ -98,25 +100,60 @@ public class clientes extends JFrame {
 		panel.add(lblNombre);
 		
 		txtNombre = new JTextField();
-		txtNombre.setBounds(70, 23, 86, 20);
+		txtNombre.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent evt) {
+				char c=evt.getKeyChar();
+				if((c<'a'|| c>'z') &&( c<'A' ||c>'z') && ((c!='ñ' && c!='Ñ') && (c!=(char)KeyEvent.VK_SPACE)))
+					evt.consume();
+				
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				txtNombre.setText(txtNombre.getText().toUpperCase());
+			}
+		});
+		txtNombre.setBounds(70, 23, 188, 20);
 		panel.add(txtNombre);
 		txtNombre.setColumns(10);
 		
 		JLabel lblNewLabel = new JLabel("Apellido Paterno:");
-		lblNewLabel.setBounds(164, 23, 96, 14);
+		lblNewLabel.setBounds(283, 26, 96, 14);
 		panel.add(lblNewLabel);
 		
 		txtApePaterno = new JTextField();
-		txtApePaterno.setBounds(270, 20, 86, 20);
+		txtApePaterno.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent evt) {
+				char c=evt.getKeyChar();
+				if(c<'a'|| c>'z' || c<'A' ||c>'z') evt.consume();
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+			txtApePaterno.setText(txtApePaterno.getText().toUpperCase());
+			}
+		});
+		txtApePaterno.setBounds(399, 23, 117, 20);
 		panel.add(txtApePaterno);
 		txtApePaterno.setColumns(10);
 		
 		final JLabel lblApellidoMaterno = new JLabel("Apellido Materno:");
-		lblApellidoMaterno.setBounds(376, 26, 105, 14);
+		lblApellidoMaterno.setBounds(540, 23, 105, 14);
 		panel.add(lblApellidoMaterno);
 		
 		txtApeMaterno = new JTextField();
-		txtApeMaterno.setBounds(480, 23, 86, 20);
+		txtApeMaterno.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent evt) {
+				char c= evt.getKeyChar();
+				if (c<'a'|| c>'z' || c<'A' ||c>'z') evt.consume();
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				txtApeMaterno.setText(txtApeMaterno.getText().toUpperCase());
+			}
+		});
+		txtApeMaterno.setBounds(644, 20, 105, 20);
 		panel.add(txtApeMaterno);
 		txtApeMaterno.setColumns(10);
 		
@@ -125,16 +162,28 @@ public class clientes extends JFrame {
 		panel.add(lblEmpresa);
 		
 		txtEmpresa = new JTextField();
-		txtEmpresa.setBounds(67, 61, 117, 20);
+		txtEmpresa.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+			txtEmpresa.setText(txtEmpresa.getText().toUpperCase());
+			}
+		});
+		txtEmpresa.setBounds(67, 61, 191, 20);
 		panel.add(txtEmpresa);
 		txtEmpresa.setColumns(10);
 		
 		JLabel lblDireccion = new JLabel("Direccion");
-		lblDireccion.setBounds(194, 64, 55, 14);
+		lblDireccion.setBounds(283, 61, 55, 14);
 		panel.add(lblDireccion);
 		
 		txtDireccion = new JTextField();
-		txtDireccion.setBounds(259, 61, 307, 20);
+		txtDireccion.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+			txtDireccion.setText(txtDireccion.getText().toUpperCase());
+			}
+		});
+		txtDireccion.setBounds(348, 58, 382, 20);
 		panel.add(txtDireccion);
 		txtDireccion.setColumns(10);
 		
@@ -143,25 +192,50 @@ public class clientes extends JFrame {
 		panel.add(lblNewLabel_1);
 		
 		txtReferencia = new JTextField();
-		txtReferencia.setBounds(98, 95, 86, 20);
+		txtReferencia.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent e) {
+			txtReferencia.setText(txtReferencia.getText().toUpperCase());
+			}
+		});
+		txtReferencia.setBounds(98, 95, 241, 20);
 		panel.add(txtReferencia);
 		txtReferencia.setColumns(10);
 		
 		JLabel lblNewLabel_2 = new JLabel("Telefono:");
-		lblNewLabel_2.setBounds(204, 95, 69, 14);
+		lblNewLabel_2.setBounds(361, 95, 69, 14);
 		panel.add(lblNewLabel_2);
 		
 		txtTelefono = new JTextField();
-		txtTelefono.setBounds(283, 92, 86, 20);
+		txtTelefono.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent evt) {
+			char c= evt.getKeyChar();
+			
+			if ((c<'0'|| c>'9') || (txtTelefono.getText().length()==10))
+
+				evt.consume(); 
+			}
+		});
+		txtTelefono.setBounds(440, 92, 86, 20);
 		panel.add(txtTelefono);
 		txtTelefono.setColumns(10);
 		
 		JLabel lblCelular = new JLabel("Celular:");
-		lblCelular.setBounds(418, 95, 46, 14);
+		lblCelular.setBounds(575, 95, 46, 14);
 		panel.add(lblCelular);
 		
 		txtCelular = new JTextField();
-		txtCelular.setBounds(463, 92, 86, 20);
+		txtCelular.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent evt) {
+			char c= evt.getKeyChar();
+			if(c<'0'||c>'9') {
+				if (txtCelular.getText().length()==10) evt.consume();
+							}
+		}
+		});
+		txtCelular.setBounds(620, 92, 86, 20);
 		panel.add(txtCelular);
 		txtCelular.setColumns(10);
 		
@@ -170,99 +244,184 @@ public class clientes extends JFrame {
 		panel.add(lblTipoDeCliente);
 		
 		JLabel lblEmail = new JLabel("E-Mail:");
-		lblEmail.setBounds(194, 140, 46, 14);
+		lblEmail.setBounds(269, 137, 46, 14);
 		panel.add(lblEmail);
 		
 		txtMail = new JTextField();
-		txtMail.setBounds(250, 137, 106, 20);
+		txtMail.setBounds(313, 134, 170, 20);
 		panel.add(txtMail);
 		txtMail.setColumns(10);
 		
 		JLabel lblNewRfc = new JLabel("RFC:");
-		lblNewRfc.setBounds(375, 140, 56, 14);
+		lblNewRfc.setBounds(504, 134, 56, 14);
 		panel.add(lblNewRfc);
 		
 		txtrfc = new JTextField();
-		txtrfc.setBounds(416, 137, 150, 20);
+		txtrfc.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+			char c=e.getKeyChar();
+			if(c<'0'|| c>'9' || c<'A' || c>'Z' ){
+				if(txtrfc.getText().length()==13)
+					e.consume();
+			}				 
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+			txtrfc.setText(txtrfc.getText().toUpperCase());
+			}
+		});
+		txtrfc.setBounds(545, 131, 150, 20);
 		panel.add(txtrfc);
 		txtrfc.setColumns(10);
 		
 		cmbTipoCliente = new JComboBox<String>();
-		cmbTipoCliente.setBounds(98, 134, 86, 20);
+		cmbTipoCliente.setBounds(98, 134, 128, 20);
 		panel.add(cmbTipoCliente);
-		
 		txtTipoCliente = new JTextField();
 		txtTipoCliente.setBounds(98, 134, 86, 20);
 		panel.add(txtTipoCliente);
 		txtTipoCliente.setColumns(10);
-		cmbTipoCliente.addItem("Comercio");
-		cmbTipoCliente.addItem("Casa-Habitacion");
-		cmbTipoCliente.addItem("Industria");
-
-		
-		JButton btnNuevo = new JButton("Nuevo");
-		btnNuevo.setBounds(111, 11, 89, 23);
-		btnNuevo.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				Habilitar();
-			}
-		});
-		contentPane.add(btnNuevo);
-		
-		JButton btnGuardar = new JButton("Guardar");
-		btnGuardar.setBounds(210, 11, 89, 23);
+		cmbTipoCliente.addItem("CASA-HABITACION");
+		cmbTipoCliente.addItem("COMERCIO");
+		cmbTipoCliente.addItem("INDUSTRIA");
+		final JLabel validacion = new JLabel("");
+		validacion.setForeground(Color.RED);
+		validacion.setBounds(557, 19, 238, 14);
+		contentPane.add(validacion);
+		final JButton btnGuardar = new JButton("Guardar");
+		btnGuardar.setBounds(296, 10, 89, 23);
 		btnGuardar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {			
+							
 				Object combo= cmbTipoCliente.getSelectedItem();
 				String tipo= String.valueOf(combo);
-		
 			try {
-				String SQL="INSERT INTO clientes(nombre, apellidopaterno, apellidomaterno,"+
-			"empresa, direccion, referencia, telefono, celular, tipocliente, email, rfc)"+
-						"VALUES(?,?,?,?,?,?,?,?,?,?,?)";
-				PreparedStatement ps= conn.prepareStatement(SQL);
-				ps.setString(1, txtNombre.getText());
-				ps.setString(2, txtApePaterno.getText());
-				ps.setString(3, txtApeMaterno.getText());
-				ps.setString(4, txtEmpresa.getText());
-				ps.setString(5, txtDireccion.getText());
-				ps.setString(6, txtReferencia.getText());
-				ps.setString(7, txtTelefono.getText());
-				ps.setString(8, txtCelular.getText());
-				ps.setString(9,tipo);
-				ps.setString(10, txtMail.getText());
-				ps.setString(11, txtrfc.getText());
-				int n=ps.executeUpdate();
-				if(n>0){
-					JOptionPane.showMessageDialog(null, "Datos guardados correctamente");
+				Bordes();
+				validacion.setText(" ");
+				if(cmbTipoCliente.getSelectedIndex()==0){
+					if(txtNombre.getText().equals("")){
+				txtNombre.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
+					validacion.setText("Llene los campos");
+					}
+					if(txtApePaterno.getText().equals("")) {
+						txtApePaterno.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
+						validacion.setText("Llene los campos");
+					}
+					if(txtApeMaterno.getText().equals("")) {
+						txtApeMaterno.setBorder(BorderFactory.createLineBorder(Color.RED,1));
+						}
+					if(txtDireccion.getText().equals("")){
+						txtDireccion.setBorder(BorderFactory.createLineBorder(Color.red,1)); }
+					if(validacion.getText().equals(" ")){
+						
+						String SQL="INSERT INTO clientes(nombre, apellidopaterno, apellidomaterno,"+
+									"empresa, direccion, referencia, telefono, celular, tipocliente, email, rfc)"+
+												"VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+										PreparedStatement ps= conn.prepareStatement(SQL);
+										ps.setString(1, txtNombre.getText());
+										ps.setString(2, txtApePaterno.getText());
+										ps.setString(3, txtApeMaterno.getText());
+										ps.setString(4, txtEmpresa.getText());
+										ps.setString(5, txtDireccion.getText());
+										ps.setString(6, txtReferencia.getText());
+										ps.setString(7, txtTelefono.getText());
+										ps.setString(8, txtCelular.getText());
+										ps.setString(9,tipo);
+										ps.setString(10, txtMail.getText());
+										ps.setString(11, txtrfc.getText());
+										int n=ps.executeUpdate();
+										if(n>0){
+											JOptionPane.showMessageDialog(null, "Datos guardados correctamente");
+											Clean();
+										}
+							
+							
+					
+					}
+				} else {
+						if(txtEmpresa.getText().equals("")){				
+							txtEmpresa.setBorder(BorderFactory.createLineBorder(Color.RED,1));
+							validacion.setText("Llene los campos");}
+						if(txtDireccion.getText().equals("")){
+							txtDireccion.setBorder(BorderFactory.createLineBorder(Color.RED,1));
+							validacion.setText("Llene los campos");}
+						if(txtrfc.getText().equals("")){
+						txtrfc.setBorder(BorderFactory.createLineBorder(Color.RED,1));
+						validacion.setText("Llene los campos");
+						}
+						if(validacion.getText().equals(" ")){
+							
+							String SQL="INSERT INTO clientes(nombre, apellidopaterno, apellidomaterno,"+
+										"empresa, direccion, referencia, telefono, celular, tipocliente, email, rfc)"+
+													"VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+											PreparedStatement ps= conn.prepareStatement(SQL);
+											ps.setString(1, txtNombre.getText());
+											ps.setString(2, txtApePaterno.getText());
+											ps.setString(3, txtApeMaterno.getText());
+											ps.setString(4, txtEmpresa.getText());
+											ps.setString(5, txtDireccion.getText());
+											ps.setString(6, txtReferencia.getText());
+											ps.setString(7, txtTelefono.getText());
+											ps.setString(8, txtCelular.getText());
+											ps.setString(9,tipo);
+											ps.setString(10, txtMail.getText());
+											ps.setString(11, txtrfc.getText());
+											int n=ps.executeUpdate();
+											if(n>0){
+												JOptionPane.showMessageDialog(null, "Datos guardados correctamente");
+												Clean();
+											}
+								
+								
+						
+						}
 				}
-			} catch(SQLException e) {
+			
+		
+				} catch(SQLException e) {
 				JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
-				
-			}	
+				}
+				}	
 			}
-		});
+	 );
 		contentPane.add(btnGuardar);
 		
-		JButton btnActualizar = new JButton("Actualizar");
+		
+		final JButton btnActualizar = new JButton("Actualizar");
 		btnActualizar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				Actualizar();
 			}
 		});
-		btnActualizar.setBounds(311, 11, 89, 23);
+		btnActualizar.setBounds(397, 10, 89, 23);
 		contentPane.add(btnActualizar);
 		
 		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(407, 11, 89, 23);
+		btnCancelar.setBounds(493, 10, 89, 23);
 		contentPane.add(btnCancelar);
-				
+		
+		JButton btnNuevo = new JButton("Nuevo");
+		btnNuevo.setBounds(197, 10, 89, 23);
+		btnNuevo.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				btnGuardar.setEnabled(true);
+				Habilitar();
+			}
+		});
+		contentPane.add(btnNuevo);
 		
 		final JLabel lblNombrebus = new JLabel("Nombre:");
 		lblNombrebus.setBounds(21, 250, 75, 14);
 		contentPane.add(lblNombrebus);
 		
 		txtbusNombre = new JTextField();
+		txtbusNombre.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				txtbusNombre.setText(txtbusNombre.getText().toUpperCase());
+			}
+		});
 		txtbusNombre.setBounds(111, 244, 111, 20);
 		contentPane.add(txtbusNombre);
 		txtbusNombre.setColumns(10);
@@ -309,6 +468,7 @@ public class clientes extends JFrame {
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent evt) {
+				btnActualizar.setEnabled(true);
 				txtTipoCliente.setVisible(true);
 				Object combo= cmbTipoCliente.getSelectedItem();
 				String tipo= String.valueOf(combo);
@@ -361,6 +521,8 @@ public class clientes extends JFrame {
 		final JButton btnBuscarPersona = new JButton("Buscar");
 		btnBuscarPersona.setBounds(230, 214, 89, 23);
 		contentPane.add(btnBuscarPersona);
+		
+	
 		btnBuscarPersona.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			BusquedaTablaPersona();
@@ -435,7 +597,8 @@ public class clientes extends JFrame {
 				}
 			}
 		});
-
+		btnGuardar.setEnabled(false);
+		btnActualizar.setEnabled(false);
 		btnBuscarPersona.setVisible(false);
 		btnBuscarEmpresa.setVisible(false);
 		btnBuscarNum.setVisible(false);
@@ -587,8 +750,10 @@ public class clientes extends JFrame {
 		String tipo= String.valueOf(combo);
 
 	try {
-		String SQL="UPDATE clientes SET nombre=?, apellidopaterno=?, apellidomaterno, empresa=?, direccion=?, refrencia=?, telefono=?, celular=?, email=?, rfc=?"+
+		String SQL="UPDATE clientes SET nombre=?, apellidopaterno=?, apellidomaterno=?, empresa=?, direccion=?, referencia=?, telefono=?, celular=?, tipocliente=?, email=?, rfc=?"+
 	"WHERE num_cliente=?";
+		int fila=table.getSelectedRow();
+		String dato=(String) table.getValueAt(fila, 0);
 		PreparedStatement ps= conn.prepareStatement(SQL);
 		ps.setString(1, txtNombre.getText());
 		ps.setString(2, txtApePaterno.getText());
@@ -601,9 +766,10 @@ public class clientes extends JFrame {
 		ps.setString(9,tipo);
 		ps.setString(10, txtMail.getText());
 		ps.setString(11, txtrfc.getText());
+		ps.setString(12, dato);
 		int n=ps.executeUpdate();
 		if(n>0){
-			JOptionPane.showMessageDialog(null, "Datos guardados correctamente");
+			JOptionPane.showMessageDialog(null, "Datos actualizados correctamente");
 		}
 	} catch(SQLException e) {
 		JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
@@ -611,4 +777,25 @@ public class clientes extends JFrame {
 	}	 
 	  
   }
+      void Bordes(){
+    	txtNombre.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));
+    	txtApePaterno.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));
+    	txtApeMaterno.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));
+    	txtDireccion.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));
+    	txtEmpresa.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));
+    	txtrfc.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));	
+    }
+      
+      void Clean(){
+    	  txtNombre.setText("");
+    	  txtApePaterno.setText("");
+    	  txtApeMaterno.setText("");
+    	  txtEmpresa.setText("");
+    	  txtDireccion.setText("");
+    	  txtReferencia.setText("");
+    	  txtTelefono.setText("");
+    	  txtCelular.setText("");
+    	  txtMail.setText("");
+    	  txtrfc.setText("");   	  
+      }
 }

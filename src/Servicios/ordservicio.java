@@ -58,7 +58,6 @@ public class ordservicio extends JFrame {
 	private JTextField txtnumcliente;
 	private JTextField txttelefono;
 	private JTextField txtcelular;
-	private JTextField textField_6;
 	private JTextField txttecnico;
 	private JTextField txtObservaciones;
 	private JTextField txtcosto;
@@ -93,7 +92,7 @@ public class ordservicio extends JFrame {
 	public ordservicio() {
 		
 		setTitle("Killers-Servicios");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 715, 494);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -189,7 +188,6 @@ public class ordservicio extends JFrame {
 				 try{
 						String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail"};
 						modeltable= new DefaultTableModel(null, titulos);
-					
 						String consulta="SELECT * FROM clientes WHERE empresa='"+txtNombre.getText()+"'";
 						sent=conn.createStatement();
 						String[] regreso= new String[10];
@@ -316,18 +314,6 @@ public class ordservicio extends JFrame {
 		cmbforma.setBounds(265, 47, 128, 20);
 		panel_1.add(cmbforma);
 		
-		textField_6 = new JTextField();
-		textField_6.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyTyped(KeyEvent evt) {
-			char c = evt.getKeyChar();
-			if(c<'A'||c>'Z') evt.consume();
-			}
-		});
-		textField_6.setColumns(10);
-		textField_6.setBounds(343, 18, 120, 20);
-		panel_1.add(textField_6);
-		
 		JLabel lblPlagaEnEl = new JLabel("Plaga en el Area:");
 		lblPlagaEnEl.setBounds(244, 21, 101, 14);
 		panel_1.add(lblPlagaEnEl);
@@ -357,6 +343,20 @@ public class ordservicio extends JFrame {
 		cmbhoras.addItem("3 Horas");
 		cmbhoras.addItem("4 Horas");
 		cmbhoras.addItem("5 Horas");
+		
+		JComboBox<String> cmbplaga = new JComboBox<String>();
+		cmbplaga.setBounds(335, 18, 93, 20);
+		panel_1.add(cmbplaga);
+		cmbplaga.addItem("Rastreros");
+		cmbplaga.addItem("Alemañas");
+		cmbplaga.addItem("Termintas");
+		cmbplaga.addItem("Roedores");
+		cmbplaga.addItem("Alacranes");
+		cmbplaga.addItem("Arañas");
+		cmbplaga.addItem("Hormigas");
+		cmbplaga.addItem("Garrapatas");
+		cmbplaga.addItem("Pulgas");
+		cmbplaga.addItem("Voladores");
 		
 		JLabel lblObservaciones = new JLabel("Observaciones:");
 		lblObservaciones.setBounds(21, 375, 115, 14);
