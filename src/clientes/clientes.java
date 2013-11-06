@@ -30,6 +30,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.SystemColor;
 
 @SuppressWarnings("unused")
 public class clientes extends JFrame {
@@ -52,6 +53,9 @@ public class clientes extends JFrame {
 	private JComboBox<String> cmbTipoCliente;
 	public JComboBox<String> cmbBusqueda;
 	public JLabel validacion;
+	public JButton btnActualizar;
+	public JButton btnGuardar;
+	public JButton btnEliminar;
 	public DefaultTableModel model;
 	/**
 	 * Launch the application.
@@ -90,7 +94,7 @@ public class clientes extends JFrame {
 		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(21, 44, 774, 165);
+		panel.setBounds(21, 44, 799, 165);
 		panel.setBorder(new TitledBorder(null, "Datos del Cliente", TitledBorder.LEADING, TitledBorder.TOP, null, Color.RED));
 		contentPane.add(panel);
 		panel.setLayout(null);
@@ -100,6 +104,7 @@ public class clientes extends JFrame {
 		panel.add(lblNombre);
 		
 		txtNombre = new JTextField();
+		txtNombre.setBackground(Color.LIGHT_GRAY);
 		txtNombre.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent evt) {
@@ -122,6 +127,7 @@ public class clientes extends JFrame {
 		panel.add(lblNewLabel);
 		
 		txtApePaterno = new JTextField();
+		txtApePaterno.setBackground(Color.LIGHT_GRAY);
 		txtApePaterno.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent evt) {
@@ -142,6 +148,7 @@ public class clientes extends JFrame {
 		panel.add(lblApellidoMaterno);
 		
 		txtApeMaterno = new JTextField();
+		txtApeMaterno.setBackground(Color.LIGHT_GRAY);
 		txtApeMaterno.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent evt) {
@@ -162,6 +169,7 @@ public class clientes extends JFrame {
 		panel.add(lblEmpresa);
 		
 		txtEmpresa = new JTextField();
+		txtEmpresa.setBackground(Color.LIGHT_GRAY);
 		txtEmpresa.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -177,6 +185,7 @@ public class clientes extends JFrame {
 		panel.add(lblDireccion);
 		
 		txtDireccion = new JTextField();
+		txtDireccion.setBackground(Color.LIGHT_GRAY);
 		txtDireccion.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -192,6 +201,7 @@ public class clientes extends JFrame {
 		panel.add(lblNewLabel_1);
 		
 		txtReferencia = new JTextField();
+		txtReferencia.setBackground(Color.LIGHT_GRAY);
 		txtReferencia.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -207,6 +217,7 @@ public class clientes extends JFrame {
 		panel.add(lblNewLabel_2);
 		
 		txtTelefono = new JTextField();
+		txtTelefono.setBackground(Color.LIGHT_GRAY);
 		txtTelefono.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent evt) {
@@ -226,14 +237,15 @@ public class clientes extends JFrame {
 		panel.add(lblCelular);
 		
 		txtCelular = new JTextField();
+		txtCelular.setBackground(Color.LIGHT_GRAY);
 		txtCelular.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent evt) {
 			char c= evt.getKeyChar();
-			if(c<'0'||c>'9') {
-				if (txtCelular.getText().length()==10) evt.consume();
+			
+			if ((c<'0'|| c>'9') || (txtTelefono.getText().length()==10))
+				evt.consume(); 
 							}
-		}
 		});
 		txtCelular.setBounds(620, 92, 86, 20);
 		panel.add(txtCelular);
@@ -248,6 +260,7 @@ public class clientes extends JFrame {
 		panel.add(lblEmail);
 		
 		txtMail = new JTextField();
+		txtMail.setBackground(Color.LIGHT_GRAY);
 		txtMail.setBounds(313, 134, 170, 20);
 		panel.add(txtMail);
 		txtMail.setColumns(10);
@@ -257,6 +270,7 @@ public class clientes extends JFrame {
 		panel.add(lblNewRfc);
 		
 		txtrfc = new JTextField();
+		txtrfc.setBackground(Color.LIGHT_GRAY);
 		txtrfc.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
@@ -276,6 +290,7 @@ public class clientes extends JFrame {
 		txtrfc.setColumns(10);
 		
 		cmbTipoCliente = new JComboBox<String>();
+		cmbTipoCliente.setBackground(Color.LIGHT_GRAY);
 		cmbTipoCliente.setBounds(98, 134, 128, 20);
 		panel.add(cmbTipoCliente);
 		cmbTipoCliente.addItem("CASA-HABITACION");
@@ -283,7 +298,7 @@ public class clientes extends JFrame {
 		cmbTipoCliente.addItem("INDUSTRIA");
 		final JLabel validacion = new JLabel("");
 		validacion.setForeground(Color.RED);
-		validacion.setBounds(557, 19, 238, 14);
+		validacion.setBounds(589, 19, 238, 14);
 		contentPane.add(validacion);
 		final JButton btnGuardar = new JButton("Guardar");
 		btnGuardar.setBounds(296, 10, 89, 23);
@@ -393,14 +408,37 @@ public class clientes extends JFrame {
 		btnActualizar.setBounds(397, 10, 89, 23);
 		contentPane.add(btnActualizar);
 		
-		JButton btnCancelar = new JButton("Cancelar");
-		btnCancelar.setBounds(493, 10, 89, 23);
-		contentPane.add(btnCancelar);
+		final JButton btnEliminar = new JButton("Eliminar");
+		btnEliminar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int fila =table.getSelectedRow();
+				try{
+					Object [] opciones ={"Aceptar","Cancelar"};
+					int eleccion = JOptionPane.showOptionDialog(null,"¿Desea eliminar definitivamente al Cliente?","Mensaje de Confirmacion",
+					JOptionPane.YES_NO_OPTION,
+					JOptionPane.QUESTION_MESSAGE,null,opciones,"Aceptar");
+					if (eleccion == JOptionPane.YES_OPTION){							
+					String SQL="DELETE FROM clientes WHERE num_cliente='"+table.getValueAt(fila, 0)+"'";
+					sent=conn.createStatement();
+					int n=sent.executeUpdate(SQL);
+					if(n>0){
+						JOptionPane.showMessageDialog(null, "Cliente dado de Baja");
+					}
+					}
+					
+				} catch(Exception e){
+					JOptionPane.showMessageDialog(null, "Error: "+ e.getMessage());
+				}
+			}
+		});
+		btnEliminar.setBounds(493, 10, 89, 23);
+		contentPane.add(btnEliminar);
 		
-		JButton btnNuevo = new JButton("Nuevo");
+		JButton btnNuevo = new JButton("Editar");
 		btnNuevo.setBounds(197, 10, 89, 23);
 		btnNuevo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				Clean();
 				btnGuardar.setEnabled(true);
 				Habilitar();
 			}
@@ -467,6 +505,7 @@ public class clientes extends JFrame {
 		contentPane.add(lblBuscarPor);
 		
 		final JLabel lblEmpresabus = new JLabel("Empresa:");
+		lblEmpresabus.setForeground(Color.BLACK);
 		lblEmpresabus.setBounds(21, 250, 89, 14);
 		contentPane.add(lblEmpresabus);
 		
@@ -483,10 +522,16 @@ public class clientes extends JFrame {
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
+		table.setBackground(SystemColor.control);
+		table.setFillsViewportHeight(true);
+		table.setSurrendersFocusOnKeystroke(true);
 		table.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent evt) {
 				btnActualizar.setEnabled(true);
+				btnEliminar.setEnabled(true);
+				btnGuardar.setEnabled(false);
+				Habilitar();
 				Object combo= cmbTipoCliente.getSelectedItem();
 				String tipo= String.valueOf(combo);
 				if(evt.getButton()==1){
@@ -514,7 +559,6 @@ public class clientes extends JFrame {
 				}
 			}
 		});
-		table.setFillsViewportHeight(true);
 		scrollPane.setViewportView(table);
 		
 		final JButton btnBuscarEmpresa = new JButton("Buscar");
@@ -551,6 +595,9 @@ public class clientes extends JFrame {
 		cmbBusqueda.addItem("Num Cliente");
 		cmbBusqueda.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
+				txtbusNombre.setText("");
+				txtbusPaterno.setText("");
+				txtbusMaterno.setText("");
 				if(cmbBusqueda.getSelectedIndex()==1){
 					lblNombrebus.setVisible(true);
 					lblEmpresabus.setVisible(false);
@@ -614,8 +661,10 @@ public class clientes extends JFrame {
 				}
 			}
 		});
+		
 		btnGuardar.setEnabled(false);
 		btnActualizar.setEnabled(false);
+		btnEliminar.setEnabled(false);
 		btnBuscarPersona.setVisible(false);
 		btnBuscarEmpresa.setVisible(false);
 		btnBuscarNum.setVisible(false);
@@ -630,7 +679,7 @@ public class clientes extends JFrame {
 	}
 
 	void Habilitar(){
-
+		
 		txtNombre.setEnabled(true);
 		txtApePaterno.setEnabled(true);
 		txtApeMaterno.setEnabled(true);
@@ -645,7 +694,8 @@ public class clientes extends JFrame {
 		txtNombre.requestFocus();
 	}
 	void Desabilitar(){
-
+	
+		
 		txtNombre.setEnabled(false);
 		txtApePaterno.setEnabled(false);
 		txtApeMaterno.setEnabled(false);
@@ -661,7 +711,11 @@ public class clientes extends JFrame {
 	}
 	
 	void BusquedaTablaPersona(){
+	
 		try{
+		 	btnGuardar.setEnabled(false);
+			btnActualizar.setEnabled(false);
+			btnEliminar.setEnabled(false);
 			Clean();
 				if(txtbusNombre.getText().equals("")) {
 				txtbusNombre.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
@@ -686,7 +740,7 @@ public class clientes extends JFrame {
 		sent=conn.createStatement();
 		String[] regreso= new String[10];
 		ResultSet rs= sent.executeQuery(consulta);
-	
+
 		while (rs.next()){
 			regreso[0]=rs.getString("num_cliente");
 			regreso[1]=rs.getString("nombre");
@@ -756,12 +810,15 @@ public class clientes extends JFrame {
  }
  
   void BuscarTablaNumero(){
-		 try{
+	  try{
+			 
 			 if(txtbusNombre.getText().equals("")) {
 				 txtbusNombre.setBorder(BorderFactory.createLineBorder(Color.RED,1));
 				 validacion.setText("Introduce el Numero del Cliente");
 				 
 			 } else {
+	 
+				 Clean();
 				 Bordes();
 				String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail","Tipo Cliente"};
 				model= new DefaultTableModel(null, titulos);
@@ -819,6 +876,7 @@ public class clientes extends JFrame {
 		int n=ps.executeUpdate();
 		if(n>0){
 			JOptionPane.showMessageDialog(null, "Datos actualizados correctamente");
+			BuscarTablaNumero();
 		}
 	} catch(SQLException e) {
 		JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
