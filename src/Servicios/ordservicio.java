@@ -6,11 +6,13 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import javax.swing.Spring;
 
@@ -18,12 +20,15 @@ import java.awt.event.ItemListener;
 import java.awt.event.ItemEvent;
 import javax.swing.JButton;
 import java.sql.*;
+import java.util.Calendar;
+
 import conexion.bd;
 import clientes.clientes;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.text.JTextComponent;
 
 import java.awt.Color;
 import javax.swing.JTextArea;
@@ -35,6 +40,11 @@ import java.awt.event.KeyEvent;
 import java.awt.FlowLayout;
 import com.toedter.calendar.JCalendar;
 import com.toedter.calendar.JDateChooser;
+import com.toedter.calendar.JTextFieldDateEditor;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 
 
 @SuppressWarnings({ "serial", "unused" })
@@ -49,9 +59,10 @@ public class ordservicio extends JFrame {
 	/**
 	 * Launch the application.
 	 */
-	//Declaramos las variables de la conexion
+	//Declaramos las variables de la conexion	
 	Connection conn;
 	Statement sent;
+	
 	private JTable table;
 	private JTextField txtdireccion;
 	private JTextField txtrfc;
@@ -61,6 +72,7 @@ public class ordservicio extends JFrame {
 	private JTextField txttecnico;
 	private JTextField txtObservaciones;
 	private JTextField txtcosto;
+	public JLabel validacion;
 	public DefaultTableModel modeltable;
 	
 	
@@ -91,7 +103,7 @@ public class ordservicio extends JFrame {
 	 */
 	public ordservicio() {
 		
-		setTitle("Killers-Servicios");
+		setTitle("Killers");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 715, 494);
 		contentPane = new JPanel();
@@ -104,7 +116,47 @@ public class ordservicio extends JFrame {
 		contentPane.add(cmbBusqueda);
 		
 		final JButton btnBuscarNumero = new JButton("Buscar");
-		btnBuscarNumero.setBounds(193, 48, 89, 23);
+		btnBuscarNumero.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				try{
+					 
+					 if(txtNombre.getText().equals("")) {
+						 txtNombre.setBorder(BorderFactory.createLineBorder(Color.RED,1));
+						 validacion.setText("Introduce el Numero del Cliente");
+						 
+					 } else {
+					
+						String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail","Tipo Cliente"};
+						modeltable= new DefaultTableModel(null, titulos);
+				
+						String consulta="SELECT * FROM clientes WHERE num_cliente='"+txtNombre.getText()+"'";
+						sent=conn.createStatement();
+						String[] regreso= new String[10];
+						ResultSet rs= sent.executeQuery(consulta);
+						while (rs.next()){
+							regreso[0]=rs.getString("num_cliente");
+							regreso[1]=rs.getString("nombre");
+							regreso[2]=rs.getString("direccion");
+							regreso[3]=rs.getString("referencia");
+							regreso[4]=rs.getString("rfc");
+							regreso[5]=rs.getString("empresa");
+							regreso[6]=rs.getString("telefono");
+							regreso[7]=rs.getString("celular");
+							regreso[8]=rs.getString("email");
+							regreso[9]=rs.getString("tipocliente");
+							modeltable.addRow(regreso); 
+						}
+					
+						table.setModel(modeltable);
+						
+					 }
+						} catch(Exception e){
+							JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
+						}
+			}
+
+		});
+		btnBuscarNumero.setBounds(229, 46, 89, 23);
 		contentPane.add(btnBuscarNumero);
 		
 		final JLabel lblNombre = new JLabel("Nombre: ");
@@ -120,25 +172,18 @@ public class ordservicio extends JFrame {
 		txtNombre.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent evt) {
-				char c=evt.getKeyChar();
-				if (cmbBusqueda.getSelectedIndex()==1 || cmbBusqueda.getSelectedIndex()==2 ){
-					if(c<'A' || c>'Z') evt.consume();
-				} 		
-				else {
-						if (c<'0' || c>'9') evt.consume();
-					}
 			}
 			@Override
 			public void keyReleased(KeyEvent arg0) {
 				txtNombre.setText(txtNombre.getText().toUpperCase());
 			}
 		});
-		txtNombre.setBounds(86, 49, 97, 20);
+		txtNombre.setBounds(86, 49, 133, 20);
 		contentPane.add(txtNombre);
 		txtNombre.setColumns(10);
 		
 		final JLabel lblApellidoPaterno = new JLabel("Apellido Paterno:");
-		lblApellidoPaterno.setBounds(193, 52, 97, 14);
+		lblApellidoPaterno.setBounds(252, 51, 97, 14);
 		contentPane.add(lblApellidoPaterno);
 		
 		txtPaterno = new JTextField();
@@ -154,11 +199,11 @@ public class ordservicio extends JFrame {
 			}
 		});
 		txtPaterno.setColumns(10);
-		txtPaterno.setBounds(300, 49, 104, 20);
+		txtPaterno.setBounds(359, 48, 104, 20);
 		contentPane.add(txtPaterno);
 		
 		final JLabel lblApellidoMaterno = new JLabel("Apellido Materno:");
-		lblApellidoMaterno.setBounds(414, 52, 115, 14);
+		lblApellidoMaterno.setBounds(473, 51, 115, 14);
 		contentPane.add(lblApellidoMaterno);
 		
 		txtMaterno = new JTextField();
@@ -174,7 +219,7 @@ public class ordservicio extends JFrame {
 			}
 		});
 		txtMaterno.setColumns(10);
-		txtMaterno.setBounds(521, 49, 109, 20);
+		txtMaterno.setBounds(580, 48, 109, 20);
 		contentPane.add(txtMaterno);
 		
 		final JLabel lblNumero = new JLabel("Num Cliente");
@@ -185,44 +230,67 @@ public class ordservicio extends JFrame {
 		final JButton btnBuscarPersona = new JButton("Buscar");
 		btnBuscarPersona.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				 try{
-						String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail"};
-						modeltable= new DefaultTableModel(null, titulos);
-						String consulta="SELECT * FROM clientes WHERE empresa='"+txtNombre.getText()+"'";
-						sent=conn.createStatement();
-						String[] regreso= new String[10];
-						ResultSet rs= sent.executeQuery(consulta);
-						while (rs.next()){
-							regreso[0]=rs.getString("num_cliente");
-							regreso[1]=rs.getString("nombre");
-							regreso[2]=rs.getString("direccion");
-							regreso[3]=rs.getString("referencia");
-							regreso[4]=rs.getString("rfc");
-							regreso[5]=rs.getString("empresa");
-							regreso[6]=rs.getString("telefono");
-							regreso[7]=rs.getString("celular");
-							regreso[8]=rs.getString("email");
-							modeltable.addRow(regreso); 
-						}
+				try{
+					if(txtNombre.getText().equals("")) {
+						txtNombre.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
+						validacion.setText("Llene los campos"); }
+						else {
 					
-						table.setModel(modeltable);
+					if(txtPaterno.getText().equals("")) {
+						txtPaterno.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
+						validacion.setText("Llene los campos"); }
+					else {	
 						
-						
-						} catch(Exception e){
-							JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
-						
+					if(txtMaterno.getText().equals("")) {
+						txtMaterno.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
+						validacion.setText("Llene los campos");	}		
+					
+					else { 
+		;		
+				String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail","Tipo Cliente"};
+				modeltable= new DefaultTableModel(null, titulos);
+				String consulta="SELECT * FROM clientes WHERE nombre='"+txtNombre.getText()+"' AND apellidopaterno='"+txtPaterno.getText()+"'"+
+				"OR apellidomaterno='"+txtMaterno.getText()+"'";
+				sent=conn.createStatement();
+				String[] regreso= new String[10];
+				ResultSet rs= sent.executeQuery(consulta);
+
+				while (rs.next()){
+					regreso[0]=rs.getString("num_cliente");
+					regreso[1]=rs.getString("nombre");
+					regreso[2]=rs.getString("direccion");
+					regreso[3]=rs.getString("referencia");
+					regreso[4]=rs.getString("rfc");
+					regreso[5]=rs.getString("empresa");
+					regreso[6]=rs.getString("telefono");
+					regreso[7]=rs.getString("celular");
+					regreso[8]=rs.getString("email");
+					regreso[9]=rs.getString("tipocliente");
+					modeltable.addRow(regreso);
+				}
+				table.setModel(modeltable);
+					 }
 						}
-
-
+			
+			 
+				} }catch(Exception e){
+					JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
+				
+				}
+			
 			}
 		});
 		btnBuscarPersona.setBounds(164, 20, 89, 23);
 		contentPane.add(btnBuscarPersona);
 		
 		final JButton btnBuscarEmpresa = new JButton("Buscar");
-		btnBuscarEmpresa.setBounds(193, 48, 89, 23);
-		contentPane.add(btnBuscarEmpresa);
-		
+		btnBuscarEmpresa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+			BuscarEmpresa();	
+			}
+		});
+		btnBuscarEmpresa.setBounds(229, 46, 89, 23);
+		contentPane.add(btnBuscarEmpresa);	
 	
 		
 		JScrollPane scrollPane = new JScrollPane();
@@ -230,6 +298,28 @@ public class ordservicio extends JFrame {
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent evt) {
+				if(evt.getButton()==1){
+					int fila=table.getSelectedRow();
+					try{
+						String actualizar="SELECT * FROM clientes WHERE num_cliente='"+table.getValueAt(fila, 0)+"'";
+						sent=conn.createStatement();
+						ResultSet rs=sent.executeQuery(actualizar);
+						rs.next();
+						txtNombre.setText(rs.getString("nombre"));
+						txtnumcliente.setText(rs.getString("num_cliente"));
+						txtdireccion.setText(rs.getString("direccion"));
+						txttelefono.setText(rs.getString("Telefono"));
+						txtcelular.setText(rs.getString("celular"));
+						txtrfc.setText(rs.getString("rfc"));
+					}catch(Exception e){		
+						JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());	
+					}
+				}
+			}
+		});
 		table.setFillsViewportHeight(true);
 		scrollPane.setViewportView(table);
 		
@@ -294,7 +384,7 @@ public class ordservicio extends JFrame {
 		lblTipoDeServicio.setBounds(10, 21, 101, 14);
 		panel_1.add(lblTipoDeServicio);
 		
-		JComboBox<String> cmbtiposerv = new JComboBox<String>();
+		final JComboBox<String> cmbtiposerv = new JComboBox<String>();
 		cmbtiposerv.setBounds(107, 18, 120, 20);
 		panel_1.add(cmbtiposerv);
 		cmbtiposerv.addItem("Correctivo");
@@ -310,9 +400,12 @@ public class ordservicio extends JFrame {
 		lblFormaDePago.setBounds(174, 52, 93, 14);
 		panel_1.add(lblFormaDePago);
 		
-		JComboBox<String> cmbforma = new JComboBox<String>();
+		final JComboBox<String> cmbforma = new JComboBox<String>();
 		cmbforma.setBounds(265, 47, 128, 20);
 		panel_1.add(cmbforma);
+		cmbforma.addItem("EFECTIVO");
+		cmbforma.addItem("TARJETA DE CREDITO");
+		cmbforma.addItem("CHEQUE");
 		
 		JLabel lblPlagaEnEl = new JLabel("Plaga en el Area:");
 		lblPlagaEnEl.setBounds(244, 21, 101, 14);
@@ -331,11 +424,13 @@ public class ordservicio extends JFrame {
 		lblFecha.setBounds(473, 21, 101, 14);
 		panel_1.add(lblFecha);
 		
-		JDateChooser dateChooser = new JDateChooser();
-		dateChooser.setBounds(518, 15, 81, 20);
+		final JDateChooser dateChooser = new JDateChooser();
+		dateChooser.setDateFormatString("dd/MM/yyyy");
+		dateChooser.setBounds(518, 21, 81, 20);
 		panel_1.add(dateChooser);
+		((JTextFieldDateEditor)dateChooser.getDateEditor()).setEditable(false);
 		
-		JComboBox<String> cmbhoras = new JComboBox<String>();
+		final JComboBox<String> cmbhoras = new JComboBox<String>();
 		cmbhoras.setBounds(55, 45, 81, 20);
 		panel_1.add(cmbhoras);
 		cmbhoras.addItem("1 Hora");
@@ -344,7 +439,7 @@ public class ordservicio extends JFrame {
 		cmbhoras.addItem("4 Horas");
 		cmbhoras.addItem("5 Horas");
 		
-		JComboBox<String> cmbplaga = new JComboBox<String>();
+		final JComboBox<String> cmbplaga = new JComboBox<String>();
 		cmbplaga.setBounds(335, 18, 93, 20);
 		panel_1.add(cmbplaga);
 		cmbplaga.addItem("Rastreros");
@@ -363,7 +458,7 @@ public class ordservicio extends JFrame {
 		contentPane.add(lblObservaciones);
 		
 		txtObservaciones = new JTextField();
-		txtObservaciones.setBounds(120, 372, 213, 20);
+		txtObservaciones.setBounds(120, 372, 323, 20);
 		contentPane.add(txtObservaciones);
 		txtObservaciones.setColumns(10);
 		
@@ -379,7 +474,7 @@ public class ordservicio extends JFrame {
 		
 		txtcosto = new JTextField();
 		txtcosto.setColumns(10);
-		txtcosto.setBounds(499, 397, 86, 20);
+		txtcosto.setBounds(499, 397, 65, 20);
 		contentPane.add(txtcosto);
 		
 		//Agregando el menu		
@@ -391,6 +486,12 @@ public class ordservicio extends JFrame {
 		menuBar.add(mnNuevo);
 				
 		JMenuItem mntmOrdenDeServicio = new JMenuItem("Solicitud de Servicio....");
+		mntmOrdenDeServicio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setTitle("Killers-Solicitud de Servicio");	
+				
+			}
+		});
 		mnNuevo.add(mntmOrdenDeServicio);
 		JMenuItem mntmNewMenuItem = new JMenuItem("Cliente...");
 		mntmNewMenuItem.addActionListener(new ActionListener() {
@@ -408,9 +509,60 @@ public class ordservicio extends JFrame {
 		JMenuItem mntmServicios = new JMenuItem("Servicios...");
 		mnActualizar.add(mntmServicios);
 		
-		JComboBox<String> cmbmedio = new JComboBox<String>();
+		final JComboBox<String> cmbmedio = new JComboBox<String>();
 		cmbmedio.setBounds(145, 403, 145, 20);
 		contentPane.add(cmbmedio);	
+		
+		JLabel validacion = new JLabel("");
+		validacion.setBounds(443, 29, 207, 14);
+		contentPane.add(validacion);
+		
+		JButton btnGuardar = new JButton("Guardar");
+		btnGuardar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+				//SACANDO LAS CADENAS DE TEXTO DE LOS COMBOS
+				Object tiposervicio= cmbtiposerv.getSelectedItem();
+				String tiposerv= String.valueOf(tiposervicio);
+				Object plagaserv=cmbplaga.getSelectedItem();
+				String plaga=String.valueOf(plagaserv);
+				int horas=cmbhoras.getSelectedIndex()+1;
+				Object formapago=cmbforma.getSelectedItem();
+				String forma=String.valueOf(formapago);
+				Object medioenterado=cmbmedio.getSelectedItem();
+				String medio=String.valueOf(medioenterado);
+				int anio= dateChooser.getCalendar().get(Calendar.YEAR);
+				int dia= dateChooser.getCalendar().get(Calendar.MARCH);
+				int mes= dateChooser.getCalendar().get(Calendar.DAY_OF_MONTH);
+				String fecha_serv= dia+"/"+mes+"/"+anio;		
+				try{
+				String SQL="INSERT INTO servicio(num_cliente, tiposervicio, plaga,"+
+						"fecha_servicio, horas, formapago, clave_tecnico, observaciones, costo, mediocontacto, fecha, valido)"+
+									"VALUES(?,?,?,?,?,?,?,?,?,?,Now(),'0')";
+							PreparedStatement ps= conn.prepareStatement(SQL);
+							ps.setString(1, txtnumcliente.getText());
+							ps.setString(2, tiposerv);
+							ps.setString(3, plaga);
+							ps.setString(4, fecha_serv);
+							ps.setInt(5, horas);
+							ps.setString(6, forma);
+							ps.setString(7, txttecnico.getText());
+							ps.setString(8, txtObservaciones.getText());
+							ps.setString(9, txtcosto.getText());
+							ps.setString(10, medio);	
+							int n=ps.executeUpdate();
+							if(n>0){
+								JOptionPane.showMessageDialog(null, "Solicud de Servicio Completado");
+								Clean();
+							}
+							
+				
+			}catch(Exception e) {
+				JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
+			}
+			}
+		});
+		btnGuardar.setBounds(600, 371, 89, 23);
+		contentPane.add(btnGuardar);
 
 		
 		cmbBusqueda.addItem("Buscar Por:");
@@ -496,6 +648,7 @@ public class ordservicio extends JFrame {
 		btnBuscarPersona.setVisible(false);
 		btnBuscarEmpresa.setVisible(false);
 		btnBuscarNumero.setVisible(false);	
+		conn= bd.getConnect();
 		
 	}
 	void Desabilitar(){
@@ -506,5 +659,52 @@ public class ordservicio extends JFrame {
 		txtcelular.setEnabled(false);
 		
 		
+	}
+	void BuscarEmpresa(){
+		try{
+			Clean();		
+		if(txtNombre.getText().equals("")) {
+			 txtNombre.setBorder(BorderFactory.createLineBorder(Color.RED,1));
+			 validacion.setText("Introduce la empresa");
+			 
+		 } else {
+		
+	
+			String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail","Tipo Cliente"};
+			modeltable= new DefaultTableModel(null, titulos);
+		
+			String consulta="SELECT * FROM clientes WHERE empresa='"+txtNombre.getText()+"'";
+			sent=conn.createStatement();
+			String[] regreso= new String[10];
+			ResultSet rs= sent.executeQuery(consulta);
+			while (rs.next()){
+				regreso[0]=rs.getString("num_cliente");
+				regreso[1]=rs.getString("nombre");
+				regreso[2]=rs.getString("direccion");
+				regreso[3]=rs.getString("referencia");
+				regreso[4]=rs.getString("rfc");
+				regreso[5]=rs.getString("empresa");
+				regreso[6]=rs.getString("telefono");
+				regreso[7]=rs.getString("celular");
+				regreso[8]=rs.getString("email");
+				regreso[9]=rs.getString("tipocliente");
+				modeltable.addRow(regreso); 
+			}
+		
+			table.setModel(modeltable);
+			
+		 }
+			} catch(Exception e){
+				JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
+			
+			}
+	}
+	void Clean(){
+		txtnumcliente.setText("");
+		txtdireccion.setText("");
+		txtrfc.setText("");
+		txttelefono.setText("");
+		txtcelular.setText("");
+				
 	}
 }
