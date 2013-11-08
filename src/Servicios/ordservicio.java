@@ -72,7 +72,7 @@ public class ordservicio extends JFrame {
 	private JTextField txttecnico;
 	private JTextField txtObservaciones;
 	private JTextField txtcosto;
-	public JLabel validacion;
+	public JLabel validacioncamp;
 	public DefaultTableModel modeltable;
 	
 	
@@ -103,7 +103,7 @@ public class ordservicio extends JFrame {
 	 */
 	public ordservicio() {
 		
-		setTitle("Killers");
+		setTitle("Killers- Servicios");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 715, 494);
 		contentPane = new JPanel();
@@ -115,6 +115,11 @@ public class ordservicio extends JFrame {
 		cmbBusqueda.setBounds(21, 21, 133, 20);
 		contentPane.add(cmbBusqueda);
 		
+		final JLabel validacioncamp = new JLabel("");
+		validacioncamp.setForeground(Color.RED);
+		validacioncamp.setBounds(443, 29, 207, 14);
+		contentPane.add(validacioncamp);
+		
 		final JButton btnBuscarNumero = new JButton("Buscar");
 		btnBuscarNumero.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
@@ -122,7 +127,7 @@ public class ordservicio extends JFrame {
 					 
 					 if(txtNombre.getText().equals("")) {
 						 txtNombre.setBorder(BorderFactory.createLineBorder(Color.RED,1));
-						 validacion.setText("Introduce el Numero del Cliente");
+						 validacioncamp.setText("Introduce el Numero del Cliente");
 						 
 					 } else {
 					
@@ -231,22 +236,24 @@ public class ordservicio extends JFrame {
 		btnBuscarPersona.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try{
+					
 					if(txtNombre.getText().equals("")) {
 						txtNombre.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
-						validacion.setText("Llene los campos"); }
-						else {
-					
-					if(txtPaterno.getText().equals("")) {
+						validacioncamp.setText("Llene los campos");
+						txtNombre.requestFocus();
+						}
+						else if(txtPaterno.getText().equals("")) {
 						txtPaterno.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
-						validacion.setText("Llene los campos"); }
-					else {	
-						
-					if(txtMaterno.getText().equals("")) {
+						validacioncamp.setText("Llene los campos");
+						txtPaterno.requestFocus();
+						}
+					else if(txtMaterno.getText().equals("")) {
 						txtMaterno.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
-						validacion.setText("Llene los campos");	}		
+						validacioncamp.setText("Llene los campos");
+						txtMaterno.requestFocus();}		
 					
 					else { 
-		;		
+						Bordes();
 				String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail","Tipo Cliente"};
 				modeltable= new DefaultTableModel(null, titulos);
 				String consulta="SELECT * FROM clientes WHERE nombre='"+txtNombre.getText()+"' AND apellidopaterno='"+txtPaterno.getText()+"'"+
@@ -269,11 +276,10 @@ public class ordservicio extends JFrame {
 					modeltable.addRow(regreso);
 				}
 				table.setModel(modeltable);
-					 }
-						}
 			
+					}
 			 
-				} }catch(Exception e){
+			}catch(Exception e){
 					JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
 				
 				}
@@ -426,7 +432,7 @@ public class ordservicio extends JFrame {
 		
 		final JDateChooser dateChooser = new JDateChooser();
 		dateChooser.setDateFormatString("dd/MM/yyyy");
-		dateChooser.setBounds(518, 21, 81, 20);
+		dateChooser.setBounds(518, 21, 107, 20);
 		panel_1.add(dateChooser);
 		((JTextFieldDateEditor)dateChooser.getDateEditor()).setEditable(false);
 		
@@ -440,7 +446,7 @@ public class ordservicio extends JFrame {
 		cmbhoras.addItem("5 Horas");
 		
 		final JComboBox<String> cmbplaga = new JComboBox<String>();
-		cmbplaga.setBounds(335, 18, 93, 20);
+		cmbplaga.setBounds(343, 18, 120, 20);
 		panel_1.add(cmbplaga);
 		cmbplaga.addItem("Rastreros");
 		cmbplaga.addItem("Alemañas");
@@ -493,7 +499,7 @@ public class ordservicio extends JFrame {
 			}
 		});
 		mnNuevo.add(mntmOrdenDeServicio);
-		JMenuItem mntmNewMenuItem = new JMenuItem("Cliente...");
+		JMenuItem mntmNewMenuItem = new JMenuItem("Clientes...");
 		mntmNewMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				clientes cliente= new clientes();
@@ -509,13 +515,20 @@ public class ordservicio extends JFrame {
 		JMenuItem mntmServicios = new JMenuItem("Servicios...");
 		mnActualizar.add(mntmServicios);
 		
+		JMenu mnC = new JMenu("Reportes");
+		menuBar.add(mnC);
+		
+		JMenuItem mntmDelDa = new JMenuItem("Del D\u00EDa");
+		mnC.add(mntmDelDa);
+		
+		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Generar Orden de Servicio");
+		mnC.add(mntmNewMenuItem_1);
+		
 		final JComboBox<String> cmbmedio = new JComboBox<String>();
 		cmbmedio.setBounds(145, 403, 145, 20);
 		contentPane.add(cmbmedio);	
 		
-		JLabel validacion = new JLabel("");
-		validacion.setBounds(443, 29, 207, 14);
-		contentPane.add(validacion);
+
 		
 		JButton btnGuardar = new JButton("Guardar");
 		btnGuardar.addActionListener(new ActionListener() {
@@ -535,6 +548,17 @@ public class ordservicio extends JFrame {
 				int mes= dateChooser.getCalendar().get(Calendar.DAY_OF_MONTH);
 				String fecha_serv= dia+"/"+mes+"/"+anio;		
 				try{
+					if(txttecnico.getText().equals("")){
+						txttecnico.setBorder(BorderFactory.createLineBorder(Color.RED,1));
+						validacioncamp.setText("Llene los campos");
+						txttecnico.requestFocus();
+					} else if(txtcosto.getText().equals("")){
+						txtcosto.setBorder(BorderFactory.createLineBorder(Color.RED,1));
+						validacioncamp.setText("Llene los campos");
+						txtcosto.requestFocus();
+					} else {
+					Bordes();
+					Clean();
 				String SQL="INSERT INTO servicio(num_cliente, tiposervicio, plaga,"+
 						"fecha_servicio, horas, formapago, clave_tecnico, observaciones, costo, mediocontacto, fecha, valido)"+
 									"VALUES(?,?,?,?,?,?,?,?,?,?,Now(),'0')";
@@ -554,15 +578,20 @@ public class ordservicio extends JFrame {
 								JOptionPane.showMessageDialog(null, "Solicud de Servicio Completado");
 								Clean();
 							}
-							
+					}				
 				
-			}catch(Exception e) {
+		
+			} catch(Exception e) {
 				JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
 			}
 			}
 		});
 		btnGuardar.setBounds(600, 371, 89, 23);
 		contentPane.add(btnGuardar);
+		
+		JButton btnOrdenServicio = new JButton("Orden Servicio");
+		btnOrdenServicio.setBounds(586, 402, 103, 23);
+		contentPane.add(btnOrdenServicio);
 
 		
 		cmbBusqueda.addItem("Buscar Por:");
@@ -665,7 +694,7 @@ public class ordservicio extends JFrame {
 			Clean();		
 		if(txtNombre.getText().equals("")) {
 			 txtNombre.setBorder(BorderFactory.createLineBorder(Color.RED,1));
-			 validacion.setText("Introduce la empresa");
+			 validacioncamp.setText("Introduce la empresa");
 			 
 		 } else {
 		
@@ -707,4 +736,13 @@ public class ordservicio extends JFrame {
 		txtcelular.setText("");
 				
 	}
+ void Bordes(){
+	txtNombre.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));
+	txtPaterno.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));
+	txtMaterno.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));
+	txttecnico.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));
+	validacioncamp.setText("");
+
+	
+}
 }
