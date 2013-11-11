@@ -2,6 +2,7 @@ package Servicios;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.HeadlessException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -21,6 +22,8 @@ import java.awt.event.ItemEvent;
 import javax.swing.JButton;
 import java.sql.*;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 import conexion.bd;
 import clientes.clientes;
@@ -33,6 +36,14 @@ import javax.swing.text.JTextComponent;
 import java.awt.Color;
 import javax.swing.JTextArea;
 import javax.swing.JMenuBar;
+
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
@@ -74,6 +85,12 @@ public class ordservicio extends JFrame {
 	private JTextField txtcosto;
 	public JLabel validacioncamp;
 	public DefaultTableModel modeltable;
+	public JComboBox<String> cmbtiposerv;
+	public JComboBox<String> cmbplaga;
+	public JComboBox<String> cmbhoras;
+	public JComboBox<String> cmbmedio;
+	public JComboBox<String> cmbformas;
+	
 	
 	
 	public static void main(String[] args) {
@@ -102,7 +119,7 @@ public class ordservicio extends JFrame {
 	 * Create the frame.
 	 */
 	public ordservicio() {
-		
+		conn= bd.getConnect();
 		setTitle("Killers- Servicios");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 715, 494);
@@ -123,14 +140,16 @@ public class ordservicio extends JFrame {
 		final JButton btnBuscarNumero = new JButton("Buscar");
 		btnBuscarNumero.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
+		
 				try{
-					 
-					 if(txtNombre.getText().equals("")) {
-						 txtNombre.setBorder(BorderFactory.createLineBorder(Color.RED,1));
+					validacioncamp.setText("");
+					Gray();
+					Clean();
+					 if(txtNombre.getText().isEmpty()) {
 						 validacioncamp.setText("Introduce el Numero del Cliente");
+						 txtNombre.setBorder(BorderFactory.createLineBorder(Color.RED,1));
 						 
-					 } else {
-					
+					 } else {						
 						String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail","Tipo Cliente"};
 						modeltable= new DefaultTableModel(null, titulos);
 				
@@ -151,9 +170,11 @@ public class ordservicio extends JFrame {
 							regreso[9]=rs.getString("tipocliente");
 							modeltable.addRow(regreso); 
 						}
-					
+						table.setVisible(true);
+						txttecnico.setEnabled(false);
+						txtObservaciones.setEnabled(false);
 						table.setModel(modeltable);
-						
+											
 					 }
 						} catch(Exception e){
 							JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
@@ -236,24 +257,27 @@ public class ordservicio extends JFrame {
 		btnBuscarPersona.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try{
-					
-					if(txtNombre.getText().equals("")) {
+					validacioncamp.setText("");
+					Gray();
+					Clean();
+					if(txtNombre.getText().isEmpty()) {
 						txtNombre.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
 						validacioncamp.setText("Llene los campos");
 						txtNombre.requestFocus();
 						}
-						else if(txtPaterno.getText().equals("")) {
+						else if(txtPaterno.getText().isEmpty()) {
 						txtPaterno.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
 						validacioncamp.setText("Llene los campos");
 						txtPaterno.requestFocus();
 						}
-					else if(txtMaterno.getText().equals("")) {
+					else if(txtMaterno.getText().isEmpty()) {
 						txtMaterno.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
 						validacioncamp.setText("Llene los campos");
 						txtMaterno.requestFocus();}		
 					
 					else { 
-						Bordes();
+						table.setEnabled(true);
+												
 				String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail","Tipo Cliente"};
 				modeltable= new DefaultTableModel(null, titulos);
 				String consulta="SELECT * FROM clientes WHERE nombre='"+txtNombre.getText()+"' AND apellidopaterno='"+txtPaterno.getText()+"'"+
@@ -275,7 +299,10 @@ public class ordservicio extends JFrame {
 					regreso[9]=rs.getString("tipocliente");
 					modeltable.addRow(regreso);
 				}
+				table.setVisible(true);
 				table.setModel(modeltable);
+				txttecnico.setEnabled(false);
+				txtObservaciones.setEnabled(false);
 			
 					}
 			 
@@ -320,11 +347,12 @@ public class ordservicio extends JFrame {
 						txttelefono.setText(rs.getString("Telefono"));
 						txtcelular.setText(rs.getString("celular"));
 						txtrfc.setText(rs.getString("rfc"));
+						Hability();
 					}catch(Exception e){		
 						JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());	
 					}
 				}
-			}
+			} 
 		});
 		table.setFillsViewportHeight(true);
 		scrollPane.setViewportView(table);
@@ -382,7 +410,7 @@ public class ordservicio extends JFrame {
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(null, "Datos del Servicio", TitledBorder.LEADING, TitledBorder.TOP, null, Color.RED));
-		panel_1.setBounds(31, 282, 635, 82);
+		panel_1.setBounds(21, 282, 635, 82);
 		contentPane.add(panel_1);
 		panel_1.setLayout(null);
 		
@@ -557,8 +585,7 @@ public class ordservicio extends JFrame {
 						validacioncamp.setText("Llene los campos");
 						txtcosto.requestFocus();
 					} else {
-					Bordes();
-					Clean();
+					
 				String SQL="INSERT INTO servicio(num_cliente, tiposervicio, plaga,"+
 						"fecha_servicio, horas, formapago, clave_tecnico, observaciones, costo, mediocontacto, fecha, valido)"+
 									"VALUES(?,?,?,?,?,?,?,?,?,?,Now(),'0')";
@@ -578,6 +605,7 @@ public class ordservicio extends JFrame {
 								JOptionPane.showMessageDialog(null, "Solicud de Servicio Completado");
 								Clean();
 							}
+						
 					}				
 				
 		
@@ -589,7 +617,23 @@ public class ordservicio extends JFrame {
 		btnGuardar.setBounds(600, 371, 89, 23);
 		contentPane.add(btnGuardar);
 		
-		JButton btnOrdenServicio = new JButton("Orden Servicio");
+		JButton btnOrdenServicio = 
+				new JButton("Orden Servicio");
+		btnOrdenServicio.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				try{
+		
+					@SuppressWarnings("deprecation")
+					JasperReport ubicacion = (JasperReport) JRLoader.loadObject("prueba.jasper");
+					JasperPrint print= JasperFillManager.fillReport(ubicacion, null, conn);
+					JasperViewer view=new JasperViewer(print, false);
+					view.setVisible(true);
+				} catch(HeadlessException | JRException e){
+						JOptionPane.showConfirmDialog(null, "Error: "+e.getMessage());
+					}
+				
+			}
+		});
 		btnOrdenServicio.setBounds(586, 402, 103, 23);
 		contentPane.add(btnOrdenServicio);
 
@@ -602,6 +646,7 @@ public class ordservicio extends JFrame {
 			
 			public void itemStateChanged(ItemEvent arg0) {
 				if(cmbBusqueda.getSelectedIndex()==1){
+					
 					lblEmpresa.setVisible(false);
 					lblNombre.setVisible(true);
 					lblNumero.setVisible(false);
@@ -617,6 +662,7 @@ public class ordservicio extends JFrame {
 					
 					
 				} else { if(cmbBusqueda.getSelectedIndex()==2){
+				
 					lblEmpresa.setVisible(true);
 					lblNombre.setVisible(false);
 					lblNumero.setVisible(false);
@@ -631,6 +677,7 @@ public class ordservicio extends JFrame {
 					txtNombre.requestFocus();
 				} else {
 					if(cmbBusqueda.getSelectedIndex()==3){
+						 table.setEnabled(true);
 						lblEmpresa.setVisible(false);
 						lblNombre.setVisible(false);
 						lblNumero.setVisible(true);
@@ -662,9 +709,6 @@ public class ordservicio extends JFrame {
 			}
 		});
 		
-		
-		
-	  
 		Desabilitar();
 		lblEmpresa.setVisible(false);
 		lblNombre.setVisible(false);
@@ -677,28 +721,38 @@ public class ordservicio extends JFrame {
 		btnBuscarPersona.setVisible(false);
 		btnBuscarEmpresa.setVisible(false);
 		btnBuscarNumero.setVisible(false);	
-		conn= bd.getConnect();
+		btnOrdenServicio.setEnabled(false);
 		
 	}
+	
+	
+	//EMPIEZAN LOS METODOS
 	void Desabilitar(){
+		table.setVisible(false);
 		txtdireccion.setEnabled(false);
 		txtnumcliente.setEnabled(false);
 		txtrfc.setEnabled(false);
 		txttelefono.setEnabled(false);
 		txtcelular.setEnabled(false);
+		txttecnico.setEnabled(false);
+		txtObservaciones.setEnabled(false);
+		
 		
 		
 	}
 	void BuscarEmpresa(){
 		try{
+			validacioncamp.setText("");
+			Gray();
 			Clean();		
-		if(txtNombre.getText().equals("")) {
+		if(txtNombre.getText().isEmpty()) {
 			 txtNombre.setBorder(BorderFactory.createLineBorder(Color.RED,1));
 			 validacioncamp.setText("Introduce la empresa");
+			 txtNombre.requestFocus();
 			 
 		 } else {
-		
-	
+			table.setEnabled(true);
+
 			String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail","Tipo Cliente"};
 			modeltable= new DefaultTableModel(null, titulos);
 		
@@ -720,7 +774,10 @@ public class ordservicio extends JFrame {
 				modeltable.addRow(regreso); 
 			}
 		
+			table.setVisible(true);
 			table.setModel(modeltable);
+			txttecnico.setEnabled(false);
+			txtObservaciones.setEnabled(false);
 			
 		 }
 			} catch(Exception e){
@@ -736,13 +793,18 @@ public class ordservicio extends JFrame {
 		txtcelular.setText("");
 				
 	}
- void Bordes(){
+ void Gray(){
 	txtNombre.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));
 	txtPaterno.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));
 	txtMaterno.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));
 	txttecnico.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));
-	validacioncamp.setText("");
-
 	
 }
+ void Hability(){
+	 txttecnico.setEnabled(true);
+	txtObservaciones.setEnabled(true);
+		
+ }
+ 
+
 }
