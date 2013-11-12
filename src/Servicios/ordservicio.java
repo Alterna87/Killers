@@ -90,6 +90,42 @@ public class ordservicio extends JFrame {
 	public JComboBox<String> cmbhoras;
 	public JComboBox<String> cmbmedio;
 	public JComboBox<String> cmbformas;
+	@SuppressWarnings("rawtypes")
+	public JComboBox cmbBusqueda;
+	public JButton btnBuscarNumero;
+	public JLabel lblNombre;
+	public JLabel lblEmpresa;
+	public JLabel lblApellidoPaterno;
+	public JLabel lblApellidoMaterno;
+	public JLabel lblNumero;
+	public JButton btnBuscarPersona;
+	public JButton btnBuscarEmpresa;
+	public JPanel scrollPane;
+	public JLabel lblDireccion;
+	public JLabel lblRFC;
+	public JLabel lblNumeroDeCliente;
+	public JTextField txtelefono;
+	public JLabel lblTelefono;
+	public JLabel lblCelular;
+	public JLabel lblObservaciones;
+	public JLabel lblmedio;
+	public JLabel lblcosto;
+	public JButton btnGuardar;
+	public JButton btnOrdenServicio;
+	public JDateChooser escogerfechas;
+	public JButton BuscarSS;
+	public JLabel lblHora;
+	public JLabel lblFormaDePago;
+	public JComboBox cmbforma;
+	public JLabel lblPlagaEnEl;
+	public JLabel tbtTecnico;
+	public JLabel lblFecha;
+	public JDateChooser dateChooser;
+	public Integer bandera;
+	public JPanel panel;
+
+
+	//TERMINA LAS DECALRACIONES DE LOS COMPONENTES
 	
 	
 	
@@ -101,11 +137,6 @@ public class ordservicio extends JFrame {
 					frame.setVisible(true);
 					JMenuBar jmb= new JMenuBar();
 					frame.setJMenuBar(jmb);
-					/*Agregando Menu
-					JMenu nuevo = new JMenu("Nuevo");
-					jmb.add(nuevo);
-					JMenuItem orden = new JMenuItem("Orden de Servicio...");
-					nuevo.add(orden);*/
 					
 					
 				} catch (Exception e) {
@@ -120,17 +151,21 @@ public class ordservicio extends JFrame {
 	 */
 	public ordservicio() {
 		conn= bd.getConnect();
+		bandera=1;
 		setTitle("Killers- Servicios");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 715, 494);
+		setBounds(100, 100, 787, 567);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 			
 		final JComboBox<String> cmbBusqueda = new JComboBox<String>();
-		cmbBusqueda.setBounds(21, 21, 133, 20);
+		cmbBusqueda.setBounds(21, 23, 133, 20);
 		contentPane.add(cmbBusqueda);
+		final JComboBox<String> cmbBusquedaAct = new JComboBox<String>();
+		cmbBusquedaAct.setBounds(21, 23, 133, 20);
+		contentPane.add(cmbBusquedaAct);
 		
 		final JLabel validacioncamp = new JLabel("");
 		validacioncamp.setForeground(Color.RED);
@@ -336,6 +371,7 @@ public class ordservicio extends JFrame {
 			public void mouseClicked(MouseEvent evt) {
 				if(evt.getButton()==1){
 					int fila=table.getSelectedRow();
+					btnGuardar.setEnabled(false);
 					try{
 						String actualizar="SELECT * FROM clientes WHERE num_cliente='"+table.getValueAt(fila, 0)+"'";
 						sent=conn.createStatement();
@@ -410,7 +446,7 @@ public class ordservicio extends JFrame {
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new TitledBorder(null, "Datos del Servicio", TitledBorder.LEADING, TitledBorder.TOP, null, Color.RED));
-		panel_1.setBounds(21, 282, 635, 82);
+		panel_1.setBounds(21, 282, 635, 108);
 		contentPane.add(panel_1);
 		panel_1.setLayout(null);
 		
@@ -421,9 +457,9 @@ public class ordservicio extends JFrame {
 		final JComboBox<String> cmbtiposerv = new JComboBox<String>();
 		cmbtiposerv.setBounds(107, 18, 120, 20);
 		panel_1.add(cmbtiposerv);
-		cmbtiposerv.addItem("Correctivo");
-		cmbtiposerv.addItem("Preventivo");
-		cmbtiposerv.addItem("Tratamiento");
+		cmbtiposerv.addItem("CORRECTIVO");
+		cmbtiposerv.addItem("PREVENTIVO");
+		cmbtiposerv.addItem("TRATAMIENTO");
 		
 		
 		JLabel lblHora = new JLabel("Horas:");
@@ -488,27 +524,27 @@ public class ordservicio extends JFrame {
 		cmbplaga.addItem("Voladores");
 		
 		JLabel lblObservaciones = new JLabel("Observaciones:");
-		lblObservaciones.setBounds(21, 375, 115, 14);
+		lblObservaciones.setBounds(21, 420, 115, 14);
 		contentPane.add(lblObservaciones);
 		
 		txtObservaciones = new JTextField();
-		txtObservaciones.setBounds(120, 372, 323, 20);
+		txtObservaciones.setBounds(120, 417, 323, 20);
 		contentPane.add(txtObservaciones);
 		txtObservaciones.setColumns(10);
 		
 	
 		
 		JLabel lblmedio = new JLabel("Medio de Contacto:");
-		lblmedio.setBounds(21, 403, 101, 14);
+		lblmedio.setBounds(21, 448, 101, 14);
 		contentPane.add(lblmedio);
 		
 		JLabel lblcosto = new JLabel("Costo:");
-		lblcosto.setBounds(443, 400, 46, 14);
+		lblcosto.setBounds(443, 445, 46, 14);
 		contentPane.add(lblcosto);
 		
 		txtcosto = new JTextField();
 		txtcosto.setColumns(10);
-		txtcosto.setBounds(499, 397, 65, 20);
+		txtcosto.setBounds(499, 442, 65, 20);
 		contentPane.add(txtcosto);
 		
 		//Agregando el menu		
@@ -522,8 +558,8 @@ public class ordservicio extends JFrame {
 		JMenuItem mntmOrdenDeServicio = new JMenuItem("Solicitud de Servicio....");
 		mntmOrdenDeServicio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				setTitle("Killers-Solicitud de Servicio");	
-				
+				setTitle("Killers-Solicitud de Servicio");
+				bandera=1;	
 			}
 		});
 		mnNuevo.add(mntmOrdenDeServicio);
@@ -541,6 +577,25 @@ public class ordservicio extends JFrame {
 		menuBar.add(mnActualizar);
 		
 		JMenuItem mntmServicios = new JMenuItem("Servicios...");
+		mntmServicios.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				cmbBusquedaAct.setVisible(true);
+				cmbBusqueda.setVisible(false);
+				lblEmpresa.setVisible(false);
+				lblNombre.setVisible(false);
+				lblNumero.setVisible(false);
+				lblApellidoPaterno.setVisible(false);
+				lblApellidoMaterno.setVisible(false);
+				txtPaterno.setVisible(false);
+				txtMaterno.setVisible(false);
+				txtNombre.setVisible(false);
+				btnBuscarPersona.setVisible(false);
+				btnBuscarEmpresa.setVisible(false);
+				btnBuscarNumero.setVisible(false);	
+				btnOrdenServicio.setEnabled(false);
+				btnGuardar.setEnabled(false);
+			}
+		});
 		mnActualizar.add(mntmServicios);
 		
 		JMenu mnC = new JMenu("Reportes");
@@ -553,7 +608,7 @@ public class ordservicio extends JFrame {
 		mnC.add(mntmNewMenuItem_1);
 		
 		final JComboBox<String> cmbmedio = new JComboBox<String>();
-		cmbmedio.setBounds(145, 403, 145, 20);
+		cmbmedio.setBounds(145, 448, 145, 20);
 		contentPane.add(cmbmedio);	
 		
 
@@ -614,7 +669,7 @@ public class ordservicio extends JFrame {
 			}
 			}
 		});
-		btnGuardar.setBounds(600, 371, 89, 23);
+		btnGuardar.setBounds(600, 416, 89, 23);
 		contentPane.add(btnGuardar);
 		
 		JButton btnOrdenServicio = 
@@ -634,18 +689,16 @@ public class ordservicio extends JFrame {
 				
 			}
 		});
-		btnOrdenServicio.setBounds(586, 402, 103, 23);
+		btnOrdenServicio.setBounds(586, 447, 103, 23);
 		contentPane.add(btnOrdenServicio);
-
-		
 		cmbBusqueda.addItem("Buscar Por:");
 		cmbBusqueda.addItem("Persona");
 		cmbBusqueda.addItem("Empresa");
 		cmbBusqueda.addItem("Num Cliente");
 		cmbBusqueda.addItemListener(new ItemListener() {
-			
+	
 			public void itemStateChanged(ItemEvent arg0) {
-				if(cmbBusqueda.getSelectedIndex()==1){
+				if(cmbBusqueda.getSelectedItem()=="Persona"){
 					
 					lblEmpresa.setVisible(false);
 					lblNombre.setVisible(true);
@@ -661,7 +714,8 @@ public class ordservicio extends JFrame {
 					txtNombre.requestFocus();
 					
 					
-				} else { if(cmbBusqueda.getSelectedIndex()==2){
+				} else { if(cmbBusqueda.getSelectedItem()=="Empresa"){
+					
 				
 					lblEmpresa.setVisible(true);
 					lblNombre.setVisible(false);
@@ -691,6 +745,7 @@ public class ordservicio extends JFrame {
 						btnBuscarNumero.setVisible(true);
 						txtNombre.requestFocus();
 					} else {
+						if(cmbBusqueda.getSelectedIndex()==4) {
 						lblEmpresa.setVisible(false);
 						lblNombre.setVisible(false);
 						lblNumero.setVisible(false);
@@ -705,11 +760,11 @@ public class ordservicio extends JFrame {
 						
 					}
 				}}
-			
-			}
+				}
+				}
 		});
 		
-		Desabilitar();
+		
 		lblEmpresa.setVisible(false);
 		lblNombre.setVisible(false);
 		lblNumero.setVisible(false);
@@ -722,7 +777,92 @@ public class ordservicio extends JFrame {
 		btnBuscarEmpresa.setVisible(false);
 		btnBuscarNumero.setVisible(false);	
 		btnOrdenServicio.setEnabled(false);
+		btnGuardar.setEnabled(false);
+				
+		final JDateChooser escogerfechas = new JDateChooser();
+		escogerfechas.setBounds(86, 49, 133, 20);
+		contentPane.add(escogerfechas);
 		
+		
+		cmbBusquedaAct.setVisible(false);
+		cmbBusquedaAct.addItem("Fecha");
+		cmbBusquedaAct.addItem("Persona");
+		cmbBusquedaAct.addItem("Empresa");
+		cmbBusquedaAct.addItem("Num Cliente");
+		cmbBusquedaAct.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent arg0) {
+				if(cmbBusquedaAct.getSelectedItem()=="Fecha"){
+					escogerfechas.setVisible(true);
+					lblEmpresa.setText("Fecha:"); }
+					else if(cmbBusquedaAct.getSelectedItem()=="Persona"){
+						lblEmpresa.setVisible(false);
+						lblNombre.setVisible(true);
+						lblNumero.setVisible(false);
+						lblApellidoPaterno.setVisible(true);
+						lblApellidoMaterno.setVisible(true);
+						txtPaterno.setVisible(true);
+						txtMaterno.setVisible(true);
+						txtNombre.setVisible(true);
+						btnBuscarPersona.setVisible(true);
+						btnBuscarEmpresa.setVisible(false);
+						btnBuscarNumero.setVisible(false);
+						txtNombre.requestFocus();
+						
+						
+					} else  if(cmbBusqueda.getSelectedItem()=="Empresa"){
+						
+					
+						lblEmpresa.setVisible(true);
+						lblNombre.setVisible(false);
+						lblNumero.setVisible(false);
+						lblApellidoPaterno.setVisible(false);
+						lblApellidoMaterno.setVisible(false);
+						txtPaterno.setVisible(false);
+						txtMaterno.setVisible(false);
+						txtNombre.setVisible(true);
+						btnBuscarPersona.setVisible(false);
+						btnBuscarEmpresa.setVisible(true);
+						btnBuscarNumero.setVisible(false);
+						txtNombre.requestFocus();
+					} else 
+						if(cmbBusqueda.getSelectedIndex()==3){
+							 table.setEnabled(true);
+							lblEmpresa.setVisible(false);
+							lblNombre.setVisible(false);
+							lblNumero.setVisible(true);
+							lblApellidoPaterno.setVisible(false);
+							lblApellidoMaterno.setVisible(false);
+							txtPaterno.setVisible(false);
+							txtMaterno.setVisible(false);
+							txtNombre.setVisible(true);
+							btnBuscarPersona.setVisible(false);
+							btnBuscarEmpresa.setVisible(false);
+							btnBuscarNumero.setVisible(true);
+							txtNombre.requestFocus();
+						} else 
+							if(cmbBusqueda.getSelectedIndex()==4) {
+							lblEmpresa.setVisible(false);
+							lblNombre.setVisible(false);
+							lblNumero.setVisible(false);
+							lblApellidoPaterno.setVisible(false);
+							lblApellidoMaterno.setVisible(false);
+							txtPaterno.setVisible(false);
+							txtMaterno.setVisible(false);
+							txtNombre.setVisible(false);
+							btnBuscarPersona.setVisible(false);
+							btnBuscarEmpresa.setVisible(false);
+							btnBuscarNumero.setVisible(false);
+							
+						}
+				
+						
+					}
+				}
+		
+	);
+		escogerfechas.setVisible(false);
+		
+		Desabilitar();
 	}
 	
 	
@@ -736,6 +876,7 @@ public class ordservicio extends JFrame {
 		txtcelular.setEnabled(false);
 		txttecnico.setEnabled(false);
 		txtObservaciones.setEnabled(false);
+		
 		
 		
 		
@@ -805,6 +946,4 @@ public class ordservicio extends JFrame {
 	txtObservaciones.setEnabled(true);
 		
  }
- 
-
 }
