@@ -184,7 +184,8 @@ public class ordservicio extends JFrame {
 						 validacioncamp.setText("Introduce el Numero del Cliente");
 						 txtNombre.setBorder(BorderFactory.createLineBorder(Color.RED,1));
 						 
-					 } else {						
+					 } else {
+						 if(bandera==1){
 						String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail","Tipo Cliente"};
 						modeltable= new DefaultTableModel(null, titulos);
 				
@@ -209,8 +210,34 @@ public class ordservicio extends JFrame {
 						txttecnico.setEnabled(false);
 						txtObservaciones.setEnabled(false);
 						table.setModel(modeltable);
-											
-					 }
+						 } else if(bandera==2){
+							 String[]titulos= {"Numero SS","Nombre","Empresa" ,"Tipo Servicio","Horas","Forma Pago","Telefono","Costo","Fecha Solicud","Tipo Cliente"};
+								modeltable= new DefaultTableModel(null, titulos);
+								String consulta="SELECT * FROM clientes INNER JOIN servicio on clientes.num_cliente=servicio.num_cliente AND clientes.num_cliente='"+txtNombre.getText()+"'";
+								sent=conn.createStatement();
+								String[] regreso= new String[10];
+								ResultSet rs= sent.executeQuery(consulta);
+								while (rs.next()){
+									regreso[0]=rs.getString("num_ss");
+									regreso[1]=rs.getString("num_cliente");
+									regreso[1]=rs.getString("nombre");
+									regreso[2]=rs.getString("empresa");
+									regreso[3]=rs.getString("tiposervicio");
+									regreso[4]=rs.getString("horas");
+									regreso[5]=rs.getString("formapago");
+									regreso[6]=rs.getString("telefono");
+									regreso[7]=rs.getString("costo");
+									regreso[8]=rs.getString("fecha");
+									regreso[9]=rs.getString("tipocliente");
+									modeltable.addRow(regreso);
+								}
+								table.setVisible(true);
+								table.setModel(modeltable);
+								txttecnico.setEnabled(false);
+								txtObservaciones.setEnabled(false);						
+						 }				
+					 } 
+					 
 						} catch(Exception e){
 							JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
 						}
@@ -311,6 +338,7 @@ public class ordservicio extends JFrame {
 						txtMaterno.requestFocus();}		
 					
 					else { 
+					if(bandera==1){
 						table.setEnabled(true);
 												
 				String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail","Tipo Cliente"};
@@ -339,6 +367,33 @@ public class ordservicio extends JFrame {
 				txttecnico.setEnabled(false);
 				txtObservaciones.setEnabled(false);
 			
+					} else if(bandera==2){
+						String[]titulos= {"Numero SS","Nombre", "Tipo Servicio","Fecha de Servicio","Horas","Forma Pago","Telefono","Costo","Fecha","Tipo Cliente"};
+						modeltable= new DefaultTableModel(null, titulos);
+						String consulta="SELECT * FROM clientes JOIN servicio on cliente.num_cliente=servicio.num_cliente and cliente.nombre='"+txtNombre.getText()+"' AND cliente.apellidopaterno='"+txtPaterno.getText()+"' AND cliente.apellidomaterno='"+txtMaterno.getText()+"'";
+						sent=conn.createStatement();
+						String[] regreso= new String[10];
+						ResultSet rs= sent.executeQuery(consulta);
+						while (rs.next()){
+							regreso[0]=rs.getString("num_ss");
+							regreso[1]=rs.getString("nombre");
+							regreso[2]=rs.getString("tiposervicio");
+							regreso[3]=rs.getString("fecha_servicio");
+							regreso[4]=rs.getString("horas");
+							regreso[5]=rs.getString("formapago");
+							regreso[6]=rs.getString("telefono");
+							regreso[7]=rs.getString("costo");
+							regreso[8]=rs.getString("fecha");
+							regreso[9]=rs.getString("tipocliente");
+							modeltable.addRow(regreso);
+						}
+						table.setVisible(true);
+						table.setModel(modeltable);
+						txttecnico.setEnabled(false);
+						txtObservaciones.setEnabled(false);
+						
+						
+					}
 					}
 			 
 			}catch(Exception e){
@@ -559,7 +614,21 @@ public class ordservicio extends JFrame {
 		mntmOrdenDeServicio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setTitle("Killers-Solicitud de Servicio");
-				bandera=1;	
+				bandera=1;
+				Desabilitar();
+				lblEmpresa.setVisible(false);
+				lblNombre.setVisible(false);
+				lblNumero.setVisible(false);
+				lblApellidoPaterno.setVisible(false);
+				lblApellidoMaterno.setVisible(false);
+				txtPaterno.setVisible(false);
+				txtMaterno.setVisible(false);
+				txtNombre.setVisible(false);
+				btnBuscarPersona.setVisible(false);
+				btnBuscarEmpresa.setVisible(false);
+				btnBuscarNumero.setVisible(false);	
+				btnOrdenServicio.setEnabled(false);
+				btnGuardar.setEnabled(false);
 			}
 		});
 		mnNuevo.add(mntmOrdenDeServicio);
@@ -579,6 +648,8 @@ public class ordservicio extends JFrame {
 		JMenuItem mntmServicios = new JMenuItem("Servicios...");
 		mntmServicios.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				setTitle("Killers-Actualizacion de Datos Servicios");
+				bandera=2;
 				cmbBusquedaAct.setVisible(true);
 				cmbBusqueda.setVisible(false);
 				lblEmpresa.setVisible(false);
@@ -785,16 +856,22 @@ public class ordservicio extends JFrame {
 		
 		
 		cmbBusquedaAct.setVisible(false);
+		cmbBusquedaAct.addItem("Buscar Por...");
 		cmbBusquedaAct.addItem("Fecha");
 		cmbBusquedaAct.addItem("Persona");
 		cmbBusquedaAct.addItem("Empresa");
 		cmbBusquedaAct.addItem("Num Cliente");
+		
 		cmbBusquedaAct.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent arg0) {
+				
 				if(cmbBusquedaAct.getSelectedItem()=="Fecha"){
+					
 					escogerfechas.setVisible(true);
-					lblEmpresa.setText("Fecha:"); }
-					else if(cmbBusquedaAct.getSelectedItem()=="Persona"){
+					lblEmpresa.setText("Fecha:"); 
+					lblEmpresa.setVisible(true); }
+				
+				else if(cmbBusquedaAct.getSelectedItem()=="Persona"){
 						lblEmpresa.setVisible(false);
 						lblNombre.setVisible(true);
 						lblNumero.setVisible(false);
@@ -809,10 +886,10 @@ public class ordservicio extends JFrame {
 						txtNombre.requestFocus();
 						
 						
-					} else  if(cmbBusqueda.getSelectedItem()=="Empresa"){
-						
+					} else  if(cmbBusquedaAct.getSelectedItem()=="Empresa"){	
 					
 						lblEmpresa.setVisible(true);
+						lblEmpresa.setText("Empresa:");
 						lblNombre.setVisible(false);
 						lblNumero.setVisible(false);
 						lblApellidoPaterno.setVisible(false);
@@ -825,8 +902,8 @@ public class ordservicio extends JFrame {
 						btnBuscarNumero.setVisible(false);
 						txtNombre.requestFocus();
 					} else 
-						if(cmbBusqueda.getSelectedIndex()==3){
-							 table.setEnabled(true);
+						if(cmbBusquedaAct.getSelectedItem()=="Num Cliente"){
+							table.setEnabled(true);
 							lblEmpresa.setVisible(false);
 							lblNombre.setVisible(false);
 							lblNumero.setVisible(true);
@@ -839,29 +916,13 @@ public class ordservicio extends JFrame {
 							btnBuscarEmpresa.setVisible(false);
 							btnBuscarNumero.setVisible(true);
 							txtNombre.requestFocus();
-						} else 
-							if(cmbBusqueda.getSelectedIndex()==4) {
-							lblEmpresa.setVisible(false);
-							lblNombre.setVisible(false);
-							lblNumero.setVisible(false);
-							lblApellidoPaterno.setVisible(false);
-							lblApellidoMaterno.setVisible(false);
-							txtPaterno.setVisible(false);
-							txtMaterno.setVisible(false);
-							txtNombre.setVisible(false);
-							btnBuscarPersona.setVisible(false);
-							btnBuscarEmpresa.setVisible(false);
-							btnBuscarNumero.setVisible(false);
-							
-						}
-				
+						}			
 						
 					}
 				}
 		
 	);
 		escogerfechas.setVisible(false);
-		
 		Desabilitar();
 	}
 	
