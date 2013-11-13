@@ -9,16 +9,16 @@ Desarrollado en:
 -Eclipse
 
 Contiene:
--Control de Clientes(Beta)
--Solicitud de Servicios(En proceso...)
++Control de Clientes(Beta)
++Solicitud de Servicios.
 
 Por hacer:
--Orden de servicio
--Control de empleados
--Ventas
--Control de productos
--Reportes
--Informes
++Orden de servicio
++Control de empleados
++Ventas
++Control de productos
++Reportes
++Informes
 
 
 Development by Alterna Velueta
