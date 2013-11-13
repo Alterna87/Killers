@@ -370,10 +370,11 @@ public class ordservicio extends JFrame {
 					} else if(bandera==2){
 						String[]titulos= {"Numero SS","Nombre", "Tipo Servicio","Fecha de Servicio","Horas","Forma Pago","Telefono","Costo","Fecha","Tipo Cliente"};
 						modeltable= new DefaultTableModel(null, titulos);
-						String consulta="SELECT * FROM clientes JOIN servicio on cliente.num_cliente=servicio.num_cliente and cliente.nombre='"+txtNombre.getText()+"' AND cliente.apellidopaterno='"+txtPaterno.getText()+"' AND cliente.apellidomaterno='"+txtMaterno.getText()+"'";
+						String consulta="SELECT * FROM clientes INNER JOIN servicio on clientes.num_cliente=servicio.num_cliente and clientes.nombre='"+txtNombre.getText()+"' AND clientes.apellidopaterno='"+txtPaterno.getText()+"' AND clientes.apellidomaterno='"+txtMaterno.getText()+"'";
 						sent=conn.createStatement();
 						String[] regreso= new String[10];
 						ResultSet rs= sent.executeQuery(consulta);
+						
 						while (rs.next()){
 							regreso[0]=rs.getString("num_ss");
 							regreso[1]=rs.getString("nombre");
@@ -936,56 +937,80 @@ public class ordservicio extends JFrame {
 		txttelefono.setEnabled(false);
 		txtcelular.setEnabled(false);
 		txttecnico.setEnabled(false);
-		txtObservaciones.setEnabled(false);
-		
-		
-		
+		txtObservaciones.setEnabled(false);		
 		
 	}
 	void BuscarEmpresa(){
 		try{
-			validacioncamp.setText("");
-			Gray();
-			Clean();		
-		if(txtNombre.getText().isEmpty()) {
-			 txtNombre.setBorder(BorderFactory.createLineBorder(Color.RED,1));
-			 validacioncamp.setText("Introduce la empresa");
-			 txtNombre.requestFocus();
-			 
-		 } else {
-			table.setEnabled(true);
-
-			String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail","Tipo Cliente"};
-			modeltable= new DefaultTableModel(null, titulos);
-		
-			String consulta="SELECT * FROM clientes WHERE empresa='"+txtNombre.getText()+"'";
-			sent=conn.createStatement();
-			String[] regreso= new String[10];
-			ResultSet rs= sent.executeQuery(consulta);
-			while (rs.next()){
-				regreso[0]=rs.getString("num_cliente");
-				regreso[1]=rs.getString("nombre");
-				regreso[2]=rs.getString("direccion");
-				regreso[3]=rs.getString("referencia");
-				regreso[4]=rs.getString("rfc");
-				regreso[5]=rs.getString("empresa");
-				regreso[6]=rs.getString("telefono");
-				regreso[7]=rs.getString("celular");
-				regreso[8]=rs.getString("email");
-				regreso[9]=rs.getString("tipocliente");
-				modeltable.addRow(regreso); 
-			}
-		
 			table.setVisible(true);
-			table.setModel(modeltable);
-			txttecnico.setEnabled(false);
-			txtObservaciones.setEnabled(false);
+			 if(txtNombre.getText().isEmpty()) {
+				 txtNombre.setBorder(BorderFactory.createLineBorder(Color.RED,1));
+				 		 
+			 } else {
+				 if(bandera==1){
+				Clean();
+				 Gray();
+				String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail","Tipo Cliente"};
+				modeltable= new DefaultTableModel(null, titulos);
 			
-		 }
-			} catch(Exception e){
-				JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
+				String consulta="SELECT * FROM clientes WHERE empresa='"+txtNombre.getText()+"'";
+				sent=conn.createStatement();
+				String[] regreso= new String[10];
+				ResultSet rs= sent.executeQuery(consulta);
+				while (rs.next()){
+					regreso[0]=rs.getString("num_cliente");
+					regreso[1]=rs.getString("nombre");
+					regreso[2]=rs.getString("direccion");
+					regreso[3]=rs.getString("referencia");
+					regreso[4]=rs.getString("rfc");
+					regreso[5]=rs.getString("empresa");
+					regreso[6]=rs.getString("telefono");
+					regreso[7]=rs.getString("celular");
+					regreso[8]=rs.getString("email");
+					regreso[9]=rs.getString("tipocliente");
+					modeltable.addRow(regreso); 
+				}
 			
-			}
+				table.setVisible(true);
+				table.setModel(modeltable);
+				txttecnico.setEnabled(false);
+				txtObservaciones.setEnabled(false);
+				
+			 } else if(bandera==2){
+					String[]titulos= {"Numero SS","Nombre", "Tipo Servicio","Fecha de Servicio","Horas","Forma Pago","Telefono","Costo","Fecha","Tipo Cliente"};
+					modeltable= new DefaultTableModel(null, titulos);
+					String consulta="SELECT * FROM clientes INNER JOIN servicio ON clientes.num_cliente=servicio.num_cliente AND clientes.empresa='"+txtNombre.getText()+"'";
+					sent=conn.createStatement();
+					String[] regreso= new String[10];
+					ResultSet rs= sent.executeQuery(consulta);
+					
+					while (rs.next()){
+						regreso[0]=rs.getString("num_ss");
+						regreso[1]=rs.getString("nombre");
+						regreso[2]=rs.getString("tiposervicio");
+						regreso[3]=rs.getString("fecha_servicio");
+						regreso[4]=rs.getString("horas");
+						regreso[5]=rs.getString("formapago");
+						regreso[6]=rs.getString("telefono");
+						regreso[7]=rs.getString("costo");
+						regreso[8]=rs.getString("fecha");
+						regreso[9]=rs.getString("tipocliente");
+						modeltable.addRow(regreso);
+					}
+					table.setVisible(true);
+					table.setModel(modeltable);
+					txttecnico.setEnabled(false);
+					txtObservaciones.setEnabled(false);
+					
+					
+				}
+				}
+				} catch(Exception e){
+					JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
+				
+				}
+
+		 
 	}
 	void Clean(){
 		txtnumcliente.setText("");
