@@ -116,13 +116,14 @@ public class ordservicio extends JFrame {
 	public JButton BuscarSS;
 	public JLabel lblHora;
 	public JLabel lblFormaDePago;
-	public JComboBox cmbforma;
+	public JComboBox<String> cmbforma;
 	public JLabel lblPlagaEnEl;
 	public JLabel tbtTecnico;
 	public JLabel lblFecha;
 	public JDateChooser dateChooser;
 	public Integer bandera;
 	public JPanel panel;
+	private JTextField txtfecha;
 
 
 	//TERMINA LAS DECALRACIONES DE LOS COMPONENTES
@@ -211,7 +212,7 @@ public class ordservicio extends JFrame {
 						txtObservaciones.setEnabled(false);
 						table.setModel(modeltable);
 						 } else if(bandera==2){
-							 String[]titulos= {"Numero SS","Nombre","Empresa" ,"Tipo Servicio","Horas","Forma Pago","Telefono","Costo","Fecha Solicud","Tipo Cliente"};
+							 String[]titulos= {"Numero SS","num Cliente","Empresa" ,"Tipo Servicio","Horas","Forma Pago","Telefono","Costo","Fecha Solicud","Tipo Cliente"};
 								modeltable= new DefaultTableModel(null, titulos);
 								String consulta="SELECT * FROM clientes INNER JOIN servicio on clientes.num_cliente=servicio.num_cliente AND clientes.num_cliente='"+txtNombre.getText()+"'";
 								sent=conn.createStatement();
@@ -313,6 +314,71 @@ public class ordservicio extends JFrame {
 		final JLabel lblNumero = new JLabel("Num Cliente");
 		lblNumero.setBounds(10, 55, 76, 14);
 		contentPane.add(lblNumero);
+		JPanel panel_1 = new JPanel();
+		panel_1.setBorder(new TitledBorder(null, "Datos del Servicio", TitledBorder.LEADING, TitledBorder.TOP, null, Color.RED));
+		panel_1.setBounds(21, 282, 635, 108);
+		contentPane.add(panel_1);
+		panel_1.setLayout(null);
+		final JComboBox<String> cmbtiposerv = new JComboBox<String>();
+		cmbtiposerv.setBounds(107, 18, 120, 20);
+		panel_1.add(cmbtiposerv);
+		cmbtiposerv.addItem("CORRECTIVO");
+		cmbtiposerv.addItem("PREVENTIVO");
+		cmbtiposerv.addItem("TRATAMIENTO");
+
+		final JComboBox<String> cmbhoras = new JComboBox<String>();
+		cmbhoras.setBounds(55, 45, 81, 20);
+		panel_1.add(cmbhoras);
+		cmbhoras.addItem("1 Hora");
+		cmbhoras.addItem("2 Horas");
+		cmbhoras.addItem("3 Horas");
+		cmbhoras.addItem("4 Horas");
+		cmbhoras.addItem("5 Horas");
+		
+		final JComboBox<String> cmbplaga = new JComboBox<String>();
+		cmbplaga.setBounds(343, 18, 120, 20);
+		panel_1.add(cmbplaga);
+		cmbplaga.addItem("Rastreros");
+		cmbplaga.addItem("Alemañas");
+		cmbplaga.addItem("Termintas");
+		cmbplaga.addItem("Roedores");
+		cmbplaga.addItem("Alacranes");
+		cmbplaga.addItem("Arañas");
+		cmbplaga.addItem("Hormigas");
+		cmbplaga.addItem("Garrapatas");
+		cmbplaga.addItem("Pulgas");
+		cmbplaga.addItem("Voladores");
+		
+		JLabel lblObservaciones = new JLabel("Observaciones:");
+		lblObservaciones.setBounds(21, 420, 115, 14);
+		contentPane.add(lblObservaciones);
+		
+		txtObservaciones = new JTextField();
+		txtObservaciones.setBounds(120, 417, 323, 20);
+		contentPane.add(txtObservaciones);
+		txtObservaciones.setColumns(10);
+		
+	
+		
+		JLabel lblmedio = new JLabel("Medio de Contacto:");
+		lblmedio.setBounds(21, 448, 101, 14);
+		contentPane.add(lblmedio);
+		
+		JLabel lblcosto = new JLabel("Costo:");
+		lblcosto.setBounds(443, 445, 46, 14);
+		contentPane.add(lblcosto);
+		
+		txtcosto = new JTextField();
+		txtcosto.setColumns(10);
+		txtcosto.setBounds(499, 442, 65, 20);
+		contentPane.add(txtcosto);
+		final JComboBox<String> cmbforma = new JComboBox<String>();
+		cmbforma.setBounds(265, 47, 128, 20);
+		panel_1.add(cmbforma);
+		cmbforma.addItem("EFECTIVO");
+		cmbforma.addItem("TARJETA DE CREDITO");
+		cmbforma.addItem("CHEQUE");
+		
 	
 		
 		final JButton btnBuscarPersona = new JButton("Buscar");
@@ -422,31 +488,58 @@ public class ordservicio extends JFrame {
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
+		table.setFillsViewportHeight(true);
+		table.setSurrendersFocusOnKeystroke(true);
 		table.addMouseListener(new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent evt) {
-				if(evt.getButton()==1){
+			public void mouseClicked(MouseEvent evit) {
+				if(evit.getButton()==1){
 					int fila=table.getSelectedRow();
-					btnGuardar.setEnabled(false);
 					try{
-						String actualizar="SELECT * FROM clientes WHERE num_cliente='"+table.getValueAt(fila, 0)+"'";
+						if(bandera==1){
+						String buscar="SELECT * FROM clientes WHERE num_cliente='"+table.getValueAt(fila, 0)+"'";
 						sent=conn.createStatement();
-						ResultSet rs=sent.executeQuery(actualizar);
+						ResultSet rs=sent.executeQuery(buscar);
 						rs.next();
-						txtNombre.setText(rs.getString("nombre"));
 						txtnumcliente.setText(rs.getString("num_cliente"));
 						txtdireccion.setText(rs.getString("direccion"));
 						txttelefono.setText(rs.getString("Telefono"));
 						txtcelular.setText(rs.getString("celular"));
 						txtrfc.setText(rs.getString("rfc"));
+						}
+					else if(bandera==2){
+						
+						String actualizar="SELECT * FROM servicio INNER JOIN clientes ON servicio.num_cliente=clientes.num_cliente AND servicio.num_ss='"+table.getValueAt(fila, 0)+"'";
+						sent=conn.createStatement();
+						ResultSet rs=sent.executeQuery(actualizar);
+						rs.next();
+						txtnumcliente.setText(rs.getString("num_cliente"));
+						txtdireccion.setText(rs.getString("direccion"));
+						txttelefono.setText(rs.getString("Telefono"));
+						txtcelular.setText(rs.getString("celular"));
+						txtrfc.setText(rs.getString("rfc"));
+						///DATOS DEL SERVICIO
+						cmbtiposerv.setSelectedItem(rs.getString("tiposervicio"));
+						cmbplaga.setSelectedItem(rs.getString("plaga"));
+						txtfecha.setText(rs.getString("fecha_servicio"));
+						cmbhoras.setSelectedIndex(rs.getInt("horas")-1);
+						txttecnico.setText(rs.getString("clave_tecnico"));
+						cmbforma.setSelectedItem(rs.getString("formapago"));
+						txtObservaciones.setText(rs.getString("observaciones"));
+						txtcosto.setText(rs.getString("costo"));
+	
+				
+						
+						
 						Hability();
-					}catch(Exception e){		
+						
+					}
+					} catch(Exception e){		
 						JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());	
 					}
 				}
 			} 
 		});
-		table.setFillsViewportHeight(true);
 		scrollPane.setViewportView(table);
 		
 		JPanel panel = new JPanel();
@@ -500,23 +593,10 @@ public class ordservicio extends JFrame {
 		txtcelular.setBounds(458, 52, 124, 20);
 		panel.add(txtcelular);
 		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBorder(new TitledBorder(null, "Datos del Servicio", TitledBorder.LEADING, TitledBorder.TOP, null, Color.RED));
-		panel_1.setBounds(21, 282, 635, 108);
-		contentPane.add(panel_1);
-		panel_1.setLayout(null);
 		
 		JLabel lblTipoDeServicio = new JLabel("Tipo de Servicio:");
 		lblTipoDeServicio.setBounds(10, 21, 101, 14);
-		panel_1.add(lblTipoDeServicio);
-		
-		final JComboBox<String> cmbtiposerv = new JComboBox<String>();
-		cmbtiposerv.setBounds(107, 18, 120, 20);
-		panel_1.add(cmbtiposerv);
-		cmbtiposerv.addItem("CORRECTIVO");
-		cmbtiposerv.addItem("PREVENTIVO");
-		cmbtiposerv.addItem("TRATAMIENTO");
-		
+		panel_1.add(lblTipoDeServicio);		
 		
 		JLabel lblHora = new JLabel("Horas:");
 		lblHora.setBounds(10, 48, 46, 14);
@@ -525,13 +605,6 @@ public class ordservicio extends JFrame {
 		JLabel lblFormaDePago = new JLabel("Forma de Pago:");
 		lblFormaDePago.setBounds(174, 52, 93, 14);
 		panel_1.add(lblFormaDePago);
-		
-		final JComboBox<String> cmbforma = new JComboBox<String>();
-		cmbforma.setBounds(265, 47, 128, 20);
-		panel_1.add(cmbforma);
-		cmbforma.addItem("EFECTIVO");
-		cmbforma.addItem("TARJETA DE CREDITO");
-		cmbforma.addItem("CHEQUE");
 		
 		JLabel lblPlagaEnEl = new JLabel("Plaga en el Area:");
 		lblPlagaEnEl.setBounds(244, 21, 101, 14);
@@ -547,61 +620,19 @@ public class ordservicio extends JFrame {
 		txttecnico.setColumns(10);
 		
 		JLabel lblFecha = new JLabel("Fecha:");
-		lblFecha.setBounds(473, 21, 101, 14);
+		lblFecha.setBounds(473, 21, 55, 14);
 		panel_1.add(lblFecha);
 		
 		final JDateChooser dateChooser = new JDateChooser();
 		dateChooser.setDateFormatString("dd/MM/yyyy");
 		dateChooser.setBounds(518, 21, 107, 20);
 		panel_1.add(dateChooser);
+		
+		txtfecha = new JTextField();
+		dateChooser.add(txtfecha, BorderLayout.NORTH);
+		txtfecha.setColumns(10);
 		((JTextFieldDateEditor)dateChooser.getDateEditor()).setEditable(false);
 		
-		final JComboBox<String> cmbhoras = new JComboBox<String>();
-		cmbhoras.setBounds(55, 45, 81, 20);
-		panel_1.add(cmbhoras);
-		cmbhoras.addItem("1 Hora");
-		cmbhoras.addItem("2 Horas");
-		cmbhoras.addItem("3 Horas");
-		cmbhoras.addItem("4 Horas");
-		cmbhoras.addItem("5 Horas");
-		
-		final JComboBox<String> cmbplaga = new JComboBox<String>();
-		cmbplaga.setBounds(343, 18, 120, 20);
-		panel_1.add(cmbplaga);
-		cmbplaga.addItem("Rastreros");
-		cmbplaga.addItem("Alemañas");
-		cmbplaga.addItem("Termintas");
-		cmbplaga.addItem("Roedores");
-		cmbplaga.addItem("Alacranes");
-		cmbplaga.addItem("Arañas");
-		cmbplaga.addItem("Hormigas");
-		cmbplaga.addItem("Garrapatas");
-		cmbplaga.addItem("Pulgas");
-		cmbplaga.addItem("Voladores");
-		
-		JLabel lblObservaciones = new JLabel("Observaciones:");
-		lblObservaciones.setBounds(21, 420, 115, 14);
-		contentPane.add(lblObservaciones);
-		
-		txtObservaciones = new JTextField();
-		txtObservaciones.setBounds(120, 417, 323, 20);
-		contentPane.add(txtObservaciones);
-		txtObservaciones.setColumns(10);
-		
-	
-		
-		JLabel lblmedio = new JLabel("Medio de Contacto:");
-		lblmedio.setBounds(21, 448, 101, 14);
-		contentPane.add(lblmedio);
-		
-		JLabel lblcosto = new JLabel("Costo:");
-		lblcosto.setBounds(443, 445, 46, 14);
-		contentPane.add(lblcosto);
-		
-		txtcosto = new JTextField();
-		txtcosto.setColumns(10);
-		txtcosto.setBounds(499, 442, 65, 20);
-		contentPane.add(txtcosto);
 		
 		//Agregando el menu		
 		JMenuBar menuBar = new JMenuBar();
@@ -701,7 +732,8 @@ public class ordservicio extends JFrame {
 				int anio= dateChooser.getCalendar().get(Calendar.YEAR);
 				int dia= dateChooser.getCalendar().get(Calendar.MARCH);
 				int mes= dateChooser.getCalendar().get(Calendar.DAY_OF_MONTH);
-				String fecha_serv= dia+"/"+mes+"/"+anio;		
+				String fecha_serv= dia+"/"+mes+"/"+anio;
+				
 				try{
 					if(txttecnico.getText().equals("")){
 						txttecnico.setBorder(BorderFactory.createLineBorder(Color.RED,1));
@@ -904,7 +936,7 @@ public class ordservicio extends JFrame {
 						txtNombre.requestFocus();
 					} else 
 						if(cmbBusquedaAct.getSelectedItem()=="Num Cliente"){
-							table.setEnabled(true);
+				
 							lblEmpresa.setVisible(false);
 							lblNombre.setVisible(false);
 							lblNumero.setVisible(true);
@@ -937,7 +969,8 @@ public class ordservicio extends JFrame {
 		txttelefono.setEnabled(false);
 		txtcelular.setEnabled(false);
 		txttecnico.setEnabled(false);
-		txtObservaciones.setEnabled(false);		
+		txtObservaciones.setEnabled(false);	
+
 		
 	}
 	void BuscarEmpresa(){
@@ -971,7 +1004,7 @@ public class ordservicio extends JFrame {
 					modeltable.addRow(regreso); 
 				}
 			
-				table.setVisible(true);
+	
 				table.setModel(modeltable);
 				txttecnico.setEnabled(false);
 				txtObservaciones.setEnabled(false);
@@ -997,7 +1030,7 @@ public class ordservicio extends JFrame {
 						regreso[9]=rs.getString("tipocliente");
 						modeltable.addRow(regreso);
 					}
-					table.setVisible(true);
+				
 					table.setModel(modeltable);
 					txttecnico.setEnabled(false);
 					txtObservaciones.setEnabled(false);
