@@ -55,6 +55,7 @@ import com.toedter.calendar.JTextFieldDateEditor;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.UIManager;
 
 
 
@@ -124,6 +125,7 @@ public class ordservicio extends JFrame {
 	public Integer bandera;
 	public JPanel panel;
 	private JTextField txtfecha;
+	private JTextField txtfecha_ss;
 
 
 	//TERMINA LAS DECALRACIONES DE LOS COMPONENTES
@@ -153,7 +155,7 @@ public class ordservicio extends JFrame {
 	public ordservicio() {
 		conn= bd.getConnect();
 		bandera=1;
-		setTitle("Killers- Servicios");
+		setTitle("Killers- Solicitud de Servicios");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 787, 567);
 		contentPane = new JPanel();
@@ -162,15 +164,16 @@ public class ordservicio extends JFrame {
 		contentPane.setLayout(null);
 			
 		final JComboBox<String> cmbBusqueda = new JComboBox<String>();
-		cmbBusqueda.setBounds(21, 23, 133, 20);
+		cmbBusqueda.setBounds(21, 39, 133, 20);
 		contentPane.add(cmbBusqueda);
 		final JComboBox<String> cmbBusquedaAct = new JComboBox<String>();
-		cmbBusquedaAct.setBounds(21, 23, 133, 20);
+		cmbBusquedaAct.setBounds(21, 39, 133, 20);
 		contentPane.add(cmbBusquedaAct);
+		final JButton btnGuardar = new JButton("Guardar");
 		
 		final JLabel validacioncamp = new JLabel("");
 		validacioncamp.setForeground(Color.RED);
-		validacioncamp.setBounds(443, 29, 207, 14);
+		validacioncamp.setBounds(443, 45, 207, 14);
 		contentPane.add(validacioncamp);
 		
 		final JButton btnBuscarNumero = new JButton("Buscar");
@@ -211,10 +214,11 @@ public class ordservicio extends JFrame {
 						txttecnico.setEnabled(false);
 						txtObservaciones.setEnabled(false);
 						table.setModel(modeltable);
+		
 						 } else if(bandera==2){
 							 String[]titulos= {"Numero SS","num Cliente","Empresa" ,"Tipo Servicio","Horas","Forma Pago","Telefono","Costo","Fecha Solicud","Tipo Cliente"};
 								modeltable= new DefaultTableModel(null, titulos);
-								String consulta="SELECT * FROM clientes INNER JOIN servicio on clientes.num_cliente=servicio.num_cliente AND clientes.num_cliente='"+txtNombre.getText()+"'";
+								String consulta="SELECT * FROM clientes INNER JOIN servicio on clientes.num_cliente=servicio.num_cliente AND clientes.num_cliente='"+txtNombre.getText()+"' AND servicio.valido='0'" ;
 								sent=conn.createStatement();
 								String[] regreso= new String[10];
 								ResultSet rs= sent.executeQuery(consulta);
@@ -245,15 +249,15 @@ public class ordservicio extends JFrame {
 			}
 
 		});
-		btnBuscarNumero.setBounds(229, 46, 89, 23);
+		btnBuscarNumero.setBounds(229, 63, 89, 23);
 		contentPane.add(btnBuscarNumero);
 		
 		final JLabel lblNombre = new JLabel("Nombre: ");
-		lblNombre.setBounds(10, 55, 55, 14);
+		lblNombre.setBounds(10, 67, 55, 14);
 		contentPane.add(lblNombre);
 		
 		final JLabel lblEmpresa = new JLabel("Empresa:");
-		lblEmpresa.setBounds(10, 52, 55, 14);
+		lblEmpresa.setBounds(10, 68, 55, 14);
 		contentPane.add(lblEmpresa);
 		
 		
@@ -267,12 +271,12 @@ public class ordservicio extends JFrame {
 				txtNombre.setText(txtNombre.getText().toUpperCase());
 			}
 		});
-		txtNombre.setBounds(86, 49, 133, 20);
+		txtNombre.setBounds(86, 64, 133, 20);
 		contentPane.add(txtNombre);
 		txtNombre.setColumns(10);
 		
 		final JLabel lblApellidoPaterno = new JLabel("Apellido Paterno:");
-		lblApellidoPaterno.setBounds(252, 51, 97, 14);
+		lblApellidoPaterno.setBounds(316, 68, 97, 14);
 		contentPane.add(lblApellidoPaterno);
 		
 		txtPaterno = new JTextField();
@@ -288,11 +292,11 @@ public class ordservicio extends JFrame {
 			}
 		});
 		txtPaterno.setColumns(10);
-		txtPaterno.setBounds(359, 48, 104, 20);
+		txtPaterno.setBounds(423, 65, 104, 20);
 		contentPane.add(txtPaterno);
 		
 		final JLabel lblApellidoMaterno = new JLabel("Apellido Materno:");
-		lblApellidoMaterno.setBounds(473, 51, 115, 14);
+		lblApellidoMaterno.setBounds(473, 67, 115, 14);
 		contentPane.add(lblApellidoMaterno);
 		
 		txtMaterno = new JTextField();
@@ -308,15 +312,15 @@ public class ordservicio extends JFrame {
 			}
 		});
 		txtMaterno.setColumns(10);
-		txtMaterno.setBounds(580, 48, 109, 20);
+		txtMaterno.setBounds(580, 64, 109, 20);
 		contentPane.add(txtMaterno);
 		
 		final JLabel lblNumero = new JLabel("Num Cliente");
-		lblNumero.setBounds(10, 55, 76, 14);
+		lblNumero.setBounds(10, 71, 76, 14);
 		contentPane.add(lblNumero);
 		JPanel panel_1 = new JPanel();
-		panel_1.setBorder(new TitledBorder(null, "Datos del Servicio", TitledBorder.LEADING, TitledBorder.TOP, null, Color.RED));
-		panel_1.setBounds(21, 282, 635, 108);
+		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Datos Solicitud de Servicio", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 0, 0)));
+		panel_1.setBounds(21, 282, 635, 146);
 		contentPane.add(panel_1);
 		panel_1.setLayout(null);
 		final JComboBox<String> cmbtiposerv = new JComboBox<String>();
@@ -348,30 +352,6 @@ public class ordservicio extends JFrame {
 		cmbplaga.addItem("Garrapatas");
 		cmbplaga.addItem("Pulgas");
 		cmbplaga.addItem("Voladores");
-		
-		JLabel lblObservaciones = new JLabel("Observaciones:");
-		lblObservaciones.setBounds(21, 420, 115, 14);
-		contentPane.add(lblObservaciones);
-		
-		txtObservaciones = new JTextField();
-		txtObservaciones.setBounds(120, 417, 323, 20);
-		contentPane.add(txtObservaciones);
-		txtObservaciones.setColumns(10);
-		
-	
-		
-		JLabel lblmedio = new JLabel("Medio de Contacto:");
-		lblmedio.setBounds(21, 448, 101, 14);
-		contentPane.add(lblmedio);
-		
-		JLabel lblcosto = new JLabel("Costo:");
-		lblcosto.setBounds(443, 445, 46, 14);
-		contentPane.add(lblcosto);
-		
-		txtcosto = new JTextField();
-		txtcosto.setColumns(10);
-		txtcosto.setBounds(499, 442, 65, 20);
-		contentPane.add(txtcosto);
 		final JComboBox<String> cmbforma = new JComboBox<String>();
 		cmbforma.setBounds(265, 47, 128, 20);
 		panel_1.add(cmbforma);
@@ -470,7 +450,7 @@ public class ordservicio extends JFrame {
 			
 			}
 		});
-		btnBuscarPersona.setBounds(164, 20, 89, 23);
+		btnBuscarPersona.setBounds(164, 36, 89, 23);
 		contentPane.add(btnBuscarPersona);
 		
 		final JButton btnBuscarEmpresa = new JButton("Buscar");
@@ -479,12 +459,13 @@ public class ordservicio extends JFrame {
 			BuscarEmpresa();	
 			}
 		});
-		btnBuscarEmpresa.setBounds(229, 46, 89, 23);
-		contentPane.add(btnBuscarEmpresa);	
+		btnBuscarEmpresa.setBounds(229, 62, 89, 23);
+		contentPane.add(btnBuscarEmpresa);
+		final JButton btnOrdenServicio = new JButton("Orden Servicio");
 	
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(21, 97, 629, 74);
+		scrollPane.setBounds(21, 97, 740, 74);
 		contentPane.add(scrollPane);
 		
 		table = new JTable();
@@ -494,6 +475,8 @@ public class ordservicio extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent evit) {
 				if(evit.getButton()==1){
+					btnOrdenServicio.setEnabled(true);
+					btnGuardar.setEnabled(true);
 					int fila=table.getSelectedRow();
 					try{
 						if(bandera==1){
@@ -523,6 +506,7 @@ public class ordservicio extends JFrame {
 						cmbplaga.setSelectedItem(rs.getString("plaga"));
 						txtfecha.setText(rs.getString("fecha_servicio"));
 						cmbhoras.setSelectedIndex(rs.getInt("horas")-1);
+						txtfecha_ss.setText(rs.getString("fecha"));
 						txttecnico.setText(rs.getString("clave_tecnico"));
 						cmbforma.setSelectedItem(rs.getString("formapago"));
 						txtObservaciones.setText(rs.getString("observaciones"));
@@ -541,6 +525,9 @@ public class ordservicio extends JFrame {
 			} 
 		});
 		scrollPane.setViewportView(table);
+		
+		JScrollPane scrollPane_1 = new JScrollPane();
+		scrollPane.setColumnHeaderView(scrollPane_1);
 		
 		JPanel panel = new JPanel();
 		panel.setBorder(new TitledBorder(null, "Datos del Cliente", TitledBorder.LEADING, TitledBorder.TOP, null, Color.BLACK));
@@ -629,14 +616,42 @@ public class ordservicio extends JFrame {
 		panel_1.add(dateChooser);
 		
 		txtfecha = new JTextField();
+		txtfecha.setEnabled(false);
 		dateChooser.add(txtfecha, BorderLayout.NORTH);
 		txtfecha.setColumns(10);
-		((JTextFieldDateEditor)dateChooser.getDateEditor()).setEditable(false);
 		
+		JLabel lblObservaciones_1 = new JLabel("Observaciones:");
+		lblObservaciones_1.setBounds(20, 79, 115, 14);
+		panel_1.add(lblObservaciones_1);
+		
+		txtObservaciones = new JTextField();
+		txtObservaciones.setBounds(119, 76, 506, 20);
+		panel_1.add(txtObservaciones);
+		txtObservaciones.setColumns(10);
+		
+	
+		
+		JLabel lblmedio_1 = new JLabel("Medio de Contacto:");
+		lblmedio_1.setBounds(30, 110, 101, 14);
+		panel_1.add(lblmedio_1);
+		
+		final JComboBox<String> cmbmedio_1 = new JComboBox<String>();
+		cmbmedio_1.setBounds(144, 107, 145, 20);
+		panel_1.add(cmbmedio_1);
+		
+		JLabel lblcosto_1 = new JLabel("Costo:");
+		lblcosto_1.setBounds(442, 107, 46, 14);
+		panel_1.add(lblcosto_1);
+		
+		txtcosto = new JTextField();
+		txtcosto.setBounds(498, 104, 93, 20);
+		panel_1.add(txtcosto);
+		txtcosto.setColumns(10);
+		final JButton btnAct = new JButton("Actualizar");
 		
 		//Agregando el menu		
 		JMenuBar menuBar = new JMenuBar();
-		menuBar.setBounds(0, 0, 699, 21);
+		menuBar.setBounds(0, 0, 238, 21);
 		contentPane.add(menuBar);
 		
 		JMenu mnNuevo = new JMenu("Nuevo");
@@ -646,6 +661,7 @@ public class ordservicio extends JFrame {
 		mntmOrdenDeServicio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				setTitle("Killers-Solicitud de Servicio");
+				txtfecha.setVisible(false);
 				bandera=1;
 				Desabilitar();
 				lblEmpresa.setVisible(false);
@@ -659,8 +675,7 @@ public class ordservicio extends JFrame {
 				btnBuscarPersona.setVisible(false);
 				btnBuscarEmpresa.setVisible(false);
 				btnBuscarNumero.setVisible(false);	
-				btnOrdenServicio.setEnabled(false);
-				btnGuardar.setEnabled(false);
+				
 			}
 		});
 		mnNuevo.add(mntmOrdenDeServicio);
@@ -682,6 +697,7 @@ public class ordservicio extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				setTitle("Killers-Actualizacion de Datos Servicios");
 				bandera=2;
+				btnAct.setEnabled(false);
 				cmbBusquedaAct.setVisible(true);
 				cmbBusqueda.setVisible(false);
 				lblEmpresa.setVisible(false);
@@ -697,6 +713,8 @@ public class ordservicio extends JFrame {
 				btnBuscarNumero.setVisible(false);	
 				btnOrdenServicio.setEnabled(false);
 				btnGuardar.setEnabled(false);
+			
+				
 			}
 		});
 		mnActualizar.add(mntmServicios);
@@ -707,16 +725,12 @@ public class ordservicio extends JFrame {
 		JMenuItem mntmDelDa = new JMenuItem("Del D\u00EDa");
 		mnC.add(mntmDelDa);
 		
-		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Generar Orden de Servicio");
+		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Ordenes de Servicio");
 		mnC.add(mntmNewMenuItem_1);
-		
-		final JComboBox<String> cmbmedio = new JComboBox<String>();
-		cmbmedio.setBounds(145, 448, 145, 20);
-		contentPane.add(cmbmedio);	
 		
 
 		
-		JButton btnGuardar = new JButton("Guardar");
+		
 		btnGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				//SACANDO LAS CADENAS DE TEXTO DE LOS COMBOS
@@ -727,7 +741,7 @@ public class ordservicio extends JFrame {
 				int horas=cmbhoras.getSelectedIndex()+1;
 				Object formapago=cmbforma.getSelectedItem();
 				String forma=String.valueOf(formapago);
-				Object medioenterado=cmbmedio.getSelectedItem();
+				Object medioenterado=cmbmedio_1.getSelectedItem();
 				String medio=String.valueOf(medioenterado);
 				int anio= dateChooser.getCalendar().get(Calendar.YEAR);
 				int dia= dateChooser.getCalendar().get(Calendar.MARCH);
@@ -773,11 +787,10 @@ public class ordservicio extends JFrame {
 			}
 			}
 		});
-		btnGuardar.setBounds(600, 416, 89, 23);
+		btnGuardar.setBounds(672, 357, 89, 23);
 		contentPane.add(btnGuardar);
 		
-		JButton btnOrdenServicio = 
-				new JButton("Orden Servicio");
+		
 		btnOrdenServicio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try{
@@ -793,7 +806,8 @@ public class ordservicio extends JFrame {
 				
 			}
 		});
-		btnOrdenServicio.setBounds(586, 447, 103, 23);
+		
+		btnOrdenServicio.setBounds(658, 388, 103, 23);
 		contentPane.add(btnOrdenServicio);
 		cmbBusqueda.addItem("Buscar Por:");
 		cmbBusqueda.addItem("Persona");
@@ -884,8 +898,83 @@ public class ordservicio extends JFrame {
 		btnGuardar.setEnabled(false);
 				
 		final JDateChooser escogerfechas = new JDateChooser();
-		escogerfechas.setBounds(86, 49, 133, 20);
+		escogerfechas.setBounds(86, 63, 133, 20);
 		contentPane.add(escogerfechas);
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBorder(new TitledBorder(null, "Entrada de Servicio", TitledBorder.LEADING, TitledBorder.TOP, null, null));
+		panel_2.setBounds(21, 439, 635, 90);
+		contentPane.add(panel_2);
+		panel_2.setLayout(null);
+		
+		final JDateChooser inicio = new JDateChooser();
+		inicio.setBounds(57, 24, 126, 20);
+		panel_2.add(inicio);
+		
+		JLabel lblInicio = new JLabel("Inicio:");
+		lblInicio.setBounds(10, 30, 46, 14);
+		panel_2.add(lblInicio);
+		
+		final JDateChooser fin = new JDateChooser();
+		fin.setBounds(57, 55, 126, 20);
+		panel_2.add(fin);
+		
+		JLabel lblFin = new JLabel("Fin:");
+		lblFin.setBounds(10, 61, 46, 14);
+		panel_2.add(lblFin);
+		((JTextFieldDateEditor)dateChooser.getDateEditor()).setEditable(false);
+		((JTextFieldDateEditor)inicio.getDateEditor()).setEditable(false);
+		((JTextFieldDateEditor)fin.getDateEditor()).setEditable(false);
+		
+		btnAct.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				int anio= inicio.getCalendar().get(Calendar.YEAR);
+				int dia= inicio.getCalendar().get(Calendar.MARCH);
+				int mes= inicio.getCalendar().get(Calendar.DAY_OF_MONTH);
+				int aniof= fin.getCalendar().get(Calendar.YEAR);
+				int diaf= fin.getCalendar().get(Calendar.MARCH);
+				int mesf= fin.getCalendar().get(Calendar.DAY_OF_MONTH);
+				String fecha_inicio= dia+"/"+mes+"/"+anio;
+				String fecha_fin= diaf+"/"+mesf+"/"+aniof;
+				try{
+					String SQL="UPDATE servicio SET tiposervicio=?, plaga=?, horas=?, formapago=?, clave_tecnico=?, observaciones=?, costo=?, valido='1', inicio=?, fin=?"+
+							"WHERE num_ss=?";
+								int fila=table.getSelectedRow();
+								String dato=(String) table.getValueAt(fila, 0);
+								PreparedStatement ps= conn.prepareStatement(SQL);
+								ps.setString(1, String.valueOf(cmbtiposerv.getSelectedItem()));
+								ps.setString(2, String.valueOf(cmbplaga.getSelectedItem()));
+								ps.setInt(3, cmbhoras.getSelectedIndex()-1);
+								ps.setString(4, String.valueOf(cmbforma.getSelectedItem()));;
+								ps.setString(5, txttecnico.getText());
+								ps.setString(6, txtObservaciones.getText());
+								ps.setString(7, txtcosto.getText());
+								ps.setString(8, fecha_inicio);
+								ps.setString(9,fecha_fin);
+								ps.setString(10, dato);
+								int n=ps.executeUpdate();
+								if(n>0){
+									JOptionPane.showMessageDialog(null, "Datos de Servicio Guardados");
+								}
+							} catch(SQLException e) {
+								JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
+								
+							}	 
+							
+			}
+		});
+		btnAct.setBounds(672, 461, 89, 23);
+		contentPane.add(btnAct);
+		
+		txtfecha_ss = new JTextField();
+		txtfecha_ss.setEnabled(false);
+		txtfecha_ss.setBounds(658, 300, 103, 20);
+		contentPane.add(txtfecha_ss);
+		txtfecha_ss.setColumns(10);
+		
+		JLabel lblFechaQueSolicit = new JLabel("Fecha que Solicit\u00F3");
+		lblFechaQueSolicit.setBounds(666, 282, 95, 14);
+		contentPane.add(lblFechaQueSolicit);
 		
 		
 		cmbBusquedaAct.setVisible(false);
@@ -955,6 +1044,7 @@ public class ordservicio extends JFrame {
 				}
 		
 	);
+		btnAct.setEnabled(false);
 		escogerfechas.setVisible(false);
 		Desabilitar();
 	}
@@ -970,6 +1060,7 @@ public class ordservicio extends JFrame {
 		txtcelular.setEnabled(false);
 		txttecnico.setEnabled(false);
 		txtObservaciones.setEnabled(false);	
+		txtcosto.setEnabled(false);
 
 		
 	}
@@ -1061,8 +1152,9 @@ public class ordservicio extends JFrame {
 	
 }
  void Hability(){
-	 txttecnico.setEnabled(true);
+	txttecnico.setEnabled(true);
 	txtObservaciones.setEnabled(true);
+	txtcosto.setEnabled(true);
 		
  }
 }
