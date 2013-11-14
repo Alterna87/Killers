@@ -532,8 +532,6 @@ public class clientes extends JFrame {
 				btnEliminar.setEnabled(true);
 				btnGuardar.setEnabled(false);
 				Habilitar();
-				Object combo= cmbTipoCliente.getSelectedItem();
-				String tipo= String.valueOf(combo);
 				if(evt.getButton()==1){
 					int fila=table.getSelectedRow();
 					try{
