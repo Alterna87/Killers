@@ -56,6 +56,7 @@ import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.UIManager;
+import javax.swing.JInternalFrame;
 
 
 
@@ -153,19 +154,21 @@ public class ordservicio extends JFrame {
 	 * Create the frame.
 	 */
 	public ordservicio() {
-		conn= bd.getConnect();
+		//conn= bd.getConnect();
 		bandera=1;
-		setTitle("Killers- Solicitud de Servicios");
+		setTitle("Killers-Servicios");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 787, 567);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
+		
 			
 		final JComboBox<String> cmbBusqueda = new JComboBox<String>();
 		cmbBusqueda.setBounds(21, 39, 133, 20);
 		contentPane.add(cmbBusqueda);
+		
 		final JComboBox<String> cmbBusquedaAct = new JComboBox<String>();
 		cmbBusquedaAct.setBounds(21, 39, 133, 20);
 		contentPane.add(cmbBusquedaAct);
@@ -175,8 +178,21 @@ public class ordservicio extends JFrame {
 		validacioncamp.setForeground(Color.RED);
 		validacioncamp.setBounds(443, 45, 207, 14);
 		contentPane.add(validacioncamp);
-		
+		//CREACION DE ELEMENTOS
+		final JLabel lblNombre = new JLabel("Nombre: ");
+		final JLabel lblEmpresa = new JLabel("Empresa:");
+		final JLabel lblApellidoPaterno = new JLabel("Apellido Paterno:");
+		final JLabel lblApellidoMaterno = new JLabel("Apellido Materno:");
+		final JLabel lblNumero = new JLabel("Num Cliente");
+		final JComboBox<String> cmbtiposerv = new JComboBox<String>();
+		final JComboBox<String> cmbplaga = new JComboBox<String>();
+		final JButton btnBuscarEmpresa = new JButton("Buscar");
+		txtMaterno = new JTextField();
 		final JButton btnBuscarNumero = new JButton("Buscar");
+		final JComboBox<String> cmbhoras = new JComboBox<String>();
+		JScrollPane scrollPane_1 = new JScrollPane();
+		final JButton btnBuscarPersona = new JButton("Buscar");
+		
 		btnBuscarNumero.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 		
@@ -252,15 +268,15 @@ public class ordservicio extends JFrame {
 		btnBuscarNumero.setBounds(229, 63, 89, 23);
 		contentPane.add(btnBuscarNumero);
 		
-		final JLabel lblNombre = new JLabel("Nombre: ");
+		
 		lblNombre.setBounds(10, 67, 55, 14);
 		contentPane.add(lblNombre);
 		
-		final JLabel lblEmpresa = new JLabel("Empresa:");
+		
 		lblEmpresa.setBounds(10, 68, 55, 14);
 		contentPane.add(lblEmpresa);
 		
-		
+
 		txtNombre = new JTextField();
 		txtNombre.addKeyListener(new KeyAdapter() {
 			@Override
@@ -275,8 +291,8 @@ public class ordservicio extends JFrame {
 		contentPane.add(txtNombre);
 		txtNombre.setColumns(10);
 		
-		final JLabel lblApellidoPaterno = new JLabel("Apellido Paterno:");
-		lblApellidoPaterno.setBounds(316, 68, 97, 14);
+		
+		lblApellidoPaterno.setBounds(294, 67, 97, 14);
 		contentPane.add(lblApellidoPaterno);
 		
 		txtPaterno = new JTextField();
@@ -292,14 +308,14 @@ public class ordservicio extends JFrame {
 			}
 		});
 		txtPaterno.setColumns(10);
-		txtPaterno.setBounds(423, 65, 104, 20);
+		txtPaterno.setBounds(406, 65, 121, 20);
 		contentPane.add(txtPaterno);
 		
-		final JLabel lblApellidoMaterno = new JLabel("Apellido Materno:");
-		lblApellidoMaterno.setBounds(473, 67, 115, 14);
+		
+		lblApellidoMaterno.setBounds(545, 66, 115, 14);
 		contentPane.add(lblApellidoMaterno);
 		
-		txtMaterno = new JTextField();
+		
 		txtMaterno.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent evt) {
@@ -312,25 +328,26 @@ public class ordservicio extends JFrame {
 			}
 		});
 		txtMaterno.setColumns(10);
-		txtMaterno.setBounds(580, 64, 109, 20);
+		txtMaterno.setBounds(640, 63, 121, 20);
 		contentPane.add(txtMaterno);
 		
-		final JLabel lblNumero = new JLabel("Num Cliente");
 		lblNumero.setBounds(10, 71, 76, 14);
 		contentPane.add(lblNumero);
 		JPanel panel_1 = new JPanel();
+		
 		panel_1.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Datos Solicitud de Servicio", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 0, 0)));
 		panel_1.setBounds(21, 282, 635, 146);
 		contentPane.add(panel_1);
 		panel_1.setLayout(null);
-		final JComboBox<String> cmbtiposerv = new JComboBox<String>();
+		
+		
 		cmbtiposerv.setBounds(107, 18, 120, 20);
 		panel_1.add(cmbtiposerv);
 		cmbtiposerv.addItem("CORRECTIVO");
 		cmbtiposerv.addItem("PREVENTIVO");
 		cmbtiposerv.addItem("TRATAMIENTO");
 
-		final JComboBox<String> cmbhoras = new JComboBox<String>();
+		
 		cmbhoras.setBounds(55, 45, 81, 20);
 		panel_1.add(cmbhoras);
 		cmbhoras.addItem("1 Hora");
@@ -339,7 +356,7 @@ public class ordservicio extends JFrame {
 		cmbhoras.addItem("4 Horas");
 		cmbhoras.addItem("5 Horas");
 		
-		final JComboBox<String> cmbplaga = new JComboBox<String>();
+		
 		cmbplaga.setBounds(343, 18, 120, 20);
 		panel_1.add(cmbplaga);
 		cmbplaga.addItem("Rastreros");
@@ -361,7 +378,7 @@ public class ordservicio extends JFrame {
 		
 	
 		
-		final JButton btnBuscarPersona = new JButton("Buscar");
+		
 		btnBuscarPersona.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try{
@@ -453,7 +470,7 @@ public class ordservicio extends JFrame {
 		btnBuscarPersona.setBounds(164, 36, 89, 23);
 		contentPane.add(btnBuscarPersona);
 		
-		final JButton btnBuscarEmpresa = new JButton("Buscar");
+		
 		btnBuscarEmpresa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 			BuscarEmpresa();	
@@ -526,7 +543,7 @@ public class ordservicio extends JFrame {
 		});
 		scrollPane.setViewportView(table);
 		
-		JScrollPane scrollPane_1 = new JScrollPane();
+		
 		scrollPane.setColumnHeaderView(scrollPane_1);
 		
 		JPanel panel = new JPanel();
@@ -534,6 +551,7 @@ public class ordservicio extends JFrame {
 		panel.setBounds(21, 182, 645, 89);
 		contentPane.add(panel);
 		panel.setLayout(null);
+		panel.setVisible(false);
 		
 		JLabel lblDireccion = new JLabel("Direccion:");
 		lblDireccion.setBounds(256, 24, 74, 14);
@@ -660,21 +678,12 @@ public class ordservicio extends JFrame {
 		JMenuItem mntmOrdenDeServicio = new JMenuItem("Solicitud de Servicio....");
 		mntmOrdenDeServicio.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 				setTitle("Killers-Solicitud de Servicio");
-				txtfecha.setVisible(false);
+				cmbBusqueda.setVisible(true);
 				bandera=1;
 				Desabilitar();
-				lblEmpresa.setVisible(false);
-				lblNombre.setVisible(false);
-				lblNumero.setVisible(false);
-				lblApellidoPaterno.setVisible(false);
-				lblApellidoMaterno.setVisible(false);
-				txtPaterno.setVisible(false);
-				txtMaterno.setVisible(false);
-				txtNombre.setVisible(false);
-				btnBuscarPersona.setVisible(false);
-				btnBuscarEmpresa.setVisible(false);
-				btnBuscarNumero.setVisible(false);	
+				
 				
 			}
 		});
@@ -883,19 +892,7 @@ public class ordservicio extends JFrame {
 		});
 		
 		
-		lblEmpresa.setVisible(false);
-		lblNombre.setVisible(false);
-		lblNumero.setVisible(false);
-		lblApellidoPaterno.setVisible(false);
-		lblApellidoMaterno.setVisible(false);
-		txtPaterno.setVisible(false);
-		txtMaterno.setVisible(false);
-		txtNombre.setVisible(false);
-		btnBuscarPersona.setVisible(false);
-		btnBuscarEmpresa.setVisible(false);
-		btnBuscarNumero.setVisible(false);	
-		btnOrdenServicio.setEnabled(false);
-		btnGuardar.setEnabled(false);
+		
 				
 		final JDateChooser escogerfechas = new JDateChooser();
 		escogerfechas.setBounds(86, 63, 133, 20);
@@ -903,7 +900,7 @@ public class ordservicio extends JFrame {
 		
 		JPanel panel_2 = new JPanel();
 		panel_2.setBorder(new TitledBorder(null, "Entrada de Servicio", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		panel_2.setBounds(21, 439, 635, 90);
+		panel_2.setBounds(21, 439, 635, 79);
 		contentPane.add(panel_2);
 		panel_2.setLayout(null);
 		
@@ -1044,9 +1041,33 @@ public class ordservicio extends JFrame {
 				}
 		
 	);
+		//OCULTANDO ELEMENTOS//
 		btnAct.setEnabled(false);
+		btnAct.setVisible(false);
 		escogerfechas.setVisible(false);
+		lblEmpresa.setVisible(false);
+		lblNombre.setVisible(false);
+		lblNumero.setVisible(false);
+		lblApellidoPaterno.setVisible(false);
+		lblApellidoMaterno.setVisible(false);
+		txtPaterno.setVisible(false);
+		txtMaterno.setVisible(false);
+		txtNombre.setVisible(false);
+		btnBuscarPersona.setVisible(false);
+		btnBuscarEmpresa.setVisible(false);
+		btnBuscarNumero.setVisible(false);	
+		btnOrdenServicio.setEnabled(false);
+		btnOrdenServicio.setVisible(false);
+		btnGuardar.setEnabled(false);
+		btnGuardar.setVisible(false);
+		cmbBusqueda.setVisible(false);
+		scrollPane.setVisible(false);
+		panel_1.setVisible(false);
+		panel_2.setVisible(false);
+		lblFechaQueSolicit.setVisible(false);
+		txtfecha_ss.setVisible(false);
 		Desabilitar();
+	
 	}
 	
 	
@@ -1157,4 +1178,21 @@ public class ordservicio extends JFrame {
 	txtcosto.setEnabled(true);
 		
  }
+ 
+ 	/*void solicitudservicio(){
+	 cmbBusqueda.setVisible(true);
+	 lblEmpresa.setVisible(false);
+		lblNombre.setVisible(false);
+		lblNumero.setVisible(false);
+		lblApellidoPaterno.setVisible(false);
+		lblApellidoMaterno.setVisible(false);
+		txtPaterno.setVisible(false);
+		txtMaterno.setVisible(false);
+		txtNombre.setVisible(false);
+		btnBuscarPersona.setVisible(false);
+		btnBuscarEmpresa.setVisible(false);
+		btnBuscarNumero.setVisible(false);	
+	 
+	 
+ }*/
 }
