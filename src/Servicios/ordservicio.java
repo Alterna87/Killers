@@ -131,8 +131,6 @@ public class ordservicio extends JFrame {
 
 	//TERMINA LAS DECALRACIONES DE LOS COMPONENTES
 	
-	
-	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -190,6 +188,7 @@ public class ordservicio extends JFrame {
 		txtMaterno = new JTextField();
 		final JButton btnBuscarNumero = new JButton("Buscar");
 		final JComboBox<String> cmbhoras = new JComboBox<String>();
+		final JScrollPane scrollPane = new JScrollPane();
 		JScrollPane scrollPane_1 = new JScrollPane();
 		final JButton btnBuscarPersona = new JButton("Buscar");
 		
@@ -263,19 +262,15 @@ public class ordservicio extends JFrame {
 							JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
 						}
 			}
-
 		});
 		btnBuscarNumero.setBounds(229, 63, 89, 23);
 		contentPane.add(btnBuscarNumero);
 		
-		
 		lblNombre.setBounds(10, 67, 55, 14);
 		contentPane.add(lblNombre);
 		
-		
 		lblEmpresa.setBounds(10, 68, 55, 14);
 		contentPane.add(lblEmpresa);
-		
 
 		txtNombre = new JTextField();
 		txtNombre.addKeyListener(new KeyAdapter() {
@@ -292,7 +287,7 @@ public class ordservicio extends JFrame {
 		txtNombre.setColumns(10);
 		
 		
-		lblApellidoPaterno.setBounds(294, 67, 97, 14);
+		lblApellidoPaterno.setBounds(244, 68, 97, 14);
 		contentPane.add(lblApellidoPaterno);
 		
 		txtPaterno = new JTextField();
@@ -304,23 +299,23 @@ public class ordservicio extends JFrame {
 			@Override
 			public void keyTyped(KeyEvent evt) {
 				char c=evt.getKeyChar();
-				if (c<'A' || c>'Z') evt.consume();
+				if(c<'a'|| c>'z' || c<'A' ||c>'z') evt.consume();
 			}
 		});
 		txtPaterno.setColumns(10);
-		txtPaterno.setBounds(406, 65, 121, 20);
+		txtPaterno.setBounds(351, 63, 133, 20);
 		contentPane.add(txtPaterno);
 		
 		
-		lblApellidoMaterno.setBounds(545, 66, 115, 14);
+		lblApellidoMaterno.setBounds(494, 67, 115, 14);
 		contentPane.add(lblApellidoMaterno);
 		
 		
 		txtMaterno.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent evt) {
-			char c=evt.getKeyChar();
-			if(c<'A' || c>'Z') evt.consume();
+				char c=evt.getKeyChar();
+				if(c<'a'|| c>'z' || c<'A' ||c>'z') evt.consume();
 			}
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -328,7 +323,7 @@ public class ordservicio extends JFrame {
 			}
 		});
 		txtMaterno.setColumns(10);
-		txtMaterno.setBounds(640, 63, 121, 20);
+		txtMaterno.setBounds(605, 63, 143, 20);
 		contentPane.add(txtMaterno);
 		
 		lblNumero.setBounds(10, 71, 76, 14);
@@ -376,34 +371,29 @@ public class ordservicio extends JFrame {
 		cmbforma.addItem("TARJETA DE CREDITO");
 		cmbforma.addItem("CHEQUE");
 		
-	
-		
-		
 		btnBuscarPersona.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try{
-					validacioncamp.setText("");
-					Gray();
 					Clean();
+					Gray();
+					validacioncamp.setText("");
+					
 					if(txtNombre.getText().isEmpty()) {
 						txtNombre.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
 						validacioncamp.setText("Llene los campos");
 						txtNombre.requestFocus();
 						}
-						else if(txtPaterno.getText().isEmpty()) {
+						if(txtPaterno.getText().isEmpty()) {
 						txtPaterno.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
 						validacioncamp.setText("Llene los campos");
 						txtPaterno.requestFocus();
 						}
-					else if(txtMaterno.getText().isEmpty()) {
+					 if(txtMaterno.getText().isEmpty()) {
 						txtMaterno.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
 						validacioncamp.setText("Llene los campos");
-						txtMaterno.requestFocus();}		
-					
-					else { 
-					if(bandera==1){
-						table.setEnabled(true);
-												
+						txtMaterno.requestFocus();}				
+					else 
+					if(bandera==1){			
 				String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail","Tipo Cliente"};
 				modeltable= new DefaultTableModel(null, titulos);
 				String consulta="SELECT * FROM clientes WHERE nombre='"+txtNombre.getText()+"' AND apellidopaterno='"+txtPaterno.getText()+"'"+
@@ -425,6 +415,7 @@ public class ordservicio extends JFrame {
 					regreso[9]=rs.getString("tipocliente");
 					modeltable.addRow(regreso);
 				}
+				scrollPane.setVisible(true);
 				table.setVisible(true);
 				table.setModel(modeltable);
 				txttecnico.setEnabled(false);
@@ -451,6 +442,7 @@ public class ordservicio extends JFrame {
 							regreso[9]=rs.getString("tipocliente");
 							modeltable.addRow(regreso);
 						}
+						scrollPane.setVisible(true);
 						table.setVisible(true);
 						table.setModel(modeltable);
 						txttecnico.setEnabled(false);
@@ -458,7 +450,7 @@ public class ordservicio extends JFrame {
 						
 						
 					}
-					}
+		
 			 
 			}catch(Exception e){
 					JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
@@ -481,7 +473,7 @@ public class ordservicio extends JFrame {
 		final JButton btnOrdenServicio = new JButton("Orden Servicio");
 	
 		
-		JScrollPane scrollPane = new JScrollPane();
+		
 		scrollPane.setBounds(21, 97, 740, 74);
 		contentPane.add(scrollPane);
 		
@@ -506,6 +498,7 @@ public class ordservicio extends JFrame {
 						txttelefono.setText(rs.getString("Telefono"));
 						txtcelular.setText(rs.getString("celular"));
 						txtrfc.setText(rs.getString("rfc"));
+						panel.setVisible(true);
 						}
 					else if(bandera==2){
 						
@@ -527,11 +520,7 @@ public class ordservicio extends JFrame {
 						txttecnico.setText(rs.getString("clave_tecnico"));
 						cmbforma.setSelectedItem(rs.getString("formapago"));
 						txtObservaciones.setText(rs.getString("observaciones"));
-						txtcosto.setText(rs.getString("costo"));
-	
-				
-						
-						
+						txtcosto.setText(rs.getString("costo"));			
 						Hability();
 						
 					}
@@ -706,6 +695,7 @@ public class ordservicio extends JFrame {
 			public void actionPerformed(ActionEvent arg0) {
 				setTitle("Killers-Actualizacion de Datos Servicios");
 				bandera=2;
+				cmbBusquedaAct.setVisible(true);
 				btnAct.setEnabled(false);
 				cmbBusquedaAct.setVisible(true);
 				cmbBusqueda.setVisible(false);
@@ -1090,7 +1080,8 @@ public class ordservicio extends JFrame {
 			table.setVisible(true);
 			 if(txtNombre.getText().isEmpty()) {
 				 txtNombre.setBorder(BorderFactory.createLineBorder(Color.RED,1));
-				 		 
+				 validacioncamp.setText("Llene los campos");
+				 txtNombre.requestFocus();		 		 
 			 } else {
 				 if(bandera==1){
 				Clean();
