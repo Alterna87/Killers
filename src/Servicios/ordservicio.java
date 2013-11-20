@@ -698,6 +698,7 @@ public class ordservicio extends JFrame {
 				btnBuscarNumero.setVisible(false);	
 				btnOrdenServicio.setEnabled(false);
 				btnOrdenServicio.setVisible(false);
+				btnBuscarfecha.setVisible(false);
 				btnGuardar.setEnabled(false);
 				btnGuardar.setVisible(false);
 				scrollPane.setVisible(false);
@@ -750,6 +751,7 @@ public class ordservicio extends JFrame {
 				btnBuscarNumero.setVisible(false);	
 				btnOrdenServicio.setEnabled(false);
 				btnOrdenServicio.setVisible(false);
+				btnBuscarfecha.setVisible(false);
 				btnGuardar.setEnabled(false);
 				btnGuardar.setVisible(false);
 				scrollPane.setVisible(false);
@@ -771,7 +773,7 @@ public class ordservicio extends JFrame {
 		JMenuItem mntmDelDia = new JMenuItem("Del Dia");
 		mntmDelDia.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
+				setTitle("Killers- Reportes del Dia");
 				cmbBusquedaAct.setVisible(false);
 				cmbBusqueda.setVisible(false);
 				btnAct.setEnabled(false);
@@ -789,6 +791,7 @@ public class ordservicio extends JFrame {
 				btnBuscarEmpresa.setVisible(false);
 				btnBuscarNumero.setVisible(false);	
 				btnOrdenServicio.setEnabled(false);
+				btnOrdenServicio.setBounds(596,495,103,23);	
 				btnOrdenServicio.setVisible(false);
 				btnGuardar.setEnabled(false);
 				btnGuardar.setVisible(false);
@@ -798,7 +801,6 @@ public class ordservicio extends JFrame {
 				lblFechaQueSolicit.setVisible(false);
 				txtfecha_ss.setVisible(false);	
 				Desabilitar();
-
 				Calendar fecha = new GregorianCalendar();
 		        int anio = fecha.get(Calendar.YEAR);
 		        int mes = fecha.get(Calendar.MONTH)+1;
@@ -833,7 +835,6 @@ public class ordservicio extends JFrame {
 					btnOrdenServicio.setVisible(true);
 					btnOrdenServicio.setEnabled(true);
 					btnOrdenServicio.setBounds(596,495,103,23);
-					
 					} catch(Exception e){
 					JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
 					}
@@ -842,9 +843,81 @@ public class ordservicio extends JFrame {
 		mnC.add(mntmDelDia);
 		
 		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Ordenes de Servicio");
+		mntmNewMenuItem_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setTitle("Killers-Ordenes de Servicio");
+				cmbBusqueda.setVisible(false);
+				cmbBusquedaAct.setVisible(false);
+				btnAct.setEnabled(false);
+				btnAct.setVisible(false);
+				escogerfechas.setVisible(true);
+				lblEmpresa.setVisible(true);
+				lblEmpresa.setText("Fecha:");
+				lblNombre.setVisible(false);
+				lblNumero.setVisible(false);
+				lblApellidoPaterno.setVisible(false);
+				lblApellidoMaterno.setVisible(false);
+				txtPaterno.setVisible(false);
+				txtMaterno.setVisible(false);
+				txtNombre.setVisible(false);
+				btnBuscarPersona.setVisible(false);
+				btnBuscarEmpresa.setVisible(false);
+				btnBuscarNumero.setVisible(false);	
+				btnOrdenServicio.setEnabled(false);
+				btnOrdenServicio.setVisible(false);
+				btnOrdenServicio.setBounds(596,495,103,23);	
+				btnBuscarfecha.setVisible(true);
+				btnGuardar.setEnabled(false);
+				btnGuardar.setVisible(false);
+				scrollPane.setVisible(false);
+				scrollPane.setBounds(596,495,103,23);
+				panel.setVisible(false);
+				panel_1.setVisible(false);
+				panel_2.setVisible(false);
+				lblFechaQueSolicit.setVisible(false);
+				txtfecha_ss.setVisible(false);	
+				bandera=4;
+			}
+		});
 		mnC.add(mntmNewMenuItem_1);
 		
 		JMenuItem mntmDelDa = new JMenuItem("Servicios");
+		mntmDelDa.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				setTitle("Killers-Servicios");
+				cmbBusqueda.setVisible(false);
+				cmbBusquedaAct.setVisible(false);
+				btnAct.setEnabled(false);
+				btnAct.setVisible(false);
+				escogerfechas.setVisible(true);
+				lblEmpresa.setVisible(true);
+				lblEmpresa.setText("Fecha:");
+				lblNombre.setVisible(false);
+				lblNumero.setVisible(false);
+				lblApellidoPaterno.setVisible(false);
+				lblApellidoMaterno.setVisible(false);
+				txtPaterno.setVisible(false);
+				txtMaterno.setVisible(false);
+				txtNombre.setVisible(false);
+				btnBuscarPersona.setVisible(false);
+				btnBuscarEmpresa.setVisible(false);
+				btnBuscarNumero.setVisible(false);	
+				btnOrdenServicio.setEnabled(false);
+				btnOrdenServicio.setVisible(false);
+				btnOrdenServicio.setBounds(596,495,103,23);	
+				btnBuscarfecha.setVisible(true);
+				btnGuardar.setEnabled(false);
+				btnGuardar.setVisible(false);
+				scrollPane.setVisible(false);
+				scrollPane.setBounds(596,495,103,23);
+				panel.setVisible(false);
+				panel_1.setVisible(false);
+				panel_2.setVisible(false);
+				lblFechaQueSolicit.setVisible(false);
+				txtfecha_ss.setVisible(false);	
+				bandera=5;
+			}
+		});
 		mnC.add(mntmDelDa);
 		
 
@@ -1098,7 +1171,9 @@ public class ordservicio extends JFrame {
 					txtMaterno.setVisible(false);
 					txtNombre.setVisible(false);
 					btnBuscarPersona.setVisible(false);
-					btnBuscarNumero.setVisible(false);}
+					btnBuscarNumero.setVisible(false);
+
+					}
 				
 				else if(cmbBusquedaAct.getSelectedItem()=="Persona"){
 						lblEmpresa.setVisible(false);
@@ -1109,6 +1184,7 @@ public class ordservicio extends JFrame {
 						txtPaterno.setVisible(true);
 						txtMaterno.setVisible(true);
 						txtNombre.setVisible(true);
+						btnBuscarfecha.setVisible(false);
 						btnBuscarPersona.setVisible(true);
 						btnBuscarEmpresa.setVisible(false);
 						btnBuscarNumero.setVisible(false);
@@ -1129,6 +1205,7 @@ public class ordservicio extends JFrame {
 						btnBuscarPersona.setVisible(false);
 						btnBuscarEmpresa.setVisible(true);
 						btnBuscarNumero.setVisible(false);
+						btnBuscarfecha.setVisible(false);
 						txtNombre.requestFocus();
 					} else 
 						if(cmbBusquedaAct.getSelectedItem()=="Num Cliente"){
@@ -1144,6 +1221,7 @@ public class ordservicio extends JFrame {
 							btnBuscarPersona.setVisible(false);
 							btnBuscarEmpresa.setVisible(false);
 							btnBuscarNumero.setVisible(true);
+							btnBuscarfecha.setVisible(false);
 							txtNombre.requestFocus();
 						}			
 						
@@ -1176,11 +1254,12 @@ public class ordservicio extends JFrame {
 				 	int anio= escogerfechas.getCalendar().get(Calendar.YEAR);
 					int mes= escogerfechas.getCalendar().get(Calendar.MARCH)+1;
 					int dia= escogerfechas.getCalendar().get(Calendar.DAY_OF_MONTH);
-					String fecha_ss= anio+"-"+mes+"-"+dia;
+					String fecha_ss= dia+"/"+mes+"/"+anio;
 					try {
+						if(bandera==2 || bandera==4){
 					String[]titulos= {"Numero SS","num Cliente","Empresa" ,"Tipo Servicio","Horas","Forma Pago","Telefono","Costo","Fecha Solicud","Tipo Cliente"};
 					modeltable= new DefaultTableModel(null, titulos);
-					String consulta="SELECT * FROM clientes INNER JOIN servicio on clientes.num_cliente=servicio.num_cliente AND servicio.fecha='"+fecha_ss+"'" ;
+					String consulta="SELECT * FROM clientes INNER JOIN servicio on clientes.num_cliente=servicio.num_cliente AND servicio.fecha_servicio='"+fecha_ss+"' AND servicio.valido='0'" ;
 					sent=conn.createStatement();
 					String[] regreso= new String[10];
 					ResultSet rs= sent.executeQuery(consulta);
@@ -1199,10 +1278,46 @@ public class ordservicio extends JFrame {
 						modeltable.addRow(regreso);
 					}
 					table.setModel(modeltable);	
-					scrollPane.setVisible(true);
 					table.setVisible(true);
+					scrollPane.setVisible(true);
 					txttecnico.setEnabled(false);
-					txtObservaciones.setEnabled(false);	
+					txtObservaciones.setEnabled(false);
+					scrollPane.setBounds(15, 97, 740, 74);
+					if(bandera==4){
+						scrollPane.setBounds(15, 97, 740, 360);
+						btnOrdenServicio.setVisible(true);
+						btnOrdenServicio.setEnabled(true);
+					}
+					} else if(bandera==5){
+						String[]titulos= {"Numero SS","num Cliente","Empresa" ,"Tipo Servicio","Horas","Forma Pago","Telefono","Costo","Fecha Solicud","Tipo Cliente"};
+						modeltable= new DefaultTableModel(null, titulos);
+						String consulta="SELECT * FROM clientes INNER JOIN servicio on clientes.num_cliente=servicio.num_cliente AND servicio.fecha_servicio='"+fecha_ss+"' AND servicio.valido='1'" ;
+						sent=conn.createStatement();
+						String[] regreso= new String[10];
+						ResultSet rs= sent.executeQuery(consulta);
+						while (rs.next()){
+							regreso[0]=rs.getString("num_ss");
+							regreso[1]=rs.getString("num_cliente");
+							regreso[1]=rs.getString("nombre");
+							regreso[2]=rs.getString("empresa");
+							regreso[3]=rs.getString("tiposervicio");
+							regreso[4]=rs.getString("horas");
+							regreso[5]=rs.getString("formapago");
+							regreso[6]=rs.getString("telefono");
+							regreso[7]=rs.getString("costo");
+							regreso[8]=rs.getString("fecha");
+							regreso[9]=rs.getString("tipocliente");
+							modeltable.addRow(regreso);
+						}
+						table.setModel(modeltable);	
+						table.setVisible(true);
+						scrollPane.setVisible(true);
+						scrollPane.setBounds(15, 97, 740, 360);
+						btnOrdenServicio.setVisible(true);
+						btnOrdenServicio.setEnabled(true);
+										
+					}
+						
 					} catch(Exception e){
 					JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
 					}
