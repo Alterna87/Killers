@@ -11,6 +11,8 @@ import com.toedter.calendar.JTextFieldDateEditor;
 import javax.swing.JComboBox;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.JTextField;
@@ -18,7 +20,11 @@ import javax.swing.JTextArea;
 import javax.swing.JButton;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.Color;
+import java.sql.*;
+import java.util.Calendar;
 
+import conexion.bd;
 public class gastos extends JFrame {
 
 	/**
@@ -31,6 +37,8 @@ public class gastos extends JFrame {
 	private JTextField txtsubtotal;
 	private JTextField txtiva;
 	private JTextField txttotal;
+	Connection conn;
+	Statement sent;
 
 	/**
 	 * Launch the application.
@@ -52,6 +60,7 @@ public class gastos extends JFrame {
 	 * Create the frame.
 	 */
 	public gastos() {
+		conn= bd.getConnect();
 		setTitle("Killers-Gastos");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 506, 440);
@@ -71,6 +80,11 @@ public class gastos extends JFrame {
 		final JComboBox<String> cmbformapago = new JComboBox<String>();
 		final JLabel lbldiasapagar = new JLabel("Dias a Pagar:");
 		txtdiaspagar = new JTextField();
+		final JLabel validar = new JLabel("");
+		validar.setForeground(Color.RED);
+		
+		
+		
 		txtdiaspagar.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent evt) {
@@ -98,6 +112,50 @@ public class gastos extends JFrame {
 		txtiva = new JTextField();
 		txttotal = new JTextField();
 		final JButton btnguardar = new JButton("Guardar");
+		btnguardar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				if(fechaingreso.getDate()==null){
+					validar.setText("Ingresar la fecha de Ingreso");					
+				}	else if(txttotal.getText().isEmpty()){
+					validar.setText("Ingresar el Total");
+				}
+				else{
+					try{
+						int anioing= fechaingreso.getCalendar().get(Calendar.YEAR);
+						int mesing= fechaingreso.getCalendar().get(Calendar.MARCH)+1;
+						int diaing= fechaingreso.getCalendar().get(Calendar.DAY_OF_MONTH);
+						String fecha_ingreso= anioing+"-"+mesing+"-"+diaing;
+						int aniopago=fechapago.getCalendar().get(Calendar.YEAR);
+						int mespago=fechapago.getCalendar().get(Calendar.MARCH)+1;
+						int diapago=fechapago.getCalendar().get(Calendar.DAY_OF_MONTH);
+						String fecha_pago= aniopago+"-"+mespago+"-"+diapago;
+						
+						String SQL="INSERT INTO gastos(fecha_ingreso, fecha_pago,factura ,"+
+								"pagado, formapago, concepto, descripcion,dias_pagar,poliza, subtotal, iva, total)"+
+											"VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+									PreparedStatement ps= conn.prepareStatement(SQL);
+									ps.setString(1, fecha_ingreso);
+									ps.setString(2, fecha_pago);
+									ps.setString(3, String.valueOf(cmbfactura.getSelectedItem()));
+									ps.setString(4, String.valueOf(cmbpagado.getSelectedItem()));
+									ps.setString(5, String.valueOf(cmbformapago.getSelectedItem()));
+									ps.setString(6, String.valueOf(cmbconcepto.getSelectedItem()));
+									ps.setString(7, txtareadescrip.getText());
+									ps.setString(8, txtdiaspagar.getText());
+									ps.setString(9, txtpoliza.getText());
+									ps.setString(10, txtsubtotal.getText());
+									ps.setString(11, txtiva.getText());
+									ps.setString(12, txttotal.getText());
+									int n=ps.executeUpdate();
+									if(n>0){
+										JOptionPane.showMessageDialog(null, "Datos de Servicio Guardados");
+									}
+								}catch(SQLException e) {
+									JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
+								}	 
+				} }
+			});
+		
 		
 		lblfechaing.setBounds(10, 42, 110, 14);
 		contentPane.add(lblfechaing);
@@ -226,8 +284,12 @@ public class gastos extends JFrame {
 		txttotal.setBounds(380, 317, 57, 20);
 		contentPane.add(txttotal);
 		
-		btnguardar.setBounds(66, 316, 89, 23);
+		btnguardar.setBounds(69, 291, 89, 23);
 		contentPane.add(btnguardar);
+		
+		
+		validar.setBounds(289, 12, 156, 14);
+		contentPane.add(validar);
 		
 		
 		//**PRINCIPAL**
@@ -257,7 +319,6 @@ public class gastos extends JFrame {
 		lbltotal.setVisible(false);
 		txttotal.setVisible(false);
 		btnguardar.setVisible(false);
-		
 		
 		
 		
