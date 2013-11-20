@@ -654,7 +654,7 @@ public class ordservicio extends JFrame {
 				btnGuardar.setEnabled(false);
 				btnGuardar.setVisible(false);
 				scrollPane.setVisible(false);
-				scrollPane.setBounds(596,495,103,23);
+				scrollPane.setBounds(15, 97, 740, 74);
 				panel.setVisible(false);
 				panel_1.setVisible(false);
 				panel_2.setVisible(false);
@@ -881,16 +881,19 @@ public class ordservicio extends JFrame {
 				Object medioenterado=cmbmedio_1.getSelectedItem();
 				String medio=String.valueOf(medioenterado);				
 				try{
+					Gray();
 					if(txttecnico.getText().equals("")){
 						txttecnico.setBorder(BorderFactory.createLineBorder(Color.RED,1));
 						validacioncamp.setText("Llene los campos");
 						txttecnico.requestFocus();
-					} if(txtcosto.getText().equals("")){
+					} else if(txtcosto.getText().equals("")){
 						txtcosto.setBorder(BorderFactory.createLineBorder(Color.RED,1));
 						validacioncamp.setText("Llene los campos");
-						txtcosto.requestFocus();
+						txtcosto.requestFocus(); }
+					else if(dateChooser.getDate()==null){
+							validacioncamp.setText("Introdusca la fecha del servicio");	
+						
 					} else {
-						Gray();
 						int anio= dateChooser.getCalendar().get(Calendar.YEAR);
 						int mes= dateChooser.getCalendar().get(Calendar.MARCH)+1;
 						int dia= dateChooser.getCalendar().get(Calendar.DAY_OF_MONTH);
