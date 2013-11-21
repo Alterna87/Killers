@@ -703,7 +703,7 @@ public class ordservicio extends JFrame {
 				btnGuardar.setEnabled(false);
 				btnGuardar.setVisible(false);
 				scrollPane.setVisible(false);
-				scrollPane.setBounds(596,495,103,23);
+				scrollPane.setBounds(15,97,740,74);
 				panel.setVisible(false);
 				panel_1.setVisible(false);
 				panel_2.setVisible(false);
@@ -1182,8 +1182,8 @@ public class ordservicio extends JFrame {
 		btnBuscarPersona.setVisible(false);
 		btnBuscarEmpresa.setVisible(false);
 		btnBuscarNumero.setVisible(false);	
-		btnOrdenServicio.setEnabled(false);
-		btnOrdenServicio.setVisible(false);
+		btnOrdenServicio.setEnabled(true);
+		btnOrdenServicio.setVisible(true);
 		btnBuscarfecha.setVisible(false);
 	
 		btnBuscarfecha.addActionListener(new ActionListener() {

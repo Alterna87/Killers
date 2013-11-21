@@ -13,6 +13,7 @@ import javax.swing.border.EmptyBorder;
 import clientes.clientes;
 
 import Servicios.ordservicio;
+import Gastos.gastos;
 
 public class Bienvenida extends JFrame {
 
@@ -78,6 +79,13 @@ public class Bienvenida extends JFrame {
 		menuBar.add(mntmClientes);
 		
 		JMenuItem mntmGastos = new JMenuItem("GASTOS");
+		mntmGastos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				gastos gastos_form= new gastos();
+				gastos_form.setVisible(true);
+				gastos_form.setLocationRelativeTo(contentPane);
+			}
+		});
 		menuBar.add(mntmGastos);
 	}
 }

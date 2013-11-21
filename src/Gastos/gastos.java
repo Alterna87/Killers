@@ -23,14 +23,11 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.Color;
 import java.sql.*;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 import conexion.bd;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.event.AncestorListener;
-import javax.swing.event.AncestorEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 public class gastos extends JFrame {
@@ -75,7 +72,7 @@ public class gastos extends JFrame {
 		conn= bd.getConnect();
 		bandera=1;
 		setTitle("Killers-Gastos");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 506, 440);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
