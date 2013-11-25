@@ -58,6 +58,7 @@ import javax.swing.UIManager;
 import javax.swing.JInternalFrame;
 import javax.swing.JToolBar;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.JCheckBox;
 
 @SuppressWarnings({ "serial", "unused" })
 public class ordservicio extends JFrame {
@@ -125,12 +126,12 @@ public class ordservicio extends JFrame {
 	public Integer bandera;
 	public JPanel panel;
 	public JComboBox<String> cmbBusquedaAct;
-	private JTextField textField;
-	private JTextField textField_2;
+	private JTextField txtaplicacion;
+	private JTextField txthora;
 	private JTextField txtciudad;
 	private JTextField txtnombreapellidos;
 	private JTextField txtempresa;
-	private JTextField textField_4;
+	private JTextField txtaplicaciones;
 	//TERMINA LAS DECALRACIONES DE LOS COMPONENTES
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -177,7 +178,6 @@ public class ordservicio extends JFrame {
 		final JLabel lblApellidoMaterno = new JLabel("Apellido Materno:");
 		final JLabel lblNumero = new JLabel("Num Cliente");
 		final JComboBox<String> cmbtiposerv = new JComboBox<String>();
-		final JComboBox<String> cmbplaga = new JComboBox<String>();
 		final JButton btnBuscarEmpresa = new JButton("Buscar");
 		txtMaterno = new JTextField();
 		final JButton btnBuscarNumero = new JButton("Buscar");
@@ -191,12 +191,6 @@ public class ordservicio extends JFrame {
 		lblRFC.setBounds(10, 112, 44, 14);
 		datoscliente.add(lblRFC);	
 		final JPanel datos_ss = new JPanel();
-		txtdireccion = new JTextField();
-		txtdireccion.setForeground(Color.BLACK);
-		txtdireccion.setBackground(Color.WHITE);
-		txtdireccion.setBounds(75, 137, 316, 20);
-		datoscliente.add(txtdireccion);
-		txtdireccion.setColumns(10);	
 		txtrfc = new JTextField();
 		txtrfc.setForeground(Color.BLACK);
 		txtrfc.setBackground(Color.WHITE);
@@ -231,52 +225,91 @@ public class ordservicio extends JFrame {
 		lblTipoDeServicio.setBounds(10, 21, 101, 14);
 		datos_ss.add(lblTipoDeServicio);		
 		JLabel lblFormaDePago = new JLabel("Forma de Pago:");
-		lblFormaDePago.setBounds(274, 87, 93, 14);
+		lblFormaDePago.setBounds(174, 273, 93, 14);
 		datos_ss.add(lblFormaDePago);
 		JLabel lblPlagaEnEl = new JLabel("Plaga en el Area:");
-		lblPlagaEnEl.setBounds(10, 57, 101, 14);
+		lblPlagaEnEl.setBounds(10, 56, 83, 14);
 		datos_ss.add(lblPlagaEnEl);
 		JLabel tbtTecnico = new JLabel("Tecnico:");
-		tbtTecnico.setBounds(276, 54, 55, 14);
+		tbtTecnico.setBounds(184, 186, 55, 14);
 		datos_ss.add(tbtTecnico);
 		txttecnico = new JTextField();
+		final JCheckBox rastreros = new JCheckBox("Rastreros");
+		final JCheckBox alemanias = new JCheckBox("Alema\u00F1as");
+		final JCheckBox termitas = new JCheckBox("Termitas");
+		final JCheckBox roedores = new JCheckBox("Roedores");
+		final JCheckBox pulgas = new JCheckBox("Pulgas");
+		final JCheckBox puntogel = new JCheckBox("Punto de Gel");
+		final JCheckBox termo = new JCheckBox("Termo");
+		final JCheckBox correctivo = new JCheckBox("Correctivo");
+		final JCheckBox preventivo = new JCheckBox("Preventivo");
+		final JLabel lblCiudad = new JLabel("Ciudad:");
+		txtempresa = new JTextField();
+		final JLabel lblnombrecliente = new JLabel("Nombre:");
+		final JLabel lblEmpresa_1 = new JLabel("Empresa:");
+		txttecnico.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent evt) {
+				char c=evt.getKeyChar();
+				if((c<'a'|| c>'z') &&( c<'A' ||c>'z') && ((c!='ñ' && c!='Ñ') && (c!=(char)KeyEvent.VK_SPACE)))
+					evt.consume();
+			}
+			@Override
+			public void keyTyped(KeyEvent e) {
+				txttecnico.setText(txttecnico.getText().toUpperCase());
+			}
+		});
 		txttecnico.setBackground(new Color(255, 255, 255));
-		txttecnico.setBounds(340, 51, 195, 20);
+		txttecnico.setBounds(248, 183, 261, 20);
 		datos_ss.add(txttecnico);
 		txttecnico.setColumns(10);
 		JLabel lblFecha = new JLabel("Fecha de Servicio:");
-		lblFecha.setBounds(274, 124, 93, 14);
+		lblFecha.setBounds(174, 161, 110, 14);
 		datos_ss.add(lblFecha);
 		final JDateChooser dateChooser = new JDateChooser();
 		dateChooser.setDateFormatString("dd/MM/yyyy");
-		dateChooser.setBounds(386, 118, 107, 20);
+		dateChooser.setBounds(286, 155, 115, 20);
 		datos_ss.add(dateChooser);
 		JLabel lblObservaciones_1 = new JLabel("Observaciones:");
-		lblObservaciones_1.setBounds(10, 165, 115, 14);
+		lblObservaciones_1.setBounds(10, 227, 115, 14);
 		datos_ss.add(lblObservaciones_1);
-		txtObservaciones = new JTextField();
+		txtObservaciones = new JTextField();	
+		
+		
+		txtObservaciones.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				txtObservaciones.setText(txtObservaciones.getText().toUpperCase());
+			}
+		});
 		txtObservaciones.setBackground(new Color(255, 255, 255));
-		txtObservaciones.setBounds(109, 162, 426, 20);
+		txtObservaciones.setBounds(109, 224, 426, 20);
 		datos_ss.add(txtObservaciones);
 		txtObservaciones.setColumns(10);
 		JLabel lblmedio_1 = new JLabel("Tecnicas:");
-		lblmedio_1.setBounds(10, 88, 101, 14);
+		lblmedio_1.setBounds(10, 111, 57, 14);
 		datos_ss.add(lblmedio_1);
-		final JComboBox<String> cmbtecnicas = new JComboBox<String>();
-		cmbtecnicas.setBounds(109, 82, 145, 20);
-		datos_ss.add(cmbtecnicas);
 		JLabel lblcosto_1 = new JLabel("Costo:");
-		lblcosto_1.setBounds(302, 18, 46, 14);
+		lblcosto_1.setBounds(10, 274, 46, 14);
 		datos_ss.add(lblcosto_1);
 		txtcosto = new JTextField();
 		txtcosto.setBackground(new Color(255, 255, 255));
-		txtcosto.setBounds(358, 15, 93, 20);
+		txtcosto.setBounds(66, 271, 93, 20);
 		datos_ss.add(txtcosto);
 		txtcosto.setColumns(10);
 		final JButton btnAct = new JButton("Actualizar");
-		final JPanel Servicios = new JPanel();
 		final JDateChooser escogerfechas = new JDateChooser();
 		final JButton btnBuscarfecha = new JButton("Buscar");
+		final JCheckBox alacranes = new JCheckBox("Alacranes");
+		final JCheckBox aranias = new JCheckBox("Ara\u00F1as");
+		final JCheckBox hormigas = new JCheckBox("Hormigas");
+		final JCheckBox garrapatas = new JCheckBox("Garrapatas");
+		final JCheckBox voladores = new JCheckBox("Voladores");
+		final JCheckBox aspercion = new JCheckBox("Aspercion");
+		final JCheckBox nebulizacion = new JCheckBox("Nebulizacion");
+		final JLabel lblNumeroDeCliente = new JLabel("Numero de Cliente:");
+		txtciudad = new JTextField();
+		txtnombreapellidos = new JTextField();
 		//FINAL DE LA DECLARACION DE ELEMENTOS//
 		
 		btnBuscarNumero.addActionListener(new ActionListener() {
@@ -290,10 +323,11 @@ public class ordservicio extends JFrame {
 						 txtNombre.setBorder(BorderFactory.createLineBorder(Color.RED,1));
 						 txtNombre.requestFocus();
 					 } else {
+						 validacioncamp.setText("");
 						 if(bandera==1){
+	
 						String[]titulos= {"Num Cliente","Nombre","Empresa","Direccion","Referencia","RFC","Telefono","Celular","E-Mail","Tipo Cliente"};
 						modeltable= new DefaultTableModel(null, titulos);
-				
 						String consulta="SELECT * FROM clientes WHERE num_cliente='"+txtNombre.getText()+"'";
 						sent=conn.createStatement();
 						String[] regreso= new String[10];
@@ -318,24 +352,24 @@ public class ordservicio extends JFrame {
 						table.setModel(modeltable);
 		
 						 } else if(bandera==2){
-							 String[]titulos= {"Numero SS","num Cliente","Empresa" ,"Tipo Servicio","Horas","Forma Pago","Telefono","Costo","Fecha Solicud","Tipo Cliente"};
+							 String[]titulos= {"Numero SS","Num Cliente","Nombre" ,"Empresa","Tipo Servicio","Plagas","Tecnicas","Fecha Servicio","Hora","Tecnico","Fecha SS"};
 								modeltable= new DefaultTableModel(null, titulos);
-								String consulta="SELECT * FROM clientes INNER JOIN servicio on clientes.num_cliente=servicio.num_cliente AND clientes.num_cliente='"+txtNombre.getText()+"' AND servicio.valido='0'" ;
+								String consulta="SELECT * FROM clientes INNER JOIN solicitud_servicio ON clientes.num_cliente=solicitud_servicio.num_cliente AND clientes.num_cliente='"+txtNombre.getText()+"' AND solicitud_servicio.valido='0'" ;
 								sent=conn.createStatement();
-								String[] regreso= new String[10];
+								String[] regreso= new String[11];
 								ResultSet rs= sent.executeQuery(consulta);
 								while (rs.next()){
 									regreso[0]=rs.getString("num_ss");
 									regreso[1]=rs.getString("num_cliente");
-									regreso[1]=rs.getString("nombre");
-									regreso[2]=rs.getString("empresa");
-									regreso[3]=rs.getString("tiposervicio");
-									regreso[4]=rs.getString("horas");
-									regreso[5]=rs.getString("formapago");
-									regreso[6]=rs.getString("telefono");
-									regreso[7]=rs.getString("costo");
-									regreso[8]=rs.getString("fecha");
-									regreso[9]=rs.getString("tipocliente");
+									regreso[2]=rs.getString("nombre")+" "+rs.getString("apellidopaterno")+" "+rs.getString("apellidomaterno");;
+									regreso[3]=rs.getString("empresa");
+									regreso[4]=rs.getString("tipo_servicio");
+									regreso[5]=rs.getString("plagas");
+									regreso[6]=rs.getString("tecnicas");
+									regreso[7]=rs.getString("fecha_servicio");
+									regreso[8]=rs.getString("hora");
+									regreso[9]=rs.getString("tecnico");
+									regreso[10]=rs.getString("fecha_ss");
 									modeltable.addRow(regreso);
 								}
 								scrollPane.setVisible(true);
@@ -360,6 +394,7 @@ public class ordservicio extends JFrame {
 		txtNombre.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent evt) {
+	
 			}
 			@Override
 			public void keyReleased(KeyEvent arg0) {
@@ -408,7 +443,7 @@ public class ordservicio extends JFrame {
 		contentPane.add(lblNumero);
 		
 		datos_ss.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Datos Solicitud de Servicio", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(255, 0, 0)));
-		datos_ss.setBounds(432, 169, 547, 262);
+		datos_ss.setBounds(414, 177, 565, 330);
 		contentPane.add(datos_ss);
 		datos_ss.setLayout(null);
 		cmbtiposerv.setBounds(107, 18, 120, 20);
@@ -417,72 +452,67 @@ public class ordservicio extends JFrame {
 		cmbtiposerv.addItem("PREVENTIVO");
 		cmbtiposerv.addItem("TRATAMIENTO");
 		
-		cmbplaga.setBounds(109, 54, 120, 20);
-		datos_ss.add(cmbplaga);
-		
-		cmbplaga.addItem("RASTREROS");
-		cmbplaga.addItem("ALEMAÑAS");
-		cmbplaga.addItem("TERMITAS");
-		cmbplaga.addItem("ROEDORES");
-		cmbplaga.addItem("ALACRANES");
-		cmbplaga.addItem("ARAÑAS");
-		cmbplaga.addItem("HORMIGAS");
-		cmbplaga.addItem("GARRAPATAS");
-		cmbplaga.addItem("PULGAS");
-		cmbplaga.addItem("VOLADORES");
-		
-		cmbtecnicas.addItem("NINGUNO");
-		cmbtecnicas.addItem("ASPERCION");
-		cmbtecnicas.addItem("NEBULIZACION");
-		cmbtecnicas.addItem("TERMO");
-		cmbtecnicas.addItem("PUNTEO DE GEL");
-		cmbtecnicas.addItem("CORRECTIVO");
-		cmbtecnicas.addItem("PREVENTIVO");
-		
 		
 		final JComboBox<String> cmbforma = new JComboBox<String>();
-		cmbforma.setBounds(365, 82, 128, 20);
+		cmbforma.setBounds(265, 268, 128, 20);
 		datos_ss.add(cmbforma);
 		final JButton btnGuardar_1 = new JButton("Guardar");	
-		btnGuardar_1.setBounds(231, 206, 93, 23);
+		btnGuardar_1.setBounds(159, 298, 93, 23);
 		datos_ss.add(btnGuardar_1);
 		
-		textField_4 = new JTextField();
-		textField_4.setBackground(new Color(255, 255, 255));
-		textField_4.setEnabled(false);
-		textField_4.setColumns(10);
-		textField_4.setBounds(78, 221, 86, 20);
-		datos_ss.add(textField_4);
+		txtaplicaciones = new JTextField();
+		txtaplicaciones.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent evt) {
+				char c= evt.getKeyChar();
+				if (c<'0'|| c>'9')
+					evt.consume(); 
+			}
+		});
+		txtaplicaciones.setBackground(new Color(255, 255, 255));
+		txtaplicaciones.setEnabled(false);
+		txtaplicaciones.setColumns(10);
+		txtaplicaciones.setBounds(102, 158, 55, 20);
+		datos_ss.add(txtaplicaciones);
 		
 		JLabel lblAplicaciones = new JLabel("Aplicaciones:");
-		lblAplicaciones.setBounds(10, 224, 101, 14);
+		lblAplicaciones.setBounds(10, 163, 101, 14);
 		datos_ss.add(lblAplicaciones);
 		
 		JLabel lblAplicacion = new JLabel("Aplicacion:");
-		lblAplicacion.setBounds(10, 193, 68, 14);
+		lblAplicacion.setBounds(10, 189, 68, 14);
 		datos_ss.add(lblAplicacion);
 		
-		textField = new JTextField();
-		textField.setBounds(78, 190, 86, 20);
-		datos_ss.add(textField);
-		textField.setColumns(10);
+		txtaplicacion = new JTextField();
+		txtaplicacion.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent evt) {
+				char c= evt.getKeyChar();
+				if (c<'0'|| c>'9')
+					evt.consume(); 			
+			}
+		});
+		txtaplicacion.setBounds(78, 186, 86, 20);
+		datos_ss.add(txtaplicacion);
+		txtaplicacion.setColumns(10);
 		
 		JLabel lblHora_1 = new JLabel("Hora:");
-		lblHora_1.setBounds(10, 121, 68, 14);
+		lblHora_1.setBounds(428, 158, 55, 14);
 		datos_ss.add(lblHora_1);
 		
-		textField_2 = new JTextField();
-		textField_2.setBounds(68, 118, 86, 20);
-		datos_ss.add(textField_2);
-		textField_2.setColumns(10);
+		txthora = new JTextField();
+		txthora.setBounds(473, 155, 86, 20);
+		datos_ss.add(txthora);
+		txthora.setColumns(10);
 		final JButton btnOrdenServicio_1 = new JButton("Orden Servicio");
-		btnOrdenServicio_1.setBounds(358, 206, 107, 23);
+		btnOrdenServicio_1.setBounds(286, 298, 128, 23);
 		datos_ss.add(btnOrdenServicio_1);
 		
 		btnOrdenServicio_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try{
-		
+					String numero="SELECT MAX(num_ss) AS num_ss FROM solicitud_servicio";
+										
 					@SuppressWarnings("deprecation")
 					JasperReport ubicacion = (JasperReport) JRLoader.loadObject("prueba.jasper");
 					JasperPrint print= JasperFillManager.fillReport(ubicacion, null, conn);
@@ -493,63 +523,131 @@ public class ordservicio extends JFrame {
 					}
 			}
 		});
-		btnOrdenServicio_1.setEnabled(true);
+		btnOrdenServicio_1.setEnabled(true);	
+		rastreros.setBounds(99, 42, 90, 23);
+		datos_ss.add(rastreros);		
+		alemanias.setBounds(191, 42, 93, 23);
+		datos_ss.add(alemanias);		
+		termitas.setBounds(286, 42, 83, 23);
+		datos_ss.add(termitas);		
+		roedores.setBounds(381, 42, 87, 23);
+		datos_ss.add(roedores);
+		alacranes.setBounds(470, 42, 89, 23);
+		datos_ss.add(alacranes);
+		aranias.setBounds(99, 68, 73, 23);
+		datos_ss.add(aranias);
+		hormigas.setBounds(191, 68, 93, 23);
+		datos_ss.add(hormigas);
+		garrapatas.setBounds(286, 68, 93, 23);
+		datos_ss.add(garrapatas);		
+		pulgas.setBounds(381, 68, 68, 23);
+		datos_ss.add(pulgas);
+		voladores.setBounds(470, 68, 86, 23);
+		datos_ss.add(voladores);
+		aspercion.setBounds(68, 94, 83, 23);
+		datos_ss.add(aspercion);
+		puntogel.setBounds(159, 94, 108, 23);
+		datos_ss.add(puntogel);
+		nebulizacion.setBounds(265, 94, 97, 23);
+		datos_ss.add(nebulizacion);
+		termo.setBounds(68, 120, 73, 23);
+		datos_ss.add(termo);
+		correctivo.setBounds(159, 120, 93, 23);
+		datos_ss.add(correctivo);
+		preventivo.setBounds(265, 120, 104, 23);
+		datos_ss.add(preventivo);
 		btnOrdenServicio_1.setVisible(true);
 		
 		btnGuardar_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				//SACANDO LAS CADENAS DE TEXTO DE LOS COMBOS
-				
-				Object tiposervicio= cmbtiposerv.getSelectedItem();
-				String tiposerv= String.valueOf(tiposervicio);
-				Object plagaserv=cmbplaga.getSelectedItem();
-				String plaga=String.valueOf(plagaserv);
-			
-				Object formapago=cmbforma.getSelectedItem();
-				String forma=String.valueOf(formapago);
-				Object medioenterado=cmbtecnicas.getSelectedItem();
-				String medio=String.valueOf(medioenterado);				
+				//SACANDO EQUIVALENCIAS DE PLAGAS//
+				int rastrerosc;int alemaniasc; int termitasc;	int roedoresc;int alacranesc;
+				int araniasc;int hormigasc;int garrapatasc; int pulgasc; int voladoresc;
+				String rastreross="", alemaniass="", termitass="", roedoress="", alacraness="", araniass="", hormigass="", garrapatass="", pulgass="", voladoress="";
+				int aspercionc; int puntogelc; int nebulizacionc; int termoc; int correctivoc; int preventivoc;		
+				String aspercions="", puntogels="", nebulizacions="", termos="", correctivos="", preventivos="";
 				try{
 					Gray();
-					if(txttecnico.getText().equals("")){
-						txttecnico.setBorder(BorderFactory.createLineBorder(Color.RED,1));
-						validacioncamp.setText("Llene los campos");
-						txttecnico.requestFocus();
-					} else if(txtcosto.getText().equals("")){
-						txtcosto.setBorder(BorderFactory.createLineBorder(Color.RED,1));
-						validacioncamp.setText("Llene los campos");
-						txtcosto.requestFocus(); }
-					else if(dateChooser.getDate()==null){
+			 if(dateChooser.getDate()==null){
 							validacioncamp.setText("Introdusca la fecha del servicio");	
-						
 					} else {
+						//PREPARACION DE LAS VARIABLES PARA EL INSERT DE LA BD
+						if(rastreros.isSelected()){
+							 rastreross=" RASTREROS";
+						}else rastreross="";
+						if(alemanias.isSelected()){
+						alemaniass=" ALEMAÑAS";
+						}else alemaniass="";
+						if(termitas.isSelected()){
+							termitass=" TERMITAS";
+						}else termitass="";
+						if(roedores.isSelected()){
+							roedoress=" ROEDORES";
+						}else roedoress="";
+						if(alacranes.isSelected()){
+						}else alacraness="";
+						if(aranias.isSelected()){
+							araniass=" ARAÑAS";
+						}else araniass="";
+						if(hormigas.isSelected()){
+							hormigass=" HORMIGAS";
+						}else hormigass="";
+						if(garrapatas.isSelected()){
+						garrapatass=" GARRAPATAS";
+						}else garrapatass="";
+						if(pulgas.isSelected()){	
+						 pulgass=" PULGAS";
+						}else pulgass="";
+						if(voladores.isSelected()){
+							 voladoress=" VOLADORES";
+						}else voladoress="";
+						if(aspercion.isSelected()){	
+							aspercions=" ASPERCION";
+						}else aspercions="";
+						if(puntogel.isSelected()){	
+							puntogels=" PUNTO DE GEL";
+						}else puntogels="";
+						if(nebulizacion.isSelected()){	
+							 nebulizacions=" NEBULIZACION";
+						}else nebulizacions="";
+						if(termo.isSelected()){
+							 termos=" TERMO";
+						}else termos="";
+						if(correctivo.isSelected()){
+							 correctivos=" CORRECTIVO";
+						}else correctivos="";
+						if(preventivo.isSelected()){
+							preventivos=" PREVENTIVO";
+						}else preventivos="";
+						String plagas=rastreross+alemaniass+termitass+roedoress+alacraness+araniass+hormigass+
+								garrapatass+pulgass+voladoress;
+						String tecnica=aspercions+puntogels+nebulizacions+termos+correctivos+preventivos;
 						int anio= dateChooser.getCalendar().get(Calendar.YEAR);
 						int mes= dateChooser.getCalendar().get(Calendar.MARCH)+1;
 						int dia= dateChooser.getCalendar().get(Calendar.DAY_OF_MONTH);
-						String fecha_serv= dia+"/"+mes+"/"+anio;
+						String fecha_serv= anio+"-"+mes+"-"+dia;
+						//TERMINA LA PREPARACION EMPIEZAN LAS QUERYS
 					
-				String SQL="INSERT INTO servicio(num_cliente, tiposervicio, plaga,"+
-						"fecha_servicio, horas, formapago, clave_tecnico, observaciones, costo, mediocontacto, fecha, valido)"+
-									"VALUES(?,?,?,?,?,?,?,?,?,?,Now(),'0')";
+				String SQL="INSERT INTO solicitud_servicio(num_cliente,tipo_servicio, plagas,"+
+						"tecnicas, fecha_servicio, hora, tecnico, observaciones,fecha_ss, valido)"+
+									"VALUES(?,?,?,?,?,?,?,?,Now(),'0')";
 							PreparedStatement ps= conn.prepareStatement(SQL);
 							ps.setString(1, txtnumcliente.getText());
-							ps.setString(2, tiposerv);
-							ps.setString(3, plaga);
-							ps.setString(4, fecha_serv);
-							/*ps.setInt(5);*/
-							ps.setString(6, forma);
+							ps.setString(2, String.valueOf(cmbtiposerv.getSelectedItem()));
+							ps.setString(3,plagas);
+							ps.setString(4, tecnica);
+							ps.setString(5, fecha_serv);
+							ps.setString(6, txthora.getText());
 							ps.setString(7, txttecnico.getText());
 							ps.setString(8, txtObservaciones.getText());
-							ps.setString(9, txtcosto.getText());
-							ps.setString(10, medio);	
+							//ps.setString(10, String.valueOf(cmbmedio.getSelectedItem()));
 							int n=ps.executeUpdate();
 							if(n>0){
-								JOptionPane.showMessageDialog(null, "Solicud de Servicio Completado");
+								JOptionPane.showMessageDialog(null, "Solicud de Servicio Guardado en la BD");
 								btnOrdenServicio.setVisible(true);
-								Clean();
-							}					
-					}					
-			} catch(SQLException e) {
+							}				
+						}				
+			} catch(Exception e) {
 				JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
 			}
 			}
@@ -715,7 +813,6 @@ public class ordservicio extends JFrame {
 						datos_ss.setVisible(true);
 						btnAct.setVisible(true);
 						btnAct.setEnabled(true);
-						Servicios.setVisible(true);
 						Hability();				
 					}
 					} catch(Exception e){		
@@ -725,53 +822,44 @@ public class ordservicio extends JFrame {
 			} 
 		});
 		scrollPane.setViewportView(table);	
-		datoscliente.setBounds(21, 169, 401, 262);
+		datoscliente.setBounds(10, 177, 401, 267);
 		contentPane.add(datoscliente);
 		datoscliente.setLayout(null);
-		datoscliente.setVisible(false);
-		
+		datoscliente.setVisible(false);	
 		lblDireccion.setBounds(10, 140, 74, 14);
 		datoscliente.add(lblDireccion);
-		
-		JLabel lblNumeroDeCliente = new JLabel("Numero de Cliente:");
 		lblNumeroDeCliente.setBounds(10, 24, 102, 14);
-		datoscliente.add(lblNumeroDeCliente);
-		
-		JLabel lblCiudad = new JLabel("Ciudad:");
+		datoscliente.add(lblNumeroDeCliente);		
 		lblCiudad.setBounds(10, 237, 58, 14);
-		datoscliente.add(lblCiudad);
-		
-		txtciudad = new JTextField();
+		datoscliente.add(lblCiudad);		
 		txtciudad.setForeground(Color.BLACK);
 		txtciudad.setBackground(Color.WHITE);
 		txtciudad.setEnabled(false);
 		txtciudad.setColumns(10);
 		txtciudad.setBounds(79, 234, 124, 20);
-		datoscliente.add(txtciudad);
-		
-		JLabel lblnombrecliente = new JLabel("Nombre:");
+		datoscliente.add(txtciudad);		
 		lblnombrecliente.setBounds(10, 55, 58, 14);
 		datoscliente.add(lblnombrecliente);
-		
-		txtnombreapellidos = new JTextField();
 		txtnombreapellidos.setForeground(Color.BLACK);
 		txtnombreapellidos.setEnabled(false);
 		txtnombreapellidos.setColumns(10);
 		txtnombreapellidos.setBackground(Color.WHITE);
 		txtnombreapellidos.setBounds(90, 52, 289, 20);
-		datoscliente.add(txtnombreapellidos);
-		
-		txtempresa = new JTextField();
+		datoscliente.add(txtnombreapellidos);		
 		txtempresa.setForeground(Color.BLACK);
 		txtempresa.setEnabled(false);
 		txtempresa.setColumns(10);
 		txtempresa.setBackground(Color.WHITE);
 		txtempresa.setBounds(90, 80, 289, 20);
 		datoscliente.add(txtempresa);
-		
-		JLabel lblEmpresa_1 = new JLabel("Empresa:");
 		lblEmpresa_1.setBounds(10, 83, 74, 14);
 		datoscliente.add(lblEmpresa_1);
+		txtdireccion = new JTextField();
+		txtdireccion.setBounds(75, 137, 316, 20);
+		datoscliente.add(txtdireccion);
+		txtdireccion.setForeground(Color.BLACK);
+		txtdireccion.setBackground(Color.WHITE);
+		txtdireccion.setColumns(10);	
 		
 		//Agregando el menu		
 		JMenuBar menuBar = new JMenuBar();
@@ -813,7 +901,6 @@ public class ordservicio extends JFrame {
 				scrollPane.setBounds(15, 92, 740, 80);
 				datoscliente.setVisible(false);
 				datos_ss.setVisible(false);
-				Servicios.setVisible(false);
 				bandera=1;
 				Desabilitar();
 			}
@@ -860,11 +947,13 @@ public class ordservicio extends JFrame {
 				scrollPane.setBounds(15,97,740,74);
 				datoscliente.setVisible(false);
 				datos_ss.setVisible(false);
-				Servicios.setVisible(false);
 				Desabilitar();
 				bandera=2;
 			}
 		});
+		
+		JMenuItem mntmSolicitudDeServicio = new JMenuItem("Solicitud de Servicio");
+		mnActualizar.add(mntmSolicitudDeServicio);
 		mnActualizar.add(mntmServicios);
 		JMenu mnC = new JMenu("Reportes");
 		menuBar.add(mnC);
@@ -896,7 +985,7 @@ public class ordservicio extends JFrame {
 				btnGuardar_1.setVisible(false);
 				datoscliente.setVisible(false);
 				datos_ss.setVisible(false);
-				Servicios.setVisible(false);
+
 
 				Desabilitar();
 				Calendar fecha = new GregorianCalendar();
@@ -971,7 +1060,6 @@ public class ordservicio extends JFrame {
 				scrollPane.setBounds(596,495,103,23);
 				datoscliente.setVisible(false);
 				datos_ss.setVisible(false);
-				Servicios.setVisible(false);
 				bandera=4;
 			}
 		});
@@ -1008,7 +1096,6 @@ public class ordservicio extends JFrame {
 				scrollPane.setBounds(596,495,103,23);
 				datoscliente.setVisible(false);
 				datos_ss.setVisible(false);
-				Servicios.setVisible(false);	
 				bandera=5;
 			}
 		});
@@ -1083,11 +1170,6 @@ public class ordservicio extends JFrame {
 		});				
 		escogerfechas.setBounds(86, 63, 133, 20);
 		contentPane.add(escogerfechas);
-		
-		Servicios.setBorder(new TitledBorder(UIManager.getBorder("TitledBorder.border"), "Servicios", TitledBorder.LEADING, TitledBorder.TOP, null, null));
-		Servicios.setBounds(21, 465, 635, 137);
-		contentPane.add(Servicios);
-		Servicios.setLayout(null);
 		((JTextFieldDateEditor)dateChooser.getDateEditor()).setEditable(false);
 		
 		btnAct.addActionListener(new ActionListener() {
@@ -1118,7 +1200,7 @@ public class ordservicio extends JFrame {
 							}	 
 			}
 		});
-		btnAct.setBounds(672, 461, 89, 23);
+		btnAct.setBounds(66, 546, 89, 23);
 		contentPane.add(btnAct);
 		cmbBusquedaAct.setVisible(false);
 		cmbBusquedaAct.addItem("Buscar Por...");
@@ -1296,7 +1378,6 @@ public class ordservicio extends JFrame {
 		cmbBusqueda.setVisible(false);
 		scrollPane.setVisible(false);
 		datos_ss.setVisible(false);
-		Servicios.setVisible(false);
 		Desabilitar();
 	
 	}
@@ -1366,17 +1447,24 @@ public class ordservicio extends JFrame {
 				}
 	}
 	void Clean(){
+		//DATOS DEL CLIENTE
 		txtnumcliente.setText("");
+		txtnombreapellidos.setText("");
 		txtdireccion.setText("");
+		txtempresa.setText("");
 		txtrfc.setText("");
 		txttelefono.setText("");
-		txtcelular.setText("");				
+		txtcelular.setText("");	
+		txtciudad.setText("");
+
+		
 	}
  void Gray(){
 	txtNombre.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));
 	txtPaterno.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));
 	txtMaterno.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));
 	txttecnico.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));
+
 	
 }
  void Hability(){
