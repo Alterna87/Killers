@@ -273,7 +273,7 @@ public class ordservicio extends JFrame {
 		JLabel lblObservaciones_1 = new JLabel("Observaciones:");
 		lblObservaciones_1.setBounds(10, 227, 115, 14);
 		datos_ss.add(lblObservaciones_1);
-		txtObservaciones = new JTextField();	
+		txtObservaciones = new JTextField();
 		
 		
 		txtObservaciones.addKeyListener(new KeyAdapter() {
@@ -297,7 +297,6 @@ public class ordservicio extends JFrame {
 		txtcosto.setBounds(66, 271, 93, 20);
 		datos_ss.add(txtcosto);
 		txtcosto.setColumns(10);
-		final JButton btnAct = new JButton("Actualizar");
 		final JDateChooser escogerfechas = new JDateChooser();
 		final JButton btnBuscarfecha = new JButton("Buscar");
 		final JCheckBox alacranes = new JCheckBox("Alacranes");
@@ -325,7 +324,6 @@ public class ordservicio extends JFrame {
 					 } else {
 						 validacioncamp.setText("");
 						 if(bandera==1){
-	
 						String[]titulos= {"Num Cliente","Nombre","Empresa","Direccion","Referencia","RFC","Telefono","Celular","E-Mail","Tipo Cliente"};
 						modeltable= new DefaultTableModel(null, titulos);
 						String consulta="SELECT * FROM clientes WHERE num_cliente='"+txtNombre.getText()+"'";
@@ -347,8 +345,6 @@ public class ordservicio extends JFrame {
 						}
 						scrollPane.setVisible(true);
 						table.setVisible(true);
-						txttecnico.setEnabled(false);
-						txtObservaciones.setEnabled(false);
 						table.setModel(modeltable);
 		
 						 } else if(bandera==2){
@@ -374,9 +370,7 @@ public class ordservicio extends JFrame {
 								}
 								scrollPane.setVisible(true);
 								table.setVisible(true);
-								table.setModel(modeltable);
-								txttecnico.setEnabled(false);
-								txtObservaciones.setEnabled(false);						
+								table.setModel(modeltable);					
 						 }				
 					 } 
 						} catch(Exception e){
@@ -470,7 +464,6 @@ public class ordservicio extends JFrame {
 			}
 		});
 		txtaplicaciones.setBackground(new Color(255, 255, 255));
-		txtaplicaciones.setEnabled(false);
 		txtaplicaciones.setColumns(10);
 		txtaplicaciones.setBounds(102, 158, 55, 20);
 		datos_ss.add(txtaplicaciones);
@@ -556,6 +549,106 @@ public class ordservicio extends JFrame {
 		datos_ss.add(correctivo);
 		preventivo.setBounds(265, 120, 104, 23);
 		datos_ss.add(preventivo);
+		final JButton btnAct = new JButton("Actualizar");
+		btnAct.setBounds(159, 298, 115, 23);
+		datos_ss.add(btnAct);
+		
+		btnAct.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				//SACANDO EQUIVALENCIAS DE PLAGAS//
+				int rastrerosc;int alemaniasc; int termitasc;	int roedoresc;int alacranesc;
+				int araniasc;int hormigasc;int garrapatasc; int pulgasc; int voladoresc;
+				String rastreross="", alemaniass="", termitass="", roedoress="", alacraness="", araniass="", hormigass="", garrapatass="", pulgass="", voladoress="";
+				int aspercionc; int puntogelc; int nebulizacionc; int termoc; int correctivoc; int preventivoc;		
+				String aspercions="", puntogels="", nebulizacions="", termos="", correctivos="", preventivos="";
+				try{
+					//PREPARACION DE LAS VARIABLES PARA EL UPDATE DE LA BD
+					if(rastreros.isSelected()){
+						 rastreross=" RASTREROS";
+					}else rastreross="";
+					if(alemanias.isSelected()){
+					alemaniass=" ALEMAÑAS";
+					}else alemaniass="";
+					if(termitas.isSelected()){
+						termitass=" TERMITAS";
+					}else termitass="";
+					if(roedores.isSelected()){
+						roedoress=" ROEDORES";
+					}else roedoress="";
+					if(alacranes.isSelected()){
+					}else alacraness="";
+					if(aranias.isSelected()){
+						araniass=" ARAÑAS";
+					}else araniass="";
+					if(hormigas.isSelected()){
+						hormigass=" HORMIGAS";
+					}else hormigass="";
+					if(garrapatas.isSelected()){
+					garrapatass=" GARRAPATAS";
+					}else garrapatass="";
+					if(pulgas.isSelected()){	
+					 pulgass=" PULGAS";
+					}else pulgass="";
+					if(voladores.isSelected()){
+						 voladoress=" VOLADORES";
+					}else voladoress="";
+					if(aspercion.isSelected()){	
+						aspercions=" ASPERCION";
+					}else aspercions="";
+					if(puntogel.isSelected()){	
+						puntogels=" PUNTO DE GEL";
+					}else puntogels="";
+					if(nebulizacion.isSelected()){	
+						 nebulizacions=" NEBULIZACION";
+					}else nebulizacions="";
+					if(termo.isSelected()){
+						 termos=" TERMO";
+					}else termos="";
+					if(correctivo.isSelected()){
+						 correctivos=" CORRECTIVO";
+					}else correctivos="";
+					if(preventivo.isSelected()){
+						preventivos=" PREVENTIVO";
+					}else preventivos="";
+					String plagas=rastreross+alemaniass+termitass+roedoress+alacraness+araniass+hormigass+
+							garrapatass+pulgass+voladoress;
+					String tecnica=aspercions+puntogels+nebulizacions+termos+correctivos+preventivos;
+					int anio= dateChooser.getCalendar().get(Calendar.YEAR);
+					int mes= dateChooser.getCalendar().get(Calendar.MARCH)+1;
+					int dia= dateChooser.getCalendar().get(Calendar.DAY_OF_MONTH);
+					String fecha_serv= anio+"-"+mes+"-"+dia;
+					//TERMINA LA PREPARACION EMPIEZAN LAS QUERYS
+				
+			String SQL="UPDATE solicitud_servicio SET tipo_servicio=?, plagas=?,"+
+					"tecnicas=?, fecha_servicio=?, hora=?, tecnico=?, observaciones=?, aplicaciones=?, aplicacion=?, costo=? WHERE num_ss=?";
+						int fila=table.getSelectedRow();
+						String dato=(String) table.getValueAt(fila, 0);
+						PreparedStatement ps= conn.prepareStatement(SQL);
+						ps.setString(1, String.valueOf(cmbtiposerv.getSelectedItem()));
+						ps.setString(2,plagas);
+						ps.setString(3, tecnica);
+						ps.setString(4, fecha_serv);
+						ps.setString(5, txthora.getText());
+						ps.setString(6, txttecnico.getText());
+						ps.setString(7, txtObservaciones.getText());
+						ps.setString(8, txtaplicaciones.getText());
+						ps.setString(9, txtaplicacion.getText());
+						ps.setString(10, txtcosto.getText());
+						ps.setString(11, dato);
+						//ps.setString(10, String.valueOf(cmbmedio.getSelectedItem()));
+						int n=ps.executeUpdate();
+						if(n>0){
+							JOptionPane.showMessageDialog(null, "Solicud de Servicio Actualizado en la BD");
+							btnOrdenServicio.setVisible(true);
+						}								
+		} catch(SQLException e) {
+			JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
+		}
+			}
+		});
+		//OCULTANDO ELEMENTOS//
+		btnAct.setEnabled(false);
+		btnAct.setVisible(false);
 		btnOrdenServicio_1.setVisible(true);
 		
 		btnGuardar_1.addActionListener(new ActionListener() {
@@ -629,7 +722,7 @@ public class ordservicio extends JFrame {
 						//TERMINA LA PREPARACION EMPIEZAN LAS QUERYS
 					
 				String SQL="INSERT INTO solicitud_servicio(num_cliente,tipo_servicio, plagas,"+
-						"tecnicas, fecha_servicio, hora, tecnico, observaciones,fecha_ss, valido)"+
+						"tecnicas, fecha_servicio, hora, tecnico, observaciones, aplicaciones, aplicacion, costo, forma_pago,fecha_ss, valido)"+
 									"VALUES(?,?,?,?,?,?,?,?,Now(),'0')";
 							PreparedStatement ps= conn.prepareStatement(SQL);
 							ps.setString(1, txtnumcliente.getText());
@@ -640,6 +733,9 @@ public class ordservicio extends JFrame {
 							ps.setString(6, txthora.getText());
 							ps.setString(7, txttecnico.getText());
 							ps.setString(8, txtObservaciones.getText());
+							ps.setString(9, txtaplicaciones.getText());
+							ps.setString(10, txtaplicacion.getText());
+							ps.setString(11, txtcosto.getText());
 							//ps.setString(10, String.valueOf(cmbmedio.getSelectedItem()));
 							int n=ps.executeUpdate();
 							if(n>0){
@@ -793,27 +889,116 @@ public class ordservicio extends JFrame {
 						Hability();
 						}
 					else if(bandera==2){
-						String actualizar="SELECT * FROM servicio INNER JOIN clientes ON servicio.num_cliente=clientes.num_cliente AND servicio.num_ss='"+table.getValueAt(fila, 0)+"'";
+						String actualizar="SELECT * FROM solicitud_servicio INNER JOIN clientes ON solicitud_servicio.num_cliente=clientes.num_cliente AND solicitud_servicio.num_ss='"+table.getValueAt(fila, 0)+"'";
 						sent=conn.createStatement();
 						ResultSet rs=sent.executeQuery(actualizar);
 						rs.next();
+						//**DATOS CLIENTE**
 						txtnumcliente.setText(rs.getString("num_cliente"));
+						txtnombreapellidos.setText(rs.getString("nombre")+" "+rs.getString("apellidopaterno")+" "+rs.getString("apellidomaterno"));
+						txtempresa.setText(rs.getString("empresa"));
 						txtdireccion.setText(rs.getString("direccion"));
 						txttelefono.setText(rs.getString("Telefono"));
 						txtcelular.setText(rs.getString("celular"));
 						txtrfc.setText(rs.getString("rfc"));
-						///DATOS DEL SERVICIO
-						cmbtiposerv.setSelectedItem(rs.getString("tiposervicio"));
-						cmbplaga.setSelectedItem(rs.getString("plaga"));
-						txttecnico.setText(rs.getString("clave_tecnico"));
-						cmbforma.setSelectedItem(rs.getString("formapago"));
-						txtObservaciones.setText(rs.getString("observaciones"));
+						txtciudad.setText(rs.getString("ciudad"));
+						//**DATOS DEL SERVICIO**
+						cmbtiposerv.setSelectedItem(rs.getString("tipo_servicio"));
+						txtaplicaciones.setText(rs.getString("aplicaciones"));
+						txtaplicacion.setText(rs.getString("aplicacion"));
 						txtcosto.setText(rs.getString("costo"));
+						txttecnico.setText(rs.getString("tecnico"));
+						txtObservaciones.setText(rs.getString("observaciones"));
+						txthora.setText(rs.getString("hora"));
+						Date date = rs.getDate("fecha_servicio");
+						dateChooser.setDate(date);
+						//DATOS DE LAS PLAGAS
+						String rastrerosq="SELECT plagas FROM solicitud_servicio WHERE num_ss='"+table.getValueAt(fila, 0)+"' AND plagas LIKE '%RASTREROS%'";
+						ResultSet es=sent.executeQuery(rastrerosq);
+						if(es.next()){
+							rastreros.setSelected(true);
+						}
+						String alemaniasq="SELECT plagas FROM solicitud_servicio WHERE num_ss='"+table.getValueAt(fila, 0)+"' AND plagas LIKE '%ALEMAÑAS%'";
+						ResultSet ale=sent.executeQuery(alemaniasq);
+						if(ale.next()){
+							alemanias.setSelected(true);
+						}
+						String termitasq="SELECT plagas FROM solicitud_servicio WHERE num_ss='"+table.getValueAt(fila, 0)+"' AND plagas LIKE '%TERMITAS%'";
+						ResultSet ter=sent.executeQuery(termitasq);
+						if(ter.next()){
+							termitas.setSelected(true);
+						}
+						String roedoresq="SELECT plagas FROM solicitud_servicio WHERE num_ss='"+table.getValueAt(fila, 0)+"' AND plagas LIKE '%ROEDORES%'";
+						ResultSet roe=sent.executeQuery(roedoresq);
+						if(roe.next()){
+							roedores.setSelected(true);
+						}
+						String alacranesq="SELECT plagas FROM solicitud_servicio WHERE num_ss='"+table.getValueAt(fila, 0)+"' AND plagas LIKE '%ALACRANES%'";
+						ResultSet ala=sent.executeQuery(alacranesq);
+						if(ala.next()){
+							alacranes.setSelected(true);
+						}
+						String araniasq="SELECT plagas FROM solicitud_servicio WHERE num_ss='"+table.getValueAt(fila, 0)+"' AND plagas LIKE '%ARAÑAS%'";
+						ResultSet ara=sent.executeQuery(araniasq);
+						if(ara.next()){
+							aranias.setSelected(true);
+						}
+						String hormigasq="SELECT plagas FROM solicitud_servicio WHERE num_ss='"+table.getValueAt(fila, 0)+"' AND plagas LIKE '%HORMIGAS%'";
+						ResultSet hor=sent.executeQuery(alemaniasq);
+						if(hor.next()){
+							hormigas.setSelected(true);
+						}
+						String garrapatasq="SELECT plagas FROM solicitud_servicio WHERE num_ss='"+table.getValueAt(fila, 0)+"' AND plagas LIKE '%GARRAPATAS%'";
+						ResultSet gar=sent.executeQuery(alemaniasq);
+						if(gar.next()){
+							garrapatas.setSelected(true);
+						}
+						String pulgasq="SELECT plagas FROM solicitud_servicio WHERE num_ss='"+table.getValueAt(fila, 0)+"' AND plagas LIKE '%PULGAS%'";
+						ResultSet pul=sent.executeQuery(alemaniasq);
+						if(pul.next()){
+							pulgas.setSelected(true);
+						}
+						String voldaroressq="SELECT plagas FROM solicitud_servicio WHERE num_ss='"+table.getValueAt(fila, 0)+"' AND plagas LIKE '%VOLADORES%'";
+						ResultSet vol=sent.executeQuery(alemaniasq);
+						if(vol.next()){
+							voladores.setSelected(true);
+						}
+						//TERMINA DATOS DE PLAGAS, EMPIEZA DATOS TECNICAS
+						String aspercionq="SELECT tecnicas FROM solicitud_servicio WHERE num_ss='"+table.getValueAt(fila, 0)+"' AND tecnicas LIKE '%ASPERCION%'";
+						ResultSet asp=sent.executeQuery(aspercionq);
+						if(asp.next()){
+							aspercion.setSelected(true);
+						}
+						String puntogelq="SELECT tecnicas FROM solicitud_servicio WHERE num_ss='"+table.getValueAt(fila, 0)+"' AND tecnicas LIKE '%PUNTO DE GEL%'";
+						ResultSet pung=sent.executeQuery(puntogelq);
+						if(pung.next()){
+							puntogel.setSelected(true);
+						}
+						String nebulizacionq="SELECT tecnicas FROM solicitud_servicio WHERE num_ss='"+table.getValueAt(fila, 0)+"' AND tecnicas LIKE '%NEBULIZACION%'";
+						ResultSet neb=sent.executeQuery(nebulizacionq);
+						if(neb.next()){
+							nebulizacion.setSelected(true);
+						}
+						String termoq="SELECT tecnicas FROM solicitud_servicio WHERE num_ss='"+table.getValueAt(fila, 0)+"' AND tecnicas LIKE '%TERMO%'";
+						ResultSet term=sent.executeQuery(termoq);
+						if(term.next()){
+							termo.setSelected(true);
+						}
+						String correctivoq="SELECT tecnicas FROM solicitud_servicio WHERE num_ss='"+table.getValueAt(fila, 0)+"' AND tecnicas LIKE '%CORRECTIVO%'";
+						ResultSet cor=sent.executeQuery(correctivoq);
+						if(cor.next()){
+							correctivo.setSelected(true);
+						}
+						String preventivoq="SELECT tecnicas FROM solicitud_servicio WHERE num_ss='"+table.getValueAt(fila, 0)+"' AND tecnicas LIKE '%PREVENTIVO%'";
+						ResultSet prev=sent.executeQuery(preventivoq);
+						if(prev.next()){
+							preventivo.setSelected(true);
+						}
+						//FINALIZA LOS DATOS DE TECNICA
 						datoscliente.setVisible(true);
 						datos_ss.setVisible(true);
 						btnAct.setVisible(true);
-						btnAct.setEnabled(true);
-						Hability();				
+						btnAct.setEnabled(true);			
 					}
 					} catch(Exception e){		
 						JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());	
@@ -914,10 +1099,16 @@ public class ordservicio extends JFrame {
 			}
 		});
 		mnNuevo.add(mntmNewMenuItem);
+		
+		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Orden de Servicio");
+		mnNuevo.add(mntmNewMenuItem_2);
+		
+		JMenuItem mntmServicio = new JMenuItem("Servicio");
+		mnNuevo.add(mntmServicio);
 		JMenu mnActualizar = new JMenu("Actualizar");
 		menuBar.add(mnActualizar);
 		
-		JMenuItem mntmServicios = new JMenuItem("Servicios...");
+		JMenuItem mntmServicios = new JMenuItem("Solicitud de Servicio...");
 		mntmServicios.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setTitle("Killers-Actualizacion de Datos Servicios");
@@ -947,14 +1138,14 @@ public class ordservicio extends JFrame {
 				scrollPane.setBounds(15,97,740,74);
 				datoscliente.setVisible(false);
 				datos_ss.setVisible(false);
-				Desabilitar();
+				//Desabilitar();
 				bandera=2;
 			}
 		});
-		
-		JMenuItem mntmSolicitudDeServicio = new JMenuItem("Solicitud de Servicio");
-		mnActualizar.add(mntmSolicitudDeServicio);
 		mnActualizar.add(mntmServicios);
+		
+		JMenuItem mntmServicios_1 = new JMenuItem("Servicios");
+		mnActualizar.add(mntmServicios_1);
 		JMenu mnC = new JMenu("Reportes");
 		menuBar.add(mnC);
 		
@@ -1029,7 +1220,7 @@ public class ordservicio extends JFrame {
 						});
 		mnC.add(mntmDelDia);
 		
-		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Ordenes de Servicio");
+		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Solicitudes de Servicio");
 		mntmNewMenuItem_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setTitle("Killers-Ordenes de Servicio");
@@ -1063,7 +1254,6 @@ public class ordservicio extends JFrame {
 				bandera=4;
 			}
 		});
-		mnC.add(mntmNewMenuItem_1);
 		
 		JMenuItem mntmDelDa = new JMenuItem("Servicios");
 		mntmDelDa.addActionListener(new ActionListener() {
@@ -1100,6 +1290,7 @@ public class ordservicio extends JFrame {
 			}
 		});
 		mnC.add(mntmDelDa);		
+		mnC.add(mntmNewMenuItem_1);
 		cmbBusqueda.addItem("Buscar Por:");
 		cmbBusqueda.addItem("Persona");
 		cmbBusqueda.addItem("Empresa");
@@ -1171,37 +1362,6 @@ public class ordservicio extends JFrame {
 		escogerfechas.setBounds(86, 63, 133, 20);
 		contentPane.add(escogerfechas);
 		((JTextFieldDateEditor)dateChooser.getDateEditor()).setEditable(false);
-		
-		btnAct.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-			
-				try{
-					String SQL="UPDATE servicio SET tiposervicio=?, plaga=?, horas=?, formapago=?, clave_tecnico=?, observaciones=?, costo=?"+
-							"WHERE num_ss=?";
-								int fila=table.getSelectedRow();
-								String dato=(String) table.getValueAt(fila, 0);
-								PreparedStatement ps= conn.prepareStatement(SQL);
-								ps.setString(1, String.valueOf(cmbtiposerv.getSelectedItem()));
-								ps.setString(2, String.valueOf(cmbplaga.getSelectedItem()));
-								//ps.setInt(3, cmbhoras_1.getSelectedIndex()-1);
-								ps.setString(4, String.valueOf(cmbforma.getSelectedItem()));;
-								ps.setString(5, txttecnico.getText());
-								ps.setString(6, txtObservaciones.getText());
-								ps.setString(7, txtcosto.getText());
-								//ps.setString(8, fecha_inicio);
-								//ps.setString(9,fecha_fin);
-								ps.setString(10, dato);
-								int n=ps.executeUpdate();
-								if(n>0){
-									JOptionPane.showMessageDialog(null, "Datos de Servicio Guardados");
-								}
-							} catch(SQLException e) {
-								JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
-							}	 
-			}
-		});
-		btnAct.setBounds(66, 546, 89, 23);
-		contentPane.add(btnAct);
 		cmbBusquedaAct.setVisible(false);
 		cmbBusquedaAct.addItem("Buscar Por...");
 		cmbBusquedaAct.addItem("Fecha");
@@ -1281,9 +1441,6 @@ public class ordservicio extends JFrame {
 					}
 				}	
 	);
-		//OCULTANDO ELEMENTOS//
-		btnAct.setEnabled(false);
-		btnAct.setVisible(false);
 		escogerfechas.setVisible(false);
 		lblEmpresa.setVisible(false);
 		lblNombre.setVisible(false);
@@ -1390,9 +1547,10 @@ public class ordservicio extends JFrame {
 		txtrfc.setEnabled(false);
 		txttelefono.setEnabled(false);
 		txtcelular.setEnabled(false);
-		txttecnico.setEnabled(false);
-		txtObservaciones.setEnabled(false);	
-		txtcosto.setEnabled(false);
+		txtempresa.setEnabled(false);
+		txtciudad.setEnabled(false);
+		txtnumcliente.setEnabled(false);
+		txtnombreapellidos.setEnabled(false);
 		
 	}
 	void BuscarEmpresa(){
@@ -1467,9 +1625,6 @@ public class ordservicio extends JFrame {
 
 	
 }
- void Hability(){
-	txttecnico.setEnabled(true);
-	txtObservaciones.setEnabled(true);
-	txtcosto.setEnabled(true);		
+ void Hability(){	
  }
 }
