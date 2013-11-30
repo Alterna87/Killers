@@ -66,8 +66,8 @@ public class clientes extends JFrame {
 	private JTextField txtbusNombre;
 	private JTextField txtbusPaterno;
 	private JTextField txtbusMaterno;
-	private JTable table;
 	private JTextField txtciudad;
+	private JTable table;
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -105,7 +105,7 @@ public class clientes extends JFrame {
 		panel.add(lblNombre);
 		
 		txtNombre = new JTextField();
-		txtNombre.setBackground(Color.LIGHT_GRAY);
+		txtNombre.setBackground(Color.WHITE);
 		txtNombre.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent evt) {
@@ -128,7 +128,7 @@ public class clientes extends JFrame {
 		panel.add(lblNewLabel);
 		
 		txtApePaterno = new JTextField();
-		txtApePaterno.setBackground(Color.LIGHT_GRAY);
+		txtApePaterno.setBackground(Color.WHITE);
 		txtApePaterno.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent evt) {
@@ -149,7 +149,7 @@ public class clientes extends JFrame {
 		panel.add(lblApellidoMaterno);
 		
 		txtApeMaterno = new JTextField();
-		txtApeMaterno.setBackground(Color.LIGHT_GRAY);
+		txtApeMaterno.setBackground(Color.WHITE);
 		txtApeMaterno.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent evt) {
@@ -170,7 +170,7 @@ public class clientes extends JFrame {
 		panel.add(lblEmpresa);
 		
 		txtEmpresa = new JTextField();
-		txtEmpresa.setBackground(Color.LIGHT_GRAY);
+		txtEmpresa.setBackground(Color.WHITE);
 		txtEmpresa.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -186,7 +186,7 @@ public class clientes extends JFrame {
 		panel.add(lblDireccion);
 		
 		txtDireccion = new JTextField();
-		txtDireccion.setBackground(Color.LIGHT_GRAY);
+		txtDireccion.setBackground(Color.WHITE);
 		txtDireccion.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -202,7 +202,7 @@ public class clientes extends JFrame {
 		panel.add(lblNewLabel_1);
 		
 		txtReferencia = new JTextField();
-		txtReferencia.setBackground(Color.LIGHT_GRAY);
+		txtReferencia.setBackground(Color.WHITE);
 		txtReferencia.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyReleased(KeyEvent e) {
@@ -218,7 +218,7 @@ public class clientes extends JFrame {
 		panel.add(lblNewLabel_2);
 		
 		txtTelefono = new JTextField();
-		txtTelefono.setBackground(Color.LIGHT_GRAY);
+		txtTelefono.setBackground(Color.WHITE);
 		txtTelefono.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent evt) {
@@ -238,15 +238,16 @@ public class clientes extends JFrame {
 		panel.add(lblCelular);
 		
 		txtCelular = new JTextField();
-		txtCelular.setBackground(Color.LIGHT_GRAY);
+		txtCelular.setBackground(Color.WHITE);
 		txtCelular.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent evt) {
-			char c= evt.getKeyChar();
-			
-			if ((c<'0'|| c>'9') || (txtTelefono.getText().length()==10))
-				evt.consume(); 
-							}
+				char c= evt.getKeyChar();
+				
+				if ((c<'0'|| c>'9') || (txtCelular.getText().length()==10))
+
+					evt.consume(); 
+				}
 		});
 		txtCelular.setBounds(686, 89, 86, 20);
 		panel.add(txtCelular);
@@ -261,7 +262,7 @@ public class clientes extends JFrame {
 		panel.add(lblEmail);
 		
 		txtMail = new JTextField();
-		txtMail.setBackground(Color.LIGHT_GRAY);
+		txtMail.setBackground(Color.WHITE);
 		txtMail.setBounds(313, 131, 170, 20);
 		panel.add(txtMail);
 		txtMail.setColumns(10);
@@ -271,7 +272,7 @@ public class clientes extends JFrame {
 		panel.add(lblNewRfc);
 		
 		txtrfc = new JTextField();
-		txtrfc.setBackground(Color.LIGHT_GRAY);
+		txtrfc.setBackground(Color.WHITE);
 		txtrfc.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyTyped(KeyEvent e) {
@@ -296,9 +297,21 @@ public class clientes extends JFrame {
 		panel.add(cmbTipoCliente);
 		
 		txtciudad = new JTextField();
+		txtciudad.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent evt) {
+				char c=evt.getKeyChar();
+				if((c<'a'|| c>'z') &&( c<'A' ||c>'z') && ((c!='ñ' && c!='Ñ') && (c!=(char)KeyEvent.VK_SPACE)))
+					evt.consume();
+			}
+			@Override
+			public void keyReleased(KeyEvent e) {
+				txtciudad.setText(txtciudad.getText().toUpperCase());
+			}
+		});
 		txtciudad.setEnabled(false);
 		txtciudad.setColumns(10);
-		txtciudad.setBackground(Color.LIGHT_GRAY);
+		txtciudad.setBackground(Color.WHITE);
 		txtciudad.setBounds(108, 162, 170, 20);
 		panel.add(txtciudad);
 		
@@ -527,6 +540,43 @@ public class clientes extends JFrame {
 		scrollPane.setBounds(10, 309, 810, 140);
 		contentPane.add(scrollPane);
 		
+		table = new JTable();
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent evt) {
+                btnActualizar.setEnabled(true);
+                btnEliminar.setEnabled(true);
+                btnGuardar.setEnabled(false);
+                Habilitar();
+                if(evt.getButton()==1){
+                        int fila=table.getSelectedRow();
+                        try{
+                                String actualizar="SELECT * FROM clientes WHERE num_cliente='"+table.getValueAt(fila, 0)+"'";
+                                sent=conn.createStatement();
+                                ResultSet rs=sent.executeQuery(actualizar);
+                                rs.next();
+                                txtNombre.setText(rs.getString("nombre"));
+                                txtApePaterno.setText(rs.getString("apellidopaterno"));
+                                txtApeMaterno.setText(rs.getString("apellidomaterno"));
+                                txtEmpresa.setText(rs.getString("empresa"));
+                                txtDireccion.setText(rs.getString("direccion"));
+                                txtReferencia.setText(rs.getString("referencia"));
+                                txtTelefono.setText(rs.getString("Telefono"));
+                                cmbTipoCliente.setSelectedItem(rs.getString("tipocliente"));
+                                txtCelular.setText(rs.getString("celular"));
+                                txtMail.setText(rs.getString("email"));
+                                txtrfc.setText(rs.getString("rfc"));
+                                txtciudad.setText(rs.getString("ciudad"));
+                        }catch(Exception e){
+                        	JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());                                
+                        }
+                }
+        }
+				
+				
+		});
+		scrollPane.setViewportView(table);
+		
 		final JButton btnBuscarEmpresa = new JButton("Buscar");
 		btnBuscarEmpresa.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -552,7 +602,34 @@ public class clientes extends JFrame {
 	
 		btnBuscarPersona.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-			BusquedaTablaPersona();
+				Bordes();
+				
+			 	/*btnGuardar.setEnabled(false);
+				btnActualizar.setEnabled(false);
+				btnEliminar.setEnabled(false);*/
+				Clean();
+					if(txtbusNombre.getText().equals("")) {
+					txtbusNombre.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
+					validacion.setText("Llene los campos"); }
+					else {
+				
+				if(txtbusPaterno.getText().equals("")) {
+					txtbusPaterno.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
+					validacion.setText("Llene los campos"); }
+				else {	
+					
+				if(txtbusMaterno.getText().equals("")) {
+					txtbusMaterno.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
+					validacion.setText("Llene los campos");	}		
+				
+				else {
+
+				
+				BusquedaTablaPersona();
+				}
+				}
+					}
+					
 			}
 		});
 		cmbBusqueda.addItem(" ");
@@ -572,6 +649,7 @@ public class clientes extends JFrame {
 					lblApellidoMaterno_1.setVisible(true);
 					txtbusPaterno.setVisible(true);
 					txtbusMaterno.setVisible(true);
+					txtbusNombre.setVisible(true);
 					txtbusNombre.requestFocus();
 					btnBuscarPersona.setVisible(true);
 					btnBuscarEmpresa.setVisible(false);
@@ -588,6 +666,7 @@ public class clientes extends JFrame {
 						lblApellidoMaterno_1.setVisible(false);
 						txtbusPaterno.setVisible(false);
 						txtbusMaterno.setVisible(false);
+						txtbusNombre.setVisible(true);
 						txtbusNombre.requestFocus();
 						btnBuscarPersona.setVisible(false);
 						btnBuscarEmpresa.setVisible(true);
@@ -602,6 +681,7 @@ public class clientes extends JFrame {
 						lblApellidoMaterno_1.setVisible(false);
 						txtbusPaterno.setVisible(false);
 						txtbusMaterno.setVisible(false);
+						txtbusNombre.setVisible(true);
 						txtbusNombre.requestFocus();
 						btnBuscarEmpresa.setVisible(false);
 						btnBuscarPersona.setVisible(false);
@@ -631,46 +711,6 @@ public class clientes extends JFrame {
 		btnGuardar.setEnabled(false);
 		btnActualizar.setEnabled(false);
 		btnEliminar.setEnabled(false);
-		
-		table = new JTable();
-		table.setBounds(10, 309, 808, 163);
-		contentPane.add(table);
-		table.setBackground(SystemColor.control);
-		table.setFillsViewportHeight(true);
-		table.setSurrendersFocusOnKeystroke(true);
-		table.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent evt) {
-				btnActualizar.setEnabled(true);
-				btnEliminar.setEnabled(true);
-				btnGuardar.setEnabled(false);
-				Habilitar();
-				if(evt.getButton()==1){
-					int fila=table.getSelectedRow();
-					try{
-						String actualizar="SELECT * FROM clientes WHERE num_cliente='"+table.getValueAt(fila, 0)+"'";
-						sent=conn.createStatement();
-						ResultSet rs=sent.executeQuery(actualizar);
-						rs.next();
-						txtNombre.setText(rs.getString("nombre"));
-						txtApePaterno.setText(rs.getString("apellidopaterno"));
-						txtApeMaterno.setText(rs.getString("apellidomaterno"));
-						txtEmpresa.setText(rs.getString("empresa"));
-						txtDireccion.setText(rs.getString("direccion"));
-						txtReferencia.setText(rs.getString("referencia"));
-						txtTelefono.setText(rs.getString("Telefono"));
-						cmbTipoCliente.setSelectedItem(rs.getString("tipocliente"));
-						txtCelular.setText(rs.getString("celular"));
-						txtMail.setText(rs.getString("email"));
-						txtrfc.setText(rs.getString("rfc"));
-						txtrfc.setText(rs.getString("ciudad"));
-					}catch(Exception e){
-						
-						
-					}
-				}
-			}
-		});
 		btnBuscarPersona.setVisible(false);
 		btnBuscarEmpresa.setVisible(false);
 		btnBuscarNum.setVisible(false);
@@ -697,6 +737,7 @@ public class clientes extends JFrame {
 		txtrfc.setEnabled(true);
 		txtReferencia.setEnabled(true);
 		cmbTipoCliente.setEnabled(true);
+		txtciudad.setEnabled(true);
 		txtNombre.requestFocus();
 	}
 	void Desabilitar(){
@@ -713,58 +754,35 @@ public class clientes extends JFrame {
 		txtrfc.setEnabled(false);
 		txtReferencia.setEnabled(false);
 		cmbTipoCliente.setEnabled(false);
+		txtciudad.setEnabled(false);
 		txtNombre.requestFocus();
 	}
 	
 	void BusquedaTablaPersona(){
-	
 		try{
-		 	btnGuardar.setEnabled(false);
-			btnActualizar.setEnabled(false);
-			btnEliminar.setEnabled(false);
-			Clean();
-				if(txtbusNombre.getText().equals("")) {
-				txtbusNombre.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
-				validacion.setText("Llene los campos"); }
-				else {
-			
-			if(txtbusPaterno.getText().equals("")) {
-				txtbusPaterno.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
-				validacion.setText("Llene los campos"); }
-			else {	
-				
-			if(txtbusMaterno.getText().equals("")) {
-				txtbusMaterno.setBorder(BorderFactory.createLineBorder(Color.RED, 1));
-				validacion.setText("Llene los campos");	}		
-			
-			else { 
-		Bordes();		
-		String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail","Tipo Cliente"};
+		String[]titulos= {"Num Cliente","Nombre","Empresa","Direccion","Referencia","RFC","Telefono","Celular","E-Mail","Tipo Cliente", "Ciudad"};
 		model= new DefaultTableModel(null, titulos);
-		String consulta="SELECT * FROM clientes WHERE nombre='"+txtbusNombre.getText()+"' AND apellidopaterno='"+txtbusPaterno.getText()+"'"+
-		"OR apellidomaterno='"+txtbusMaterno.getText()+"'";
+		String consulta="SELECT * FROM clientes WHERE nombre='"+txtbusNombre.getText()+"' OR apellidopaterno='"+txtbusPaterno.getText()+"' OR apellidomaterno='"+txtbusMaterno.getText()+"'";
 		sent=conn.createStatement();
 		String[] regreso= new String[11];
 		ResultSet rs= sent.executeQuery(consulta);
-
 		while (rs.next()){
 			regreso[0]=rs.getString("num_cliente");
-			regreso[1]=rs.getString("nombre");
-			regreso[2]=rs.getString("direccion");
-			regreso[3]=rs.getString("referencia");
-			regreso[4]=rs.getString("rfc");
-			regreso[5]=rs.getString("empresa");
+			regreso[1]=rs.getString("nombre")+" "+rs.getString("apellidopaterno")+" "+rs.getString("apellidomaterno");
+			regreso[2]=rs.getString("empresa");
+			regreso[3]=rs.getString("direccion");
+			regreso[4]=rs.getString("referencia");
+			regreso[5]=rs.getString("rfc");
 			regreso[6]=rs.getString("telefono");
 			regreso[7]=rs.getString("celular");
 			regreso[8]=rs.getString("email");
 			regreso[9]=rs.getString("tipocliente");
-			regreso[10]=rs.getString("cliente");
-			model.addRow(regreso);
+			regreso[10]=rs.getString("ciudad");
+			model.addRow(regreso); 
 		}
 		table.setModel(model);
 			 }
-				}
-		} }catch(Exception e){
+		catch(Exception e){
 			JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
 		}	
 	}
@@ -776,23 +794,24 @@ public class clientes extends JFrame {
 			 validacion.setText("Introduce la empresa");
 		 } else {
 			 Bordes();
-			String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail","Tipo Cliente"};
+			String[]titulos= {"Num Cliente","Nombre","Empresa","Direccion","Referencia","RFC","Telefono","Celular","E-Mail","Tipo Cliente", "Ciudad"};
 			model= new DefaultTableModel(null, titulos);
-			String consulta="SELECT * FROM clientes WHERE empresa='"+txtbusNombre.getText()+"'";
+			String consulta="SELECT * FROM clientes WHERE empresa LIKE '%"+txtbusNombre.getText()+"%'";
 			sent=conn.createStatement();
-			String[] regreso= new String[10];
+			String[] regreso= new String[11];
 			ResultSet rs= sent.executeQuery(consulta);
 			while (rs.next()){
 				regreso[0]=rs.getString("num_cliente");
-				regreso[1]=rs.getString("nombre");
-				regreso[2]=rs.getString("direccion");
-				regreso[3]=rs.getString("referencia");
-				regreso[4]=rs.getString("rfc");
-				regreso[5]=rs.getString("empresa");
+				regreso[1]=rs.getString("nombre")+" "+rs.getString("apellidopaterno")+" "+rs.getString("apellidomaterno");
+				regreso[2]=rs.getString("empresa");
+				regreso[3]=rs.getString("direccion");
+				regreso[4]=rs.getString("referencia");
+				regreso[5]=rs.getString("rfc");
 				regreso[6]=rs.getString("telefono");
 				regreso[7]=rs.getString("celular");
 				regreso[8]=rs.getString("email");
 				regreso[9]=rs.getString("tipocliente");
+				regreso[10]=rs.getString("ciudad");
 				model.addRow(regreso); 
 			}
 		
@@ -816,10 +835,9 @@ public class clientes extends JFrame {
 				 validacion.setText("Introduce el Numero del Cliente");
 				 
 			 } else {
-	 
 				 Clean();
 				 Bordes();
-				String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail","Tipo Cliente"};
+				 String[]titulos= {"Num Cliente","Nombre","Empresa","Direccion","Referencia","RFC","Telefono","Celular","E-Mail","Tipo Cliente", "Ciudad"};
 				model= new DefaultTableModel(null, titulos);
 			
 				String consulta="SELECT * FROM clientes WHERE num_cliente='"+txtbusNombre.getText()+"' AND apellidopaterno='"+txtbusPaterno.getText()+"' AND apellidomaterno='"+txtbusMaterno.getText()+"'";
@@ -828,11 +846,11 @@ public class clientes extends JFrame {
 				ResultSet rs= sent.executeQuery(consulta);
 				while (rs.next()){
 					regreso[0]=rs.getString("num_cliente");
-					regreso[1]=rs.getString("nombre");
-					regreso[2]=rs.getString("direccion");
-					regreso[3]=rs.getString("referencia");
-					regreso[4]=rs.getString("rfc");
-					regreso[5]=rs.getString("empresa");
+					regreso[1]=rs.getString("nombre")+" "+rs.getString("apellidopaterno")+" "+rs.getString("apellidomaterno");
+					regreso[2]=rs.getString("empresa");
+					regreso[3]=rs.getString("direccion");
+					regreso[4]=rs.getString("referencia");
+					regreso[5]=rs.getString("rfc");
 					regreso[6]=rs.getString("telefono");
 					regreso[7]=rs.getString("celular");
 					regreso[8]=rs.getString("email");
@@ -907,6 +925,7 @@ public class clientes extends JFrame {
     	  txtTelefono.setText("");
     	  txtCelular.setText("");
     	  txtMail.setText("");
-    	  txtrfc.setText("");   	  
+    	  txtrfc.setText(""); 
+    	  txtciudad.setText("");
       }
 }
