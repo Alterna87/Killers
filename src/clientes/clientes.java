@@ -67,6 +67,7 @@ public class clientes extends JFrame {
 	private JTextField txtbusPaterno;
 	private JTextField txtbusMaterno;
 	private JTable table;
+	private JTextField txtciudad;
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -87,14 +88,14 @@ public class clientes extends JFrame {
 	public clientes() {
 		setTitle("Killers-Clientes");
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-		setBounds(100, 100, 843, 559);
+		setBounds(100, 100, 843, 524);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JPanel panel = new JPanel();
-		panel.setBounds(21, 44, 799, 165);
+		panel.setBounds(21, 44, 799, 192);
 		panel.setBorder(new TitledBorder(null, "Datos del Cliente", TitledBorder.LEADING, TitledBorder.TOP, null, Color.RED));
 		contentPane.add(panel);
 		panel.setLayout(null);
@@ -208,12 +209,12 @@ public class clientes extends JFrame {
 			txtReferencia.setText(txtReferencia.getText().toUpperCase());
 			}
 		});
-		txtReferencia.setBounds(98, 95, 241, 20);
+		txtReferencia.setBounds(98, 95, 319, 20);
 		panel.add(txtReferencia);
 		txtReferencia.setColumns(10);
 		
 		JLabel lblNewLabel_2 = new JLabel("Telefono:");
-		lblNewLabel_2.setBounds(361, 95, 69, 14);
+		lblNewLabel_2.setBounds(427, 98, 69, 14);
 		panel.add(lblNewLabel_2);
 		
 		txtTelefono = new JTextField();
@@ -228,12 +229,12 @@ public class clientes extends JFrame {
 				evt.consume(); 
 			}
 		});
-		txtTelefono.setBounds(440, 92, 86, 20);
+		txtTelefono.setBounds(506, 89, 86, 20);
 		panel.add(txtTelefono);
 		txtTelefono.setColumns(10);
 		
 		JLabel lblCelular = new JLabel("Celular:");
-		lblCelular.setBounds(575, 95, 46, 14);
+		lblCelular.setBounds(630, 98, 46, 14);
 		panel.add(lblCelular);
 		
 		txtCelular = new JTextField();
@@ -247,26 +248,26 @@ public class clientes extends JFrame {
 				evt.consume(); 
 							}
 		});
-		txtCelular.setBounds(620, 92, 86, 20);
+		txtCelular.setBounds(686, 89, 86, 20);
 		panel.add(txtCelular);
 		txtCelular.setColumns(10);
 		
 		JLabel lblTipoDeCliente = new JLabel("Tipo de Cliente:");
-		lblTipoDeCliente.setBounds(10, 137, 86, 14);
+		lblTipoDeCliente.setBounds(10, 134, 86, 14);
 		panel.add(lblTipoDeCliente);
 		
 		JLabel lblEmail = new JLabel("E-Mail:");
-		lblEmail.setBounds(269, 137, 46, 14);
+		lblEmail.setBounds(269, 134, 46, 14);
 		panel.add(lblEmail);
 		
 		txtMail = new JTextField();
 		txtMail.setBackground(Color.LIGHT_GRAY);
-		txtMail.setBounds(313, 134, 170, 20);
+		txtMail.setBounds(313, 131, 170, 20);
 		panel.add(txtMail);
 		txtMail.setColumns(10);
 		
 		JLabel lblNewRfc = new JLabel("RFC:");
-		lblNewRfc.setBounds(504, 134, 56, 14);
+		lblNewRfc.setBounds(504, 131, 56, 14);
 		panel.add(lblNewRfc);
 		
 		txtrfc = new JTextField();
@@ -285,14 +286,25 @@ public class clientes extends JFrame {
 			txtrfc.setText(txtrfc.getText().toUpperCase());
 			}
 		});
-		txtrfc.setBounds(545, 131, 150, 20);
+		txtrfc.setBounds(545, 128, 150, 20);
 		panel.add(txtrfc);
 		txtrfc.setColumns(10);
 		
 		cmbTipoCliente = new JComboBox<String>();
 		cmbTipoCliente.setBackground(Color.LIGHT_GRAY);
-		cmbTipoCliente.setBounds(98, 134, 128, 20);
+		cmbTipoCliente.setBounds(98, 131, 128, 20);
 		panel.add(cmbTipoCliente);
+		
+		txtciudad = new JTextField();
+		txtciudad.setEnabled(false);
+		txtciudad.setColumns(10);
+		txtciudad.setBackground(Color.LIGHT_GRAY);
+		txtciudad.setBounds(108, 162, 170, 20);
+		panel.add(txtciudad);
+		
+		JLabel lblciudad = new JLabel("Ciudad:");
+		lblciudad.setBounds(10, 165, 78, 14);
+		panel.add(lblciudad);
 		cmbTipoCliente.addItem("CASA-HABITACION");
 		cmbTipoCliente.addItem("COMERCIO");
 		cmbTipoCliente.addItem("INDUSTRIA");
@@ -327,8 +339,8 @@ public class clientes extends JFrame {
 					if(validacion.getText().equals(" ")){
 						
 						String SQL="INSERT INTO clientes(nombre, apellidopaterno, apellidomaterno,"+
-									"empresa, direccion, referencia, telefono, celular, tipocliente, email, rfc)"+
-												"VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+									"empresa, direccion, referencia, telefono, celular, tipocliente, email, rfc, ciudad)"+
+												"VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
 										PreparedStatement ps= conn.prepareStatement(SQL);
 										ps.setString(1, txtNombre.getText());
 										ps.setString(2, txtApePaterno.getText());
@@ -341,14 +353,12 @@ public class clientes extends JFrame {
 										ps.setString(9,tipo);
 										ps.setString(10, txtMail.getText());
 										ps.setString(11, txtrfc.getText());
+										ps.setString(12, txtciudad.getText());
 										int n=ps.executeUpdate();
 										if(n>0){
-											JOptionPane.showMessageDialog(null, "Datos guardados correctamente");
+											JOptionPane.showMessageDialog(null, "Datos del Cliente Guardados Correctamente");
 											Clean();
-										}
-							
-							
-					
+										}	
 					}
 				} else {
 						if(txtEmpresa.getText().equals("")){				
@@ -361,11 +371,10 @@ public class clientes extends JFrame {
 						txtrfc.setBorder(BorderFactory.createLineBorder(Color.RED,1));
 						validacion.setText("Llene los campos");
 						}
-						if(validacion.getText().equals(" ")){
-							
+						if(validacion.getText().equals(" ")){	
 							String SQL="INSERT INTO clientes(nombre, apellidopaterno, apellidomaterno,"+
-										"empresa, direccion, referencia, telefono, celular, tipocliente, email, rfc)"+
-													"VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+										"empresa, direccion, referencia, telefono, celular, tipocliente, email, rfc,ciudad)"+
+													"VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
 											PreparedStatement ps= conn.prepareStatement(SQL);
 											ps.setString(1, txtNombre.getText());
 											ps.setString(2, txtApePaterno.getText());
@@ -378,18 +387,15 @@ public class clientes extends JFrame {
 											ps.setString(9,tipo);
 											ps.setString(10, txtMail.getText());
 											ps.setString(11, txtrfc.getText());
+											ps.setString(12, txtciudad.getText());
 											int n=ps.executeUpdate();
 											if(n>0){
-												JOptionPane.showMessageDialog(null, "Datos guardados correctamente");
+												JOptionPane.showMessageDialog(null, "Datos del Cliente Guardados Correctamente");
 												Clean();
-											}
-								
-								
-						
+											}					
 						}
 				}
-			
-		
+
 				} catch(SQLException e) {
 				JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
 				}
@@ -446,7 +452,7 @@ public class clientes extends JFrame {
 		contentPane.add(btnNuevo);
 		
 		final JLabel lblNombrebus = new JLabel("Nombre:");
-		lblNombrebus.setBounds(21, 250, 75, 14);
+		lblNombrebus.setBounds(20, 276, 75, 14);
 		contentPane.add(lblNombrebus);
 		
 		txtbusNombre = new JTextField();
@@ -456,12 +462,12 @@ public class clientes extends JFrame {
 				txtbusNombre.setText(txtbusNombre.getText().toUpperCase());
 			}
 		});
-		txtbusNombre.setBounds(111, 244, 111, 20);
+		txtbusNombre.setBounds(120, 273, 111, 20);
 		contentPane.add(txtbusNombre);
 		txtbusNombre.setColumns(10);
 		
 		final JLabel lblApellidoPaterno = new JLabel("Apellido Paterno: ");
-		lblApellidoPaterno.setBounds(232, 247, 104, 14);
+		lblApellidoPaterno.setBounds(241, 276, 104, 14);
 		contentPane.add(lblApellidoPaterno);
 		
 		txtbusPaterno = new JTextField();
@@ -476,12 +482,12 @@ public class clientes extends JFrame {
 				txtbusPaterno.setText(txtbusPaterno.getText().toUpperCase());
 			}
 		});
-		txtbusPaterno.setBounds(332, 247, 140, 20);
+		txtbusPaterno.setBounds(341, 273, 140, 20);
 		contentPane.add(txtbusPaterno);
 		txtbusPaterno.setColumns(10);
 		
 		final JLabel lblApellidoMaterno_1 = new JLabel("Apellido Materno:");
-		lblApellidoMaterno_1.setBounds(508, 247, 111, 14);
+		lblApellidoMaterno_1.setBounds(517, 276, 111, 14);
 		contentPane.add(lblApellidoMaterno_1);
 		
 		txtbusMaterno = new JTextField();
@@ -496,68 +502,30 @@ public class clientes extends JFrame {
 				if(c<'a'|| c>'z' || c<'A' ||c>'z') evt.consume();
 			}
 		});
-		txtbusMaterno.setBounds(617, 244, 107, 20);
+		txtbusMaterno.setBounds(626, 273, 107, 20);
 		contentPane.add(txtbusMaterno);
 		txtbusMaterno.setColumns(10);
 		
 		JLabel lblBuscarPor = new JLabel("Buscar Por:");
-		lblBuscarPor.setBounds(10, 218, 91, 14);
+		lblBuscarPor.setBounds(10, 243, 91, 14);
 		contentPane.add(lblBuscarPor);
 		
 		final JLabel lblEmpresabus = new JLabel("Empresa:");
 		lblEmpresabus.setForeground(Color.BLACK);
-		lblEmpresabus.setBounds(21, 250, 89, 14);
+		lblEmpresabus.setBounds(21, 276, 89, 14);
 		contentPane.add(lblEmpresabus);
 		
 		final JLabel lblNumCliente = new JLabel("Num Cliente: ");
-		lblNumCliente.setBounds(21, 250, 89, 14);
+		lblNumCliente.setBounds(21, 276, 89, 14);
 		contentPane.add(lblNumCliente);
 		
 		final JComboBox<String> cmbBusqueda = new JComboBox<String>();
-		cmbBusqueda.setBounds(99, 216, 123, 20);
+		cmbBusqueda.setBounds(99, 241, 123, 20);
 		contentPane.add(cmbBusqueda);
 		
 		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setBounds(10, 298, 810, 165);
+		scrollPane.setBounds(10, 309, 810, 140);
 		contentPane.add(scrollPane);
-		
-		table = new JTable();
-		table.setBackground(SystemColor.control);
-		table.setFillsViewportHeight(true);
-		table.setSurrendersFocusOnKeystroke(true);
-		table.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent evt) {
-				btnActualizar.setEnabled(true);
-				btnEliminar.setEnabled(true);
-				btnGuardar.setEnabled(false);
-				Habilitar();
-				if(evt.getButton()==1){
-					int fila=table.getSelectedRow();
-					try{
-						String actualizar="SELECT * FROM clientes WHERE num_cliente='"+table.getValueAt(fila, 0)+"'";
-						sent=conn.createStatement();
-						ResultSet rs=sent.executeQuery(actualizar);
-						rs.next();
-						txtNombre.setText(rs.getString("nombre"));
-						txtApePaterno.setText(rs.getString("apellidopaterno"));
-						txtApeMaterno.setText(rs.getString("apellidomaterno"));
-						txtEmpresa.setText(rs.getString("empresa"));
-						txtDireccion.setText(rs.getString("direccion"));
-						txtReferencia.setText(rs.getString("referencia"));
-						txtTelefono.setText(rs.getString("Telefono"));
-						cmbTipoCliente.setSelectedItem(rs.getString("tipocliente"));
-						txtCelular.setText(rs.getString("celular"));
-						txtMail.setText(rs.getString("email"));
-						txtrfc.setText(rs.getString("rfc"));
-					}catch(Exception e){
-						
-						
-					}
-				}
-			}
-		});
-		scrollPane.setViewportView(table);
 		
 		final JButton btnBuscarEmpresa = new JButton("Buscar");
 		btnBuscarEmpresa.addActionListener(new ActionListener() {
@@ -565,7 +533,7 @@ public class clientes extends JFrame {
 				BusquedaTablaEmpresa();
 			}
 		});
-		btnBuscarEmpresa.setBounds(232, 214, 89, 23);
+		btnBuscarEmpresa.setBounds(232, 239, 89, 23);
 		contentPane.add(btnBuscarEmpresa);
 		
 		final JButton btnBuscarNum = new JButton("Buscar");
@@ -574,11 +542,11 @@ public class clientes extends JFrame {
 				BuscarTablaNumero();
 			}
 		});
-		btnBuscarNum.setBounds(230, 214, 89, 23);
+		btnBuscarNum.setBounds(230, 239, 89, 23);
 		contentPane.add(btnBuscarNum);
 		
 		final JButton btnBuscarPersona = new JButton("Buscar");
-		btnBuscarPersona.setBounds(230, 214, 89, 23);
+		btnBuscarPersona.setBounds(232, 241, 89, 23);
 		contentPane.add(btnBuscarPersona);
 		
 	
@@ -663,6 +631,46 @@ public class clientes extends JFrame {
 		btnGuardar.setEnabled(false);
 		btnActualizar.setEnabled(false);
 		btnEliminar.setEnabled(false);
+		
+		table = new JTable();
+		table.setBounds(10, 309, 808, 163);
+		contentPane.add(table);
+		table.setBackground(SystemColor.control);
+		table.setFillsViewportHeight(true);
+		table.setSurrendersFocusOnKeystroke(true);
+		table.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent evt) {
+				btnActualizar.setEnabled(true);
+				btnEliminar.setEnabled(true);
+				btnGuardar.setEnabled(false);
+				Habilitar();
+				if(evt.getButton()==1){
+					int fila=table.getSelectedRow();
+					try{
+						String actualizar="SELECT * FROM clientes WHERE num_cliente='"+table.getValueAt(fila, 0)+"'";
+						sent=conn.createStatement();
+						ResultSet rs=sent.executeQuery(actualizar);
+						rs.next();
+						txtNombre.setText(rs.getString("nombre"));
+						txtApePaterno.setText(rs.getString("apellidopaterno"));
+						txtApeMaterno.setText(rs.getString("apellidomaterno"));
+						txtEmpresa.setText(rs.getString("empresa"));
+						txtDireccion.setText(rs.getString("direccion"));
+						txtReferencia.setText(rs.getString("referencia"));
+						txtTelefono.setText(rs.getString("Telefono"));
+						cmbTipoCliente.setSelectedItem(rs.getString("tipocliente"));
+						txtCelular.setText(rs.getString("celular"));
+						txtMail.setText(rs.getString("email"));
+						txtrfc.setText(rs.getString("rfc"));
+						txtrfc.setText(rs.getString("ciudad"));
+					}catch(Exception e){
+						
+						
+					}
+				}
+			}
+		});
 		btnBuscarPersona.setVisible(false);
 		btnBuscarEmpresa.setVisible(false);
 		btnBuscarNum.setVisible(false);
@@ -736,7 +744,7 @@ public class clientes extends JFrame {
 		String consulta="SELECT * FROM clientes WHERE nombre='"+txtbusNombre.getText()+"' AND apellidopaterno='"+txtbusPaterno.getText()+"'"+
 		"OR apellidomaterno='"+txtbusMaterno.getText()+"'";
 		sent=conn.createStatement();
-		String[] regreso= new String[10];
+		String[] regreso= new String[11];
 		ResultSet rs= sent.executeQuery(consulta);
 
 		while (rs.next()){
@@ -750,19 +758,15 @@ public class clientes extends JFrame {
 			regreso[7]=rs.getString("celular");
 			regreso[8]=rs.getString("email");
 			regreso[9]=rs.getString("tipocliente");
+			regreso[10]=rs.getString("cliente");
 			model.addRow(regreso);
 		}
 		table.setModel(model);
 			 }
 				}
-	
-	 
 		} }catch(Exception e){
 			JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
-		
-		}
-	
-		
+		}	
 	}
  void BusquedaTablaEmpresa(){
 	 try{
@@ -770,13 +774,10 @@ public class clientes extends JFrame {
 		 if(txtbusNombre.getText().equals("")) {
 			 txtbusNombre.setBorder(BorderFactory.createLineBorder(Color.RED,1));
 			 validacion.setText("Introduce la empresa");
-			 
 		 } else {
 			 Bordes();
-	
 			String[]titulos= {"Num Cliente","Nombre", "Direccion","Referencia","RFC","Empresa","Telefono","Celular","E-Mail","Tipo Cliente"};
 			model= new DefaultTableModel(null, titulos);
-		
 			String consulta="SELECT * FROM clientes WHERE empresa='"+txtbusNombre.getText()+"'";
 			sent=conn.createStatement();
 			String[] regreso= new String[10];
@@ -823,7 +824,7 @@ public class clientes extends JFrame {
 			
 				String consulta="SELECT * FROM clientes WHERE num_cliente='"+txtbusNombre.getText()+"' AND apellidopaterno='"+txtbusPaterno.getText()+"' AND apellidomaterno='"+txtbusMaterno.getText()+"'";
 				sent=conn.createStatement();
-				String[] regreso= new String[10];
+				String[] regreso= new String[11];
 				ResultSet rs= sent.executeQuery(consulta);
 				while (rs.next()){
 					regreso[0]=rs.getString("num_cliente");
@@ -836,6 +837,7 @@ public class clientes extends JFrame {
 					regreso[7]=rs.getString("celular");
 					regreso[8]=rs.getString("email");
 					regreso[9]=rs.getString("tipocliente");
+					regreso[10]=rs.getString("ciudad");
 					model.addRow(regreso); 
 				}
 			
@@ -854,7 +856,7 @@ public class clientes extends JFrame {
 		String tipo= String.valueOf(combo);
 
 	try {
-		String SQL="UPDATE clientes SET nombre=?, apellidopaterno=?, apellidomaterno=?, empresa=?, direccion=?, referencia=?, telefono=?, celular=?, tipocliente=?, email=?, rfc=?"+
+		String SQL="UPDATE clientes SET nombre=?, apellidopaterno=?, apellidomaterno=?, empresa=?, direccion=?, referencia=?, telefono=?, celular=?, tipocliente=?, email=?, rfc=?, ciudad=?"+
 	"WHERE num_cliente=?";
 		int fila=table.getSelectedRow();
 		String dato=(String) table.getValueAt(fila, 0);
@@ -870,7 +872,8 @@ public class clientes extends JFrame {
 		ps.setString(9,tipo);
 		ps.setString(10, txtMail.getText());
 		ps.setString(11, txtrfc.getText());
-		ps.setString(12, dato);
+		ps.setString(12, txtciudad.getText());
+		ps.setString(13, dato);
 		int n=ps.executeUpdate();
 		if(n>0){
 			JOptionPane.showMessageDialog(null, "Datos actualizados correctamente");
@@ -891,7 +894,7 @@ public class clientes extends JFrame {
     	txtrfc.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));	
     	txtbusNombre.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));	
     	txtbusPaterno.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));	
-    	txtbusMaterno.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));	
+    	txtbusMaterno.setBorder(BorderFactory.createLineBorder(Color.GRAY,1));
     }
       
       void Clean(){
