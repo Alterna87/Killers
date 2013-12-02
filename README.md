@@ -1,26 +1,28 @@
-Killers "Exterminio de plagas"
+Killers "exterminio de plagas"
 =======
 
-Sistema de control de "Killers"
+Sistema de control de "Killer"
+-------
 
 Desarrollado en:
-*Java
-*MySQL
-*Eclipse
+* *Java*
+* *MySQL*
+* *Eclipse*
 
 Contiene:
-*Control de Clientes(Beta)
-*Solicitud de Servicios(Beta)
-*Actualizar Servicios(Beta)
-*Gastos
+
+  * Control de Clientes(Beta).
+  * Solicitud de Servicios(Beta).
+  * Orden de Servicio(En diseño).
 
 Por hacer:
-*Orden de servicio
-*Control de empleados
-*Ventas
-*Control de productos
-*Reportes
-*Informes
+* Control de Servicios.
+* Control de empleados.
+* Venta.
+* Control de productos.
+* Reportes.
+* Informes.
+
 
 Development by Alterna Velueta
 
