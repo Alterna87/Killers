@@ -9,9 +9,9 @@ Desarrollado en:
 *Eclipse*
 
 Contiene:
-::
-Control de Clientes(Beta)
-Solicitud de Servicios.
+
+  *Control de Clientes(Beta)
+  *Solicitud de Servicios.
 
 Por hacer:
 *Orden de servicio*
