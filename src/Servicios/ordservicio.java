@@ -209,7 +209,7 @@ public class ordservicio extends JFrame {
 		txtnumcliente.setForeground(SystemColor.desktop);
 		txtnumcliente.setBackground(Color.WHITE);
 		txtnumcliente.setColumns(10);
-		txtnumcliente.setBounds(147, 21, 124, 20);
+		txtnumcliente.setBounds(125, 21, 124, 20);
 		datoscliente.add(txtnumcliente);
 		txttelefono = new JTextField();
 		txttelefono.setEditable(false);
@@ -259,16 +259,18 @@ public class ordservicio extends JFrame {
 		final JLabel lblnombrecliente = new JLabel("Nombre:");
 		final JLabel lblEmpresa_1 = new JLabel("Empresa:");
 		final JButton btnOrdenServicio_1 = new JButton("Orden Servicio");
+		
+		
 		txttecnico.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyReleased(KeyEvent evt) {
+			public void keyReleased(KeyEvent e) {
+				txttecnico.setText(txttecnico.getText().toUpperCase());
+			}
+			@Override
+			public void keyTyped(KeyEvent evt) {
 				char c=evt.getKeyChar();
 				if((c<'a'|| c>'z') &&( c<'A' ||c>'z') && ((c!='ñ' && c!='Ñ') && (c!=(char)KeyEvent.VK_SPACE)))
 					evt.consume();
-			}
-			@Override
-			public void keyTyped(KeyEvent e) {
-				txttecnico.setText(txttecnico.getText().toUpperCase());
 			}
 		});
 		txttecnico.setBackground(new Color(255, 255, 255));
@@ -290,7 +292,7 @@ public class ordservicio extends JFrame {
 		
 		txtObservaciones.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyTyped(KeyEvent e) {
+			public void keyReleased(KeyEvent arg0) {
 				txtObservaciones.setText(txtObservaciones.getText().toUpperCase());
 			}
 		});
@@ -408,10 +410,6 @@ public class ordservicio extends JFrame {
 		txtNombre = new JTextField();
 		txtNombre.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyTyped(KeyEvent evt) {
-	
-			}
-			@Override
 			public void keyReleased(KeyEvent arg0) {
 				txtNombre.setText(txtNombre.getText().toUpperCase());
 			}
@@ -527,7 +525,27 @@ public class ordservicio extends JFrame {
 				//ORDENES DE SERVICIO
 				try{
 					if(bandera==5){
-						String Orden="";
+						try{
+						String orden="INSERT INTO ordenservicio(numero_ss,num_cliente, aplicacion,"+
+								"aplicaciones, valido, fecha)"+
+								"VALUES(?,?,?,?,'0', Now())";
+						int fila=table.getSelectedRow();
+						String dato=(String) table.getValueAt(fila, 0);
+						PreparedStatement ps= conn.prepareStatement(orden);
+						//ps.setString(1, );
+						ps.setString(2,txtnumcliente.getText());
+						ps.setString(3,txtaplicacion.getText());
+						ps.setString(4, txtaplicaciones.getText());
+						int n=ps.executeUpdate();
+						String ss="UPDATE solicitud_servicio SET tipo_servicio=?, plagas=?,"+
+					"WHERE num_ss=?";
+						if(n>0){
+							JOptionPane.showMessageDialog(null, "Solicud de Servicio Guardado en la BD");
+							btnOrdenServicio.setVisible(true);
+						}				
+						}catch(SQLException e){
+							JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
+						}	
 						
 					}
 					if(bandera==6){}
@@ -747,8 +765,8 @@ public class ordservicio extends JFrame {
 						//TERMINA LA PREPARACION EMPIEZAN LAS QUERYS
 					
 				String SQL="INSERT INTO solicitud_servicio(num_cliente,tipo_servicio, plagas,"+
-						"tecnicas, fecha_servicio, hora, tecnico, observaciones, aplicaciones, aplicacion, costo, forma_pago,fecha_ss, valido)"+
-									"VALUES(?,?,?,?,?,?,?,?,Now(),'0')";
+						"tecnicas, fecha_servicio, hora, tecnico, observaciones, aplicaciones, aplicacion, costo,fecha_ss, valido)"+
+									"VALUES(?,?,?,?,?,?,?,?,?,?,?,Now(),'0')";
 							PreparedStatement ps= conn.prepareStatement(SQL);
 							ps.setString(1, txtnumcliente.getText());
 							ps.setString(2, String.valueOf(cmbtiposerv.getSelectedItem()));
@@ -764,8 +782,7 @@ public class ordservicio extends JFrame {
 							//ps.setString(10, String.valueOf(cmbmedio.getSelectedItem()));
 							int n=ps.executeUpdate();
 							if(n>0){
-								JOptionPane.showMessageDialog(null, "Solicud de Servicio Guardado en la BD");
-								btnOrdenServicio.setVisible(true);
+								JOptionPane.showMessageDialog(null, "Solicud de Servicio Guardada en la BD");
 							}				
 						}				
 			} catch(Exception e) {
@@ -783,39 +800,48 @@ public class ordservicio extends JFrame {
 				try{
 					Clean();
 					Gray();
+					
 					 if(txtNombre.getText().isEmpty()) {
-						 validacioncamp.setText("Introduce el Numero del Cliente");
+						 validacioncamp.setText("Introduce el Nombre del Cliente");
 						 txtNombre.setBorder(BorderFactory.createLineBorder(Color.RED,1));
 						 txtNombre.requestFocus();
-					 } else {
+					 } else	 if(txtPaterno.getText().isEmpty()){
+							 validacioncamp.setText("Introduce el Apellido Paterno");
+							 txtPaterno.setBorder(BorderFactory.createLineBorder(Color.RED,1));
+							 txtPaterno.requestFocus(); 
+						 } else if(txtMaterno.getText().isEmpty()){
+							 validacioncamp.setText("Introduce el Apellido Materno");
+							 txtMaterno.setBorder(BorderFactory.createLineBorder(Color.RED,1));
+							 txtMaterno.requestFocus(); 
+						 }
+						 else{
 						 validacioncamp.setText("");
 						 if(bandera==1){
-						String[]titulos= {"Num Cliente","Nombre","Empresa","Direccion","Referencia","RFC","Telefono","Celular","E-Mail","Tipo Cliente"};
+						String[]titulos= {"Num Cliente","Nombre","Empresa","Direccion","Referencia","RFC","Telefono","Celular","E-Mail","Tipo Cliente", "Ciudad"};
 						modeltable= new DefaultTableModel(null, titulos);
-						String consulta="SELECT * FROM clientes WHERE nombre LIKE '%"+txtNombre.getText()+"%' AND apellidopaterno LIKE '%"+txtPaterno.getText()+"%' AND apellidomaterno LIKE '%"+txtMaterno.getText()+"%'";
+						String consulta="SELECT * FROM clientes WHERE nombre='"+txtNombre.getText()+"' OR apellidopaterno='"+txtPaterno.getText()+"' OR apellidomaterno='"+txtMaterno.getText()+"'";
 						sent=conn.createStatement();
-						String[] regreso= new String[10];
+						String[] regreso= new String[11];
 						ResultSet rs= sent.executeQuery(consulta);
-						if(!rs.next()){
-							JOptionPane.showMessageDialog(null, "Error: El Cliente no se encuentra en la BD");
-						} else {
+				
 						while (rs.next()){
-							regreso[0]=rs.getString("num_cliente");
-							regreso[1]=rs.getString("nombre");
-							regreso[2]=rs.getString("empresa");
-							regreso[3]=rs.getString("direccion");
-							regreso[4]=rs.getString("referencia");
-							regreso[5]=rs.getString("rfc");
-							regreso[6]=rs.getString("telefono");
-							regreso[7]=rs.getString("celular");
-							regreso[8]=rs.getString("email");
-							regreso[9]=rs.getString("tipocliente");
-							modeltable.addRow(regreso); 
-						}
+								regreso[0]=rs.getString("num_cliente");
+								regreso[1]=rs.getString("nombre")+" "+rs.getString("apellidopaterno")+" "+rs.getString("apellidomaterno");
+								regreso[2]=rs.getString("empresa");
+								regreso[3]=rs.getString("direccion");
+								regreso[4]=rs.getString("referencia");
+								regreso[5]=rs.getString("rfc");
+								regreso[6]=rs.getString("telefono");
+								regreso[7]=rs.getString("celular");
+								regreso[8]=rs.getString("email");
+								regreso[9]=rs.getString("tipocliente");
+								regreso[10]=rs.getString("ciudad");
+								modeltable.addRow(regreso); 
+							}
 						scrollPane.setVisible(true);
 						table.setVisible(true);
 						table.setModel(modeltable);
-						}
+			
 						 } else if(bandera==2){
 							 String[]titulos= {"Numero SS","Num Cliente","Nombre" ,"Empresa","Tipo Servicio","Plagas","Tecnicas","Fecha Servicio","Hora","Tecnico","Fecha SS"};
 								modeltable= new DefaultTableModel(null, titulos);
@@ -823,10 +849,7 @@ public class ordservicio extends JFrame {
 								sent=conn.createStatement();
 								String[] regreso= new String[11];
 								ResultSet rs= sent.executeQuery(consulta);
-								if(!rs.next()){
-									JOptionPane.showMessageDialog(null, "Error: El Cliente No Solicitó el Servicio ");
-								}
-								else{
+							
 								while (rs.next()){
 									regreso[0]=rs.getString("num_ss");
 									regreso[1]=rs.getString("num_cliente");
@@ -844,7 +867,6 @@ public class ordservicio extends JFrame {
 								scrollPane.setVisible(true);
 								table.setVisible(true);
 								table.setModel(modeltable);					
-						 }	
 						 }
 					 } 
 						} catch(Exception e){
@@ -900,7 +922,6 @@ public class ordservicio extends JFrame {
 						datoscliente.setVisible(true);
 						datos_ss.setVisible(true);
 						btnGuardar_1.setVisible(true);
-						
 						}
 					else if(bandera==2 || bandera==5){
 						String actualizar="SELECT * FROM solicitud_servicio INNER JOIN clientes ON solicitud_servicio.num_cliente=clientes.num_cliente AND solicitud_servicio.num_ss='"+table.getValueAt(fila, 0)+"'";
@@ -1268,7 +1289,7 @@ public class ordservicio extends JFrame {
 					ResultSet rs= sent.executeQuery(consulta);
 					while (rs.next()){
 						regreso[0]=rs.getString("num_ss");
-						regreso[1]=rs.getString("nombre");
+						regreso[1]=rs.getString("nombre")+" "+rs.getString("apellidopaterno")+" "+rs.getString("apellidomaterno");
 						regreso[1]=rs.getString("nombre");
 						regreso[2]=rs.getString("empresa");
 						regreso[3]=rs.getString("tiposervicio");
@@ -1592,13 +1613,9 @@ public class ordservicio extends JFrame {
 				sent=conn.createStatement();
 				String[] regreso= new String[10];
 				ResultSet rs= sent.executeQuery(consulta);
-				if(!rs.next()){
-					JOptionPane.showMessageDialog(null, "Error: No se encuentra la Empresa Registrada en la BD");
-					
-				}else {
 				while (rs.next()){
 					regreso[0]=rs.getString("num_cliente");
-					regreso[1]=rs.getString("nombre");
+					regreso[1]=rs.getString("nombre")+" "+rs.getString("apellidopaterno")+" "+rs.getString("apellidomaterno");
 					regreso[2]=rs.getString("empresa");
 					regreso[3]=rs.getString("direccion");
 					regreso[4]=rs.getString("referencia");
@@ -1610,7 +1627,6 @@ public class ordservicio extends JFrame {
 					modeltable.addRow(regreso); 
 				}
 				table.setModel(modeltable);
-				}
 				 } else if(bandera==2){
 					 String[]titulos= {"Numero SS","Num Cliente","Nombre" ,"Empresa","Tipo Servicio","Plagas","Tecnicas","Fecha Servicio","Hora","Tecnico","Fecha SS"};
 						modeltable= new DefaultTableModel(null, titulos);
