@@ -345,9 +345,6 @@ public class ordservicio extends JFrame {
 						sent=conn.createStatement();
 						String[] regreso= new String[10];
 						ResultSet rs= sent.executeQuery(consulta);
-						if(!rs.next()){
-							JOptionPane.showMessageDialog(null, "Error: El Numero de cliente es Incorrecto o No se encuentra en la BD");
-						}else{
 						while (rs.next()){
 							regreso[0]=rs.getString("num_cliente");
 							regreso[1]=rs.getString("nombre")+" "+rs.getString("apellidopaterno")+" "+rs.getString("apellidomaterno");
@@ -365,7 +362,6 @@ public class ordservicio extends JFrame {
 						scrollPane.setVisible(true);
 						table.setVisible(true);
 						table.setModel(modeltable);
-						}
 						 } else if(bandera==2){
 							 String[]titulos= {"Numero SS","Num Cliente","Nombre" ,"Empresa","Tipo Servicio","Plagas","Tecnicas","Fecha Servicio","Hora","Tecnico","Fecha SS"};
 								modeltable= new DefaultTableModel(null, titulos);
@@ -373,9 +369,6 @@ public class ordservicio extends JFrame {
 								sent=conn.createStatement();
 								String[] regreso= new String[11];
 								ResultSet rs= sent.executeQuery(consulta);
-								if(!rs.next()){
-									JOptionPane.showMessageDialog(null, "Error: El Cliente no solicitó servicio");
-								} else {
 								while (rs.next()){
 									regreso[0]=rs.getString("num_ss");
 									regreso[1]=rs.getString("num_cliente");
@@ -393,7 +386,6 @@ public class ordservicio extends JFrame {
 								scrollPane.setVisible(true);
 								table.setVisible(true);
 								table.setModel(modeltable);					
-						 }	
 						 }
 					 } 
 						} catch(Exception e){
@@ -523,8 +515,8 @@ public class ordservicio extends JFrame {
 		btnOrdenServicio_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//ORDENES DE SERVICIO
-				try{
-					if(bandera==5){
+				//try{
+					if(bandera==2){
 						try{
 						String orden="INSERT INTO ordenservicio(numero_ss,num_cliente, aplicacion,"+
 								"aplicaciones, valido, fecha)"+
@@ -532,32 +524,44 @@ public class ordservicio extends JFrame {
 						int fila=table.getSelectedRow();
 						String dato=(String) table.getValueAt(fila, 0);
 						PreparedStatement ps= conn.prepareStatement(orden);
-						//ps.setString(1, );
+						ps.setString(1,dato);
 						ps.setString(2,txtnumcliente.getText());
 						ps.setString(3,txtaplicacion.getText());
 						ps.setString(4, txtaplicaciones.getText());
 						int n=ps.executeUpdate();
-						String ss="UPDATE solicitud_servicio SET tipo_servicio=?, plagas=?,"+
-					"WHERE num_ss=?";
-						if(n>0){
-							JOptionPane.showMessageDialog(null, "Solicud de Servicio Guardado en la BD");
-							btnOrdenServicio.setVisible(true);
-						}				
+						ResultSet mt=ps.getGeneratedKeys(); //obtengo las ultimas llaves generadas
+						int clave=0;
+						while(mt.next()){ 
+						 clave=mt.getInt(1);
+						}
+						String ss="UPDATE solicitud_servicio SET valido='1'"+
+								"WHERE num_ss=?";
+						int fila2=table.getSelectedRow();
+						PreparedStatement pt=conn.prepareStatement(ss);
+						pt.setString(1,dato);
+						int mn=pt.executeUpdate();
+						
+						if(n>0 && mn>0){
+							
+							JOptionPane.showMessageDialog(null, "Orden de servicio guardada Guardada en la BD "+clave);
+						
+				
+					}				
 						}catch(SQLException e){
 							JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
 						}	
 						
 					}
-					if(bandera==6){}
+			
 										
-					@SuppressWarnings("deprecation")
+				/*	@SuppressWarnings("deprecation")
 					JasperReport ubicacion = (JasperReport) JRLoader.loadObject("prueba.jasper");
 					JasperPrint print= JasperFillManager.fillReport(ubicacion, null, conn);
 					JasperViewer view=new JasperViewer(print, false);
 					view.setVisible(true);
 				} catch(HeadlessException | JRException e){
 						JOptionPane.showConfirmDialog(null, "Error: "+e.getMessage());
-					}
+					}*/
 			}
 		});
 			
@@ -823,7 +827,6 @@ public class ordservicio extends JFrame {
 						sent=conn.createStatement();
 						String[] regreso= new String[11];
 						ResultSet rs= sent.executeQuery(consulta);
-				
 						while (rs.next()){
 								regreso[0]=rs.getString("num_cliente");
 								regreso[1]=rs.getString("nombre")+" "+rs.getString("apellidopaterno")+" "+rs.getString("apellidomaterno");
@@ -845,7 +848,7 @@ public class ordservicio extends JFrame {
 						 } else if(bandera==2){
 							 String[]titulos= {"Numero SS","Num Cliente","Nombre" ,"Empresa","Tipo Servicio","Plagas","Tecnicas","Fecha Servicio","Hora","Tecnico","Fecha SS"};
 								modeltable= new DefaultTableModel(null, titulos);
-								String consulta="SELECT * FROM clientes INNER JOIN solicitud_servicio ON clientes.num_cliente=solicitud_servicio.num_cliente AND clientes.nombre LIKE '%"+txtNombre.getText()+"%' AND clientes.apellidopaterno LIKE '%"+txtPaterno.getText()+"%' AND clientes.apellidomaterno '%"+txtMaterno.getText()+"%'AND solicitud_servicio.valido='0'" ;
+								String consulta="SELECT * FROM clientes INNER JOIN solicitud_servicio ON clientes.num_cliente=solicitud_servicio.num_cliente AND clientes.nombre LIKE '%"+txtNombre.getText()+"%' AND clientes.apellidopaterno LIKE '%"+txtPaterno.getText()+"%' AND clientes.apellidomaterno LIKE '%"+txtMaterno.getText()+"%' AND solicitud_servicio.valido='0'" ;
 								sent=conn.createStatement();
 								String[] regreso= new String[11];
 								ResultSet rs= sent.executeQuery(consulta);
@@ -1034,8 +1037,8 @@ public class ordservicio extends JFrame {
 						datos_ss.setVisible(true);
 						btnAct.setVisible(true);
 						btnAct.setEnabled(true);
+						btnOrdenServicio_1.setVisible(true);
 						if(bandera==5){
-							btnOrdenServicio_1.setVisible(true);
 							scrollPane.setVisible(false);
 							table.setVisible(false);						
 						}
@@ -1634,9 +1637,6 @@ public class ordservicio extends JFrame {
 						sent=conn.createStatement();
 						String[] regreso= new String[11];
 						ResultSet rs= sent.executeQuery(consulta);
-						if(!rs.next()){
-							JOptionPane.showMessageDialog(null, "Error: El Cliente no solicitó servicio");
-						} else {
 						while (rs.next()){
 							regreso[0]=rs.getString("num_ss");
 							regreso[1]=rs.getString("num_cliente");
@@ -1652,7 +1652,7 @@ public class ordservicio extends JFrame {
 							modeltable.addRow(regreso);
 						}
 						table.setModel(modeltable);						
-				 }	}	 
+				 }
 				} catch(Exception e){
 					JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
 				}
