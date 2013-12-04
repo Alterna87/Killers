@@ -515,13 +515,13 @@ public class ordservicio extends JFrame {
 		btnOrdenServicio_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				//ORDENES DE SERVICIO
-				//try{
 					if(bandera==2){
 						try{
 						String orden="INSERT INTO ordenservicio(numero_ss,num_cliente, aplicacion,"+
-								"aplicaciones, valido, fecha)"+
-								"VALUES(?,?,?,?,'0', Now())";
+									"aplicaciones, valido, fecha)"+
+									"VALUES(?,?,?,?,'0', Now())";
 						int fila=table.getSelectedRow();
+						Object [] opciones ={"Aceptar","Cancelar"};
 						String dato=(String) table.getValueAt(fila, 0);
 						PreparedStatement ps= conn.prepareStatement(orden);
 						ps.setString(1,dato);
@@ -529,7 +529,7 @@ public class ordservicio extends JFrame {
 						ps.setString(3,txtaplicacion.getText());
 						ps.setString(4, txtaplicaciones.getText());
 						int n=ps.executeUpdate();
-						ResultSet mt=ps.getGeneratedKeys(); //obtengo las ultimas llaves generadas
+						ResultSet mt=ps.getGeneratedKeys();
 						int clave=0;
 						while(mt.next()){ 
 						 clave=mt.getInt(1);
@@ -540,10 +540,22 @@ public class ordservicio extends JFrame {
 						PreparedStatement pt=conn.prepareStatement(ss);
 						pt.setString(1,dato);
 						int mn=pt.executeUpdate();
-						
 						if(n>0 && mn>0){
-							
-							JOptionPane.showMessageDialog(null, "Orden de servicio guardada Guardada en la BD "+clave);
+							int eleccion = JOptionPane.showOptionDialog(null,"¿Desea Imprimir la Orden de Servicio?","Mensaje de Confirmacion",
+									JOptionPane.YES_NO_OPTION,
+									JOptionPane.QUESTION_MESSAGE,null,opciones,"Aceptar");
+									if (eleccion == JOptionPane.YES_OPTION){
+										try{
+										  @SuppressWarnings("deprecation")
+										JasperReport ubicacion = (JasperReport) JRLoader.loadObject("prueba.jasper");
+										JasperPrint print= JasperFillManager.fillReport(ubicacion, null, conn);
+										JasperViewer view=new JasperViewer(print, false);
+										view.setVisible(true);
+									} catch(HeadlessException | JRException e){
+											JOptionPane.showConfirmDialog(null, "Error: "+e.getMessage());
+										}
+										
+									}
 						
 				
 					}				
@@ -552,16 +564,6 @@ public class ordservicio extends JFrame {
 						}	
 						
 					}
-			
-										
-				/*	@SuppressWarnings("deprecation")
-					JasperReport ubicacion = (JasperReport) JRLoader.loadObject("prueba.jasper");
-					JasperPrint print= JasperFillManager.fillReport(ubicacion, null, conn);
-					JasperViewer view=new JasperViewer(print, false);
-					view.setVisible(true);
-				} catch(HeadlessException | JRException e){
-						JOptionPane.showConfirmDialog(null, "Error: "+e.getMessage());
-					}*/
 			}
 		});
 			
@@ -1247,7 +1249,7 @@ public class ordservicio extends JFrame {
 		JMenu mnC = new JMenu("Reportes");
 		menuBar.add(mnC);
 		
-		JMenuItem mntmDelDia = new JMenuItem("Del Dia");
+		JMenuItem mntmDelDia = new JMenuItem("Del d\u00EDa");
 		mntmDelDia.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				setTitle("Killers- Reportes del Dia");
@@ -1274,7 +1276,7 @@ public class ordservicio extends JFrame {
 				btnGuardar_1.setVisible(false);
 				datoscliente.setVisible(false);
 				datos_ss.setVisible(false);
-
+				
 
 				Desabilitar();
 				Calendar fecha = new GregorianCalendar();
@@ -1353,6 +1355,15 @@ public class ordservicio extends JFrame {
 			}
 		});
 		mnC.add(mntmNewMenuItem_1);
+		
+		JMenu mnNewMenu = new JMenu("Ordenes de Servicio...");
+		mnC.add(mnNewMenu);
+		
+		JMenuItem mntmActivos = new JMenuItem("Activos");
+		mnNewMenu.add(mntmActivos);
+		
+		JMenuItem mntmNewMenuItem_3 = new JMenuItem("Atendidos");
+		mnNewMenu.add(mntmNewMenuItem_3);
 		cmbBusqueda.addItem("Buscar Por:");
 		cmbBusqueda.addItem("Persona");
 		cmbBusqueda.addItem("Empresa");
