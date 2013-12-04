@@ -1,3 +1,5 @@
+/* DEVELOPMENT */
+
 package clientes;
 
 import java.awt.BorderLayout;
@@ -171,6 +173,7 @@ public class clientes extends JFrame {
 		final JLabel lblApellidoMaterno_1 = new JLabel("Apellido Materno:");
 		txtbusMaterno = new JTextField();
 		final JLabel lblBuscarPor = new JLabel("Buscar Por:");
+		lblBuscarPor.setForeground(Color.RED);
 		final JLabel lblEmpresabus = new JLabel("Empresa:");
 		final JLabel lblNumCliente = new JLabel("Num Cliente:");
 		final JComboBox<String> cmbBusqueda = new JComboBox<String>();
