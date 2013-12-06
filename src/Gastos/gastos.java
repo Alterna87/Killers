@@ -30,6 +30,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.swing.JMenu;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
 public class gastos extends JFrame {
 
 	/**
@@ -48,6 +51,7 @@ public class gastos extends JFrame {
 	private JTable table;
 	int bandera;
 	public DefaultTableModel modeltable;
+	private JTextField txtfactura;
 
 	/**
 	 * Launch the application.
@@ -83,9 +87,6 @@ public class gastos extends JFrame {
 		final JDateChooser fechaingreso = new JDateChooser();
 		final JDateChooser fechapago = new JDateChooser();
 		final JLabel lblfactura = new JLabel("Factura:");
-		final JLabel lblpagado = new JLabel("Pagado:");
-		final JComboBox<String> cmbfactura = new JComboBox<String>();
-		final JComboBox<String> cmbpagado = new JComboBox<String>();
 		final JLabel lblformapag = new JLabel("Forma de Pago:");
 		final JComboBox<String> cmbformapago = new JComboBox<String>();
 		final JLabel lbldiasapagar = new JLabel("Dias a Pagar:");
@@ -102,6 +103,18 @@ public class gastos extends JFrame {
 		final JLabel lbliva = new JLabel("IVA(+):");
 		final JLabel lbltotal = new JLabel("Total:");
 		txtsubtotal = new JTextField();
+		txtsubtotal.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				/*num1=Double.parseDouble(val1.getText());
+		          num2=Double.parseDouble(val2.getText());
+		          resu=num1-num2;
+		          resultado=String.valueOf(resu);
+		          resul.setText(resultado);*/
+				
+				
+			}
+		});
 		txtiva = new JTextField();
 		txttotal = new JTextField();
 		final JButton btnguardar = new JButton("Guardar");
@@ -119,8 +132,6 @@ public class gastos extends JFrame {
 					Date date = rs.getDate("fecha_pago");
 					fechapago.setDate(date);
 					cmbformapago.setSelectedItem(rs.getString("formapago"));
-					cmbfactura.setSelectedItem(rs.getString("factura"));
-					cmbpagado.setSelectedItem(rs.getString("pagado"));
 					txtdiaspagar.setText(rs.getString("dias_pagar"));
 					txtareadescrip.setText(rs.getString("descripcion"));
 					txtpoliza.setText(rs.getString("poliza"));
@@ -136,9 +147,7 @@ public class gastos extends JFrame {
 					fechapago.setVisible(true);
 					fechaingreso.setVisible(true);
 					lblfactura.setVisible(true);
-					cmbfactura.setVisible(true);
-					lblpagado.setVisible(true);
-					cmbpagado.setVisible(true);
+					txtfactura.setVisible(true);
 					lblformapag.setVisible(true);
 					lbldiasapagar.setVisible(true);
 					lblpoliza.setVisible(true);
@@ -157,7 +166,6 @@ public class gastos extends JFrame {
 					txttotal.setVisible(true);
 					btnguardar.setVisible(true);	
 					btnBuscar.setVisible(false);
-					
 				}catch(Exception e){
 					JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
 				}
@@ -174,27 +182,26 @@ public class gastos extends JFrame {
 					validar.setText("Introdusca la fecha");
 				} else {
 					try{
-						String[]titulos= {"Num Gastos","Fecha Ingreso","Fecha Pago","Factura","Pagado","Dias a Pagar","Poliza","Forma Pago","Concepto","Descripcion","Subtotal","IVA", "Total"};
+						String[]titulos= {"Num Gastos","Fecha Ingreso","Fecha Pago","Factura","Dias a Pagar","Poliza","Forma Pago","Concepto","Descripcion","Subtotal","IVA", "Total"};
 						modeltable= new DefaultTableModel(null, titulos);
 				
 						String consulta="SELECT * FROM gastos WHERE fecha_ingreso='"+fechbus+"'";
 						sent=conn.createStatement();
-						String[] regreso= new String[13];
+						String[] regreso= new String[12];
 						ResultSet rs= sent.executeQuery(consulta);
 						while (rs.next()){
 							regreso[0]=rs.getString("num_gastos");
 							regreso[1]=rs.getString("fecha_ingreso");
 							regreso[2]=rs.getString("fecha_pago");
 							regreso[3]=rs.getString("factura");
-							regreso[4]=rs.getString("pagado");
-							regreso[5]=rs.getString("dias_pagar");
-							regreso[6]=rs.getString("poliza");
-							regreso[7]=rs.getString("formapago");
-							regreso[8]=rs.getString("concepto");
-							regreso[9]=rs.getString("descripcion");
-							regreso[10]=rs.getString("subtotal");
-							regreso[11]=rs.getString("iva");
-							regreso[12]=rs.getString("total");
+							regreso[4]=rs.getString("dias_pagar");
+							regreso[5]=rs.getString("poliza");
+							regreso[6]=rs.getString("formapago");
+							regreso[7]=rs.getString("concepto");
+							regreso[8]=rs.getString("descripcion");
+							regreso[9]=rs.getString("subtotal");
+							regreso[10]=rs.getString("iva");
+							regreso[11]=rs.getString("total");
 							modeltable.addRow(regreso); 
 						}
 						scrollPane.setVisible(true);
@@ -236,34 +243,42 @@ public class gastos extends JFrame {
 				}	else if(txttotal.getText().isEmpty()){
 					validar.setText("Ingresar el Total");
 				}
-				else{
+				else if(txtdiaspagar.getText().isEmpty()){
+					validar.setText("Ingresar los dias a pagar si no un valor 0");
+				} 
+				else if(txtpoliza.getText().isEmpty()) {
+					validar.setText("Ingresar la poliza si no un valor 0");
+				} else{ 
 					try{
 						int anioing= fechaingreso.getCalendar().get(Calendar.YEAR);
-					
 						int mesing= fechaingreso.getCalendar().get(Calendar.MARCH)+1;
 						int diaing= fechaingreso.getCalendar().get(Calendar.DAY_OF_MONTH);
 						String fecha_ingreso= anioing+"-"+mesing+"-"+diaing;
-						int aniopago=fechapago.getCalendar().get(Calendar.YEAR);
-						int mespago=fechapago.getCalendar().get(Calendar.MARCH)+1;
-						int diapago=fechapago.getCalendar().get(Calendar.DAY_OF_MONTH);
-						String fecha_pago= aniopago+"-"+mespago+"-"+diapago;
+						String fecha_pago=null;
+						int aniopago=0; int mespago=0; int diapago=0;
+						if(fechapago.getDate()!=null){
+							aniopago=fechapago.getCalendar().get(Calendar.YEAR);
+							mespago=fechapago.getCalendar().get(Calendar.MARCH)+1;
+							diapago=fechapago.getCalendar().get(Calendar.DAY_OF_MONTH);
+							fecha_pago= aniopago+"-"+mespago+"-"+diapago;	
+						} 		
+					
 						if(bandera==1){
 						String SQL="INSERT INTO gastos(fecha_ingreso, fecha_pago,factura ,"+
-								"pagado, formapago, concepto, descripcion,dias_pagar,poliza, subtotal, iva, total)"+
-											"VALUES(?,?,?,?,?,?,?,?,?,?,?,?)";
+								"formapago, concepto, descripcion,dias_pagar,poliza, subtotal, iva, total)"+
+											"VALUES(?,?,?,?,?,?,?,?,?,?,?)";
 									PreparedStatement ps= conn.prepareStatement(SQL);
 									ps.setString(1, fecha_ingreso);
 									ps.setString(2, fecha_pago);
-									ps.setString(3, String.valueOf(cmbfactura.getSelectedItem()));
-									ps.setString(4, String.valueOf(cmbpagado.getSelectedItem()));
-									ps.setString(5, String.valueOf(cmbformapago.getSelectedItem()));
-									ps.setString(6, String.valueOf(cmbconcepto.getSelectedItem()));
-									ps.setString(7, txtareadescrip.getText());
-									ps.setString(8, txtdiaspagar.getText());
-									ps.setString(9, txtpoliza.getText());
-									ps.setString(10, txtsubtotal.getText());
-									ps.setString(11, txtiva.getText());
-									ps.setString(12, txttotal.getText());
+									ps.setString(3, txtfactura.getText());
+									ps.setString(4, String.valueOf(cmbformapago.getSelectedItem()));
+									ps.setString(5, String.valueOf(cmbconcepto.getSelectedItem()));
+									ps.setString(6, txtareadescrip.getText());
+									ps.setString(7, txtdiaspagar.getText());
+									ps.setString(8, txtpoliza.getText());
+									ps.setString(9, txtsubtotal.getText());
+									ps.setString(10, txtiva.getText());
+									ps.setString(11, txttotal.getText());
 									int n=ps.executeUpdate();
 									if(n>0){
 										JOptionPane.showMessageDialog(null, "Datos de Gastos Guardados");
@@ -276,9 +291,8 @@ public class gastos extends JFrame {
 										String dato=(String) table.getValueAt(fila, 0);
 										PreparedStatement ps= conn.prepareStatement(SQL);
 										ps.setString(1, fecha_pago);
-										ps.setString(2, String.valueOf(cmbfactura.getSelectedItem()));
-										ps.setString(3, String.valueOf(cmbpagado.getSelectedItem()));
 										ps.setString(4, String.valueOf(cmbformapago.getSelectedItem()));
+										ps.setString(4, txtfactura.getText());
 										ps.setString(5, String.valueOf(cmbconcepto.getSelectedItem()));
 										ps.setString(6, txtareadescrip.getText());
 										ps.setString(7, txtdiaspagar.getText());
@@ -327,45 +341,36 @@ public class gastos extends JFrame {
 		fechapago.setBounds(130, 65, 93, 20);
 		contentPane.add(fechapago);	
 		((JTextFieldDateEditor)fechapago.getDateEditor()).setEditable(false);
-		lblfactura.setBounds(289, 37, 84, 14);
-		contentPane.add(lblfactura);		
-		lblpagado.setBounds(289, 66, 67, 14);
-		contentPane.add(lblpagado);	
-		cmbfactura.setBounds(366, 34, 67, 20);
-		contentPane.add(cmbfactura);
-		cmbfactura.addItem("NO");
-		cmbfactura.addItem("SI");
-		cmbpagado.setBounds(366, 63, 67, 20);
-		contentPane.add(cmbpagado);
-		cmbpagado.addItem("NO");
-		cmbpagado.addItem("SI");
+		lblfactura.setBounds(289, 37, 57, 14);
+		contentPane.add(lblfactura);
 		lblformapag.setBounds(10, 96, 98, 14);
 		contentPane.add(lblformapag);
 		
 		//***MENU****
 		JMenuBar menuBar = new JMenuBar();
-		menuBar.setBounds(0, 0, 335, 21);
+		menuBar.setBounds(0, 0, 398, 21);
 		contentPane.add(menuBar);
 		JMenuItem mntmNewMenuItem = new JMenuItem("Nuevo");
 		mntmNewMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				setTitle("Killers-Gatos-Nuevo");
 				lblfechaing.setVisible(true);
 				fechaingreso.setVisible(true);
 				lblfechapag.setVisible(true);
 				fechapago.setVisible(true);
 				fechaingreso.setVisible(true);
 				lblfactura.setVisible(true);
-				cmbfactura.setVisible(true);
-				lblpagado.setVisible(true);
-				cmbpagado.setVisible(true);
+				txtfactura.setVisible(true);
 				lblformapag.setVisible(true);
 				lbldiasapagar.setVisible(true);
 				lblpoliza.setVisible(true);
 				lblconcepto.setVisible(true);
 				txtpoliza.setVisible(true);
+				txtpoliza.setText("0");
 				cmbconcepto.setVisible(true);
 				cmbformapago.setVisible(true);
 				txtdiaspagar.setVisible(true);
+				txtdiaspagar.setText("0");
 				lbldescripcion.setVisible(true);
 				txtareadescrip.setVisible(true);
 				lblsubtotal.setVisible(true);
@@ -377,21 +382,25 @@ public class gastos extends JFrame {
 				btnguardar.setVisible(true);
 				btnBuscar.setVisible(false);
 				btnguardar.setText("Guardar");
+				scrollPane.setVisible(false);
+				table.setVisible(false);
+				fechaingreso.setDate(null);
+				fechapago.setDate(null);
 				bandera=1;
+				Limpiar();
 			}
 		});
 		menuBar.add(mntmNewMenuItem);	
 		JMenuItem mntmNewMenuItem_1 = new JMenuItem("Actualizar");
 		mntmNewMenuItem_1.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				setTitle("Killers-Gatos-Actualizar");
 				lblfechaing.setVisible(true);
 				fechaingreso.setVisible(true);
 				fechapago.setVisible(false);
 				lblfechapag.setVisible(false);
 				lblfactura.setVisible(false);
-				cmbfactura.setVisible(false);
-				lblpagado.setVisible(false);
-				cmbpagado.setVisible(false);
+				txtfactura.setVisible(false);
 				lblformapag.setVisible(false);	
 				lbldiasapagar.setVisible(false);
 				lblpoliza.setVisible(false);
@@ -417,18 +426,16 @@ public class gastos extends JFrame {
 			}
 		});
 		menuBar.add(mntmNewMenuItem_1);
-		
 		JMenuItem mntmNewMenuItem_2 = new JMenuItem("Eliminar");
 		mntmNewMenuItem_2.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				setTitle("Killers-Gatos-Eliminar");
 				lblfechaing.setVisible(true);
 				fechaingreso.setVisible(true);
 				fechapago.setVisible(false);
 				lblfechapag.setVisible(false);
 				lblfactura.setVisible(false);
-				cmbfactura.setVisible(false);
-				lblpagado.setVisible(false);
-				cmbpagado.setVisible(false);
+				txtfactura.setVisible(false);
 				lblformapag.setVisible(false);	
 				lbldiasapagar.setVisible(false);
 				lblpoliza.setVisible(false);
@@ -454,6 +461,130 @@ public class gastos extends JFrame {
 			}
 		});
 		menuBar.add(mntmNewMenuItem_2);
+		
+		JMenu mnConsulta = new JMenu("Consulta");
+		menuBar.add(mnConsulta);
+		
+		JMenuItem mntmAPagar = new JMenuItem("Por pagar");
+		mntmAPagar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setTitle("Killers-Gatos-Por Pagar");
+				lblfechaing.setVisible(false);
+				fechaingreso.setVisible(false);
+				fechapago.setVisible(false);
+				lblfechapag.setVisible(false);
+				lblfactura.setVisible(false);
+				lblformapag.setVisible(false);	
+				lbldiasapagar.setVisible(false);
+				lblpoliza.setVisible(false);
+				lblconcepto.setVisible(false);
+				txtpoliza.setVisible(false);
+				cmbconcepto.setVisible(false);
+				cmbformapago.setVisible(false);
+				txtdiaspagar.setVisible(false);
+				lbldescripcion.setVisible(false);
+				txtareadescrip.setVisible(false);
+				lblsubtotal.setVisible(false);
+				txtsubtotal.setVisible(false);
+				txtiva.setVisible(false);
+				lbliva.setVisible(false);
+				lbltotal.setVisible(false);
+				txttotal.setVisible(false);
+				btnguardar.setVisible(false);
+				btnBuscar.setVisible(false);
+		try{
+		
+				String[]titulos= {"Num Gastos","Fecha Ingreso","Fecha Pago","Factura","Dias a Pagar","Poliza","Forma Pago","Concepto","Descripcion","Subtotal","IVA", "Total"};
+				modeltable= new DefaultTableModel(null, titulos);
+				String consulta="SELECT * FROM gastos WHERE fecha_pago IS NULL";
+				sent=conn.createStatement();
+				String[] regreso= new String[12];
+				ResultSet rs= sent.executeQuery(consulta);
+				while (rs.next()){
+					regreso[0]=rs.getString("num_gastos");
+					regreso[1]=rs.getString("fecha_ingreso");
+					regreso[2]=rs.getString("fecha_pago");
+					regreso[3]=rs.getString("factura");
+					regreso[4]=rs.getString("dias_pagar");
+					regreso[5]=rs.getString("poliza");
+					regreso[6]=rs.getString("formapago");
+					regreso[7]=rs.getString("concepto");
+					regreso[8]=rs.getString("descripcion");
+					regreso[9]=rs.getString("subtotal");
+					regreso[10]=rs.getString("iva");
+					regreso[11]=rs.getString("total");
+					modeltable.addRow(regreso); 
+				}	
+				scrollPane.setVisible(true);
+				table.setVisible(true);
+				table.setModel(modeltable);
+		}catch(SQLException e){
+			JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
+		}
+			} 
+		});
+		mnConsulta.add(mntmAPagar);
+		
+		JMenuItem mntmPagados = new JMenuItem("Pagados");
+		mntmPagados.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				setTitle("Killers-Gatos-Pagados");
+				lblfechaing.setVisible(false);
+				fechaingreso.setVisible(false);
+				fechapago.setVisible(false);
+				lblfechapag.setVisible(false);
+				lblfactura.setVisible(false);
+				lblformapag.setVisible(false);	
+				lbldiasapagar.setVisible(false);
+				lblpoliza.setVisible(false);
+				lblconcepto.setVisible(false);
+				txtpoliza.setVisible(false);
+				cmbconcepto.setVisible(false);
+				cmbformapago.setVisible(false);
+				txtdiaspagar.setVisible(false);
+				lbldescripcion.setVisible(false);
+				txtareadescrip.setVisible(false);
+				lblsubtotal.setVisible(false);
+				txtsubtotal.setVisible(false);
+				txtiva.setVisible(false);
+				lbliva.setVisible(false);
+				lbltotal.setVisible(false);
+				txttotal.setVisible(false);
+				btnguardar.setVisible(false);
+				btnBuscar.setVisible(false);
+		try{
+		
+				String[]titulos= {"Num Gastos","Fecha Ingreso","Fecha Pago","Factura","Dias a Pagar","Poliza","Forma Pago","Concepto","Descripcion","Subtotal","IVA", "Total"};
+				modeltable= new DefaultTableModel(null, titulos);
+				String consulta="SELECT * FROM gastos WHERE fecha_pago IS NOT NULL";
+				sent=conn.createStatement();
+				String[] regreso= new String[12];
+				ResultSet rs= sent.executeQuery(consulta);
+				while (rs.next()){
+					regreso[0]=rs.getString("num_gastos");
+					regreso[1]=rs.getString("fecha_ingreso");
+					regreso[2]=rs.getString("fecha_pago");
+					regreso[3]=rs.getString("factura");
+					regreso[4]=rs.getString("dias_pagar");
+					regreso[5]=rs.getString("poliza");
+					regreso[6]=rs.getString("formapago");
+					regreso[7]=rs.getString("concepto");
+					regreso[8]=rs.getString("descripcion");
+					regreso[9]=rs.getString("subtotal");
+					regreso[10]=rs.getString("iva");
+					regreso[11]=rs.getString("total");
+					modeltable.addRow(regreso); 
+				}	
+				scrollPane.setVisible(true);
+				table.setVisible(true);
+				table.setModel(modeltable);
+		}catch(SQLException e){
+			JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
+		}
+				
+			}
+		});
+		mnConsulta.add(mntmPagados);
 		cmbformapago.setBounds(114, 93, 121, 20);
 		contentPane.add(cmbformapago);
 		cmbformapago.addItem("CHEQUE");
@@ -466,17 +597,13 @@ public class gastos extends JFrame {
 		txtdiaspagar.setBounds(366, 94, 77, 20);
 		contentPane.add(txtdiaspagar);
 		txtdiaspagar.setColumns(10);
-				
 		lblpoliza.setBounds(289, 127, 46, 14);
 		contentPane.add(lblpoliza);
-				
 		txtpoliza.setBounds(366, 124, 77, 20);
 		contentPane.add(txtpoliza);
 		txtpoliza.setColumns(10);
-		
 		lblconcepto.setBounds(10, 127, 84, 14);
 		contentPane.add(lblconcepto);
-		
 		cmbconcepto.setBounds(114, 124, 121, 20);
 		contentPane.add(cmbconcepto);
 		cmbconcepto.addItem("OPERACION");
@@ -486,41 +613,30 @@ public class gastos extends JFrame {
 		cmbconcepto.addItem("FELIPE");
 		cmbconcepto.addItem("CREDITO");
 		cmbconcepto.addItem("PRESTAMO");
-			
 		txtareadescrip.setBounds(104, 173, 341, 76);
 		contentPane.add(txtareadescrip);
 		txtareadescrip.setLineWrap(true);	
-		
 		lbldescripcion.setBounds(10, 178, 84, 14);
 		contentPane.add(lbldescripcion);
-		
 		lblsubtotal.setBounds(307, 270, 66, 14);
 		contentPane.add(lblsubtotal);	
-		
 		lbliva.setBounds(307, 295, 46, 14);
 		contentPane.add(lbliva);
-		
 		lbltotal.setBounds(307, 320, 46, 14);
 		contentPane.add(lbltotal);
-				
 		txtsubtotal.setBounds(380, 265, 57, 20);
 		contentPane.add(txtsubtotal);
 		txtsubtotal.setColumns(10);
-		
 		txtiva.setColumns(10);
 		txtiva.setBounds(380, 290, 57, 20);
 		contentPane.add(txtiva);
-		
 		txttotal.setColumns(10);
 		txttotal.setBounds(380, 317, 57, 20);
 		contentPane.add(txttotal);
-		
 		btnguardar.setBounds(69, 291, 89, 23);
 		contentPane.add(btnguardar);
-		
 		validar.setBounds(289, 12, 156, 14);
 		contentPane.add(validar);
-		
 		scrollPane.setBounds(20, 67, 448, 263);
 		contentPane.add(scrollPane);
 		
@@ -528,6 +644,11 @@ public class gastos extends JFrame {
 		btnBuscar.setBounds(233, 33, 89, 23);
 		contentPane.add(btnBuscar);
 		table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+		
+		txtfactura = new JTextField();
+		txtfactura.setBounds(340, 33, 128, 20);
+		contentPane.add(txtfactura);
+		txtfactura.setColumns(10);
 		table.doLayout();
 		
 		
@@ -538,9 +659,7 @@ public class gastos extends JFrame {
 		lblfechapag.setVisible(false);
 		fechaingreso.setVisible(false);
 		lblfactura.setVisible(false);
-		cmbfactura.setVisible(false);
-		lblpagado.setVisible(false);
-		cmbpagado.setVisible(false);
+		txtfactura.setVisible(false);
 		lblformapag.setVisible(false);	
 		lbldiasapagar.setVisible(false);
 		lblpoliza.setVisible(false);
@@ -560,8 +679,15 @@ public class gastos extends JFrame {
 		btnguardar.setVisible(false);
 		scrollPane.setVisible(false);
 		table.setVisible(false);
-		btnBuscar.setVisible(false);
-		
+		btnBuscar.setVisible(false);	
+	}
+
+	
+	void Limpiar(){
+		txtfactura.setText("");
+		txtsubtotal.setText("");
+		txtiva.setText("");
+		txttotal.setText("");
 		
 		
 	}
