@@ -22,6 +22,8 @@ import javax.swing.JButton;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.Color;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.*;
 import java.util.Calendar;
 
@@ -106,17 +108,39 @@ public class gastos extends JFrame {
 		txtsubtotal.addFocusListener(new FocusAdapter() {
 			@Override
 			public void focusLost(FocusEvent arg0) {
-				/*num1=Double.parseDouble(val1.getText());
-		          num2=Double.parseDouble(val2.getText());
-		          resu=num1-num2;
-		          resultado=String.valueOf(resu);
-		          resul.setText(resultado);*/
-				
-				
+				double num1, iva, total;	
+				num1=Double.parseDouble(txtsubtotal.getText());
+				iva=num1*0.16;
+				total=num1+iva;
+				BigDecimal big = new BigDecimal(iva);
+				BigDecimal totals=new BigDecimal(total);
+		        big = big.setScale(2, RoundingMode.HALF_UP); 
+		        totals=totals.setScale(2,RoundingMode.HALF_UP);
+		        String ivaresult=String.valueOf(big);
+		        String totalstring=String.valueOf(totals);
+		        txtiva.setText(ivaresult);
+		        txttotal.setText(totalstring); 
 			}
 		});
 		txtiva = new JTextField();
 		txttotal = new JTextField();
+		txttotal.addFocusListener(new FocusAdapter() {
+			@Override
+			public void focusLost(FocusEvent arg0) {
+				double num1, iva, subtotal;	
+				num1=Double.parseDouble(txttotal.getText());
+				subtotal=num1/1.16;
+				iva=num1-subtotal;
+				BigDecimal big = new BigDecimal(iva);
+				BigDecimal subtotals=new BigDecimal(subtotal);
+				subtotals=subtotals.setScale(2, RoundingMode.HALF_UP);
+		        big = big.setScale(2, RoundingMode.HALF_UP);  
+		        String ivaresult=String.valueOf(big);
+		        String subtotalstring=String.valueOf(subtotals);
+		        txtiva.setText(ivaresult);
+		        txtsubtotal.setText(subtotalstring);
+			}
+		});
 		final JButton btnguardar = new JButton("Guardar");
 		final JButton btnBuscar = new JButton("Buscar");
 		table.addMouseListener(new MouseAdapter() {
