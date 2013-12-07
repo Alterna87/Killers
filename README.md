@@ -1,4 +1,4 @@
-Killers "exterminio de plagas"
+﻿Killers "exterminio de plagas"
 =======
 
 Sistema de control de "Killer"
@@ -22,8 +22,18 @@ Por hacer:
 * Control de productos.
 * Reportes.
 * Informes.
+=======
+* Orden de servicio
+* Control de empleados
+* Venta
+* Control de productos
+* Reportes
+* Informes
+>>>>>>> Mejoras
 
 
 Development by Alterna Velueta
 
 Twitter: [@Alterna87](https://twitter.com/Alterna87)
+
+
