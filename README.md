@@ -13,7 +13,7 @@ Contiene:
 
   * Control de Clientes(Beta).
   * Solicitud de Servicios(Beta).
-  * Orden de Servicio(En diseño).
+  * Orden de Servicio(En Proceso).
 
 Por hacer:
 * Control de Servicios.
@@ -22,16 +22,9 @@ Por hacer:
 * Control de productos.
 * Reportes.
 * Informes.
-=======
-* Orden de servicio
 * Control de empleados
 * Venta
-* Control de productos
-* Reportes
-* Informes
 >>>>>>> Mejoras
-
-
 Development by Alterna Velueta
 
 Twitter: [@Alterna87](https://twitter.com/Alterna87)
