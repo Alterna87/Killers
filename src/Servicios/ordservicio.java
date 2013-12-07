@@ -513,6 +513,7 @@ public class ordservicio extends JFrame {
 		datos_ss.add(btnOrdenServicio_1);
 		
 		btnOrdenServicio_1.addActionListener(new ActionListener() {
+			@SuppressWarnings("unchecked")
 			public void actionPerformed(ActionEvent arg0) {
 				//ORDENES DE SERVICIO
 					if(bandera==2){
@@ -546,13 +547,16 @@ public class ordservicio extends JFrame {
 									JOptionPane.QUESTION_MESSAGE,null,opciones,"Aceptar");
 									if (eleccion == JOptionPane.YES_OPTION){
 										try{
-										  @SuppressWarnings("deprecation")
-										JasperReport ubicacion = (JasperReport) JRLoader.loadObject("prueba.jasper");
-										JasperPrint print= JasperFillManager.fillReport(ubicacion, null, conn);
+										String ubicacion = "Reportes/OrdenServicio1.jasper";
+										@SuppressWarnings("rawtypes")
+										Map parametros=new HashMap();
+										parametros.put("neworden", clave);
+										JasperPrint print= JasperFillManager.fillReport(ubicacion, parametros,conn);
 										JasperViewer view=new JasperViewer(print, false);
+										view.setTitle("Orden de Servicio");
 										view.setVisible(true);
 									} catch(HeadlessException | JRException e){
-											JOptionPane.showConfirmDialog(null, "Error: "+e.getMessage());
+										JOptionPane.showConfirmDialog(null, "Error: "+e.getMessage());
 										}
 										
 									}
@@ -563,7 +567,12 @@ public class ordservicio extends JFrame {
 							JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
 						}	
 						
-					}
+					} 
+			if (bandera==6){
+				
+				
+				
+			}
 			}
 		});
 			
