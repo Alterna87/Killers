@@ -858,12 +858,11 @@ public class ordservicio extends JFrame {
 			
 						 } else if(bandera==2){
 							 String[]titulos= {"Numero SS","Num Cliente","Nombre" ,"Empresa","Tipo Servicio","Plagas","Tecnicas","Fecha Servicio","Hora","Tecnico","Fecha SS"};
-								modeltable= new DefaultTableModel(null, titulos);
-								String consulta="SELECT * FROM clientes INNER JOIN solicitud_servicio ON clientes.num_cliente=solicitud_servicio.num_cliente AND clientes.nombre LIKE '%"+txtNombre.getText()+"%' AND clientes.apellidopaterno LIKE '%"+txtPaterno.getText()+"%' AND clientes.apellidomaterno LIKE '%"+txtMaterno.getText()+"%' AND solicitud_servicio.valido='0'" ;
-								sent=conn.createStatement();
-								String[] regreso= new String[11];
-								ResultSet rs= sent.executeQuery(consulta);
-							
+							modeltable= new DefaultTableModel(null, titulos);
+							String consulta="SELECT * FROM clientes INNER JOIN solicitud_servicio ON clientes.num_cliente=solicitud_servicio.num_cliente AND clientes.nombre LIKE '%"+txtNombre.getText()+"%' AND clientes.apellidopaterno LIKE '%"+txtPaterno.getText()+"%' AND clientes.apellidomaterno LIKE '%"+txtMaterno.getText()+"%' AND solicitud_servicio.valido='0'" ;
+							sent=conn.createStatement();
+							String[] regreso= new String[11];
+							ResultSet rs= sent.executeQuery(consulta);
 								while (rs.next()){
 									regreso[0]=rs.getString("num_ss");
 									regreso[1]=rs.getString("num_cliente");
@@ -882,7 +881,7 @@ public class ordservicio extends JFrame {
 								table.setVisible(true);
 								table.setModel(modeltable);					
 						 }
-					 } 
+						 }
 						} catch(Exception e){
 							JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
 						}
@@ -1248,7 +1247,6 @@ public class ordservicio extends JFrame {
 				btnGuardar_1.setEnabled(false);
 				btnGuardar_1.setVisible(false);
 				scrollPane.setVisible(false);
-				scrollPane.setBounds(596,495,103,23);
 				datoscliente.setVisible(false);
 				datos_ss.setVisible(false);
 				bandera=6;
@@ -1605,6 +1603,32 @@ public class ordservicio extends JFrame {
 						scrollPane.setBounds(15, 97, 740, 360);
 										
 					}
+					else if(bandera==6){
+						String [] titulos={"Num Orden", "Num SS", "Num Cliente", "Nombre","Empresa", "Tipo Servicio", "Plagas", "Tecnicas", "Fecha Servicio", "Hora", "Tecnico", "Fecha"};
+						modeltable=new DefaultTableModel(null, titulos);
+						String consulta="SELECT * FROM ordenservicio INNER JOIN solicitud_servicio ON ordenservicio.numero_ss=solicitud_servicio.num_ss INNER JOIN clientes ON ordenservicio.num_cliente=clientes.num_cliente AND ordenservicio.fecha='"+fecha_ss+"'";
+						sent=conn.createStatement();
+						String[] regreso= new String[12];
+						ResultSet rs= sent.executeQuery(consulta);
+							while (rs.next()){
+								regreso[0]=rs.getString("num_ordenser");
+								regreso[1]=rs.getString("num_ss");
+								regreso[2]=rs.getString("num_cliente");
+								regreso[3]=rs.getString("nombre")+" "+rs.getString("apellidopaterno")+" "+rs.getString("apellidomaterno");;
+								regreso[4]=rs.getString("empresa");
+								regreso[5]=rs.getString("tipo_servicio");
+								regreso[6]=rs.getString("plagas");
+								regreso[7]=rs.getString("tecnicas");
+								regreso[8]=rs.getString("fecha_servicio");
+								regreso[9]=rs.getString("hora");
+								regreso[10]=rs.getString("tecnico");
+								regreso[11]=rs.getString("fecha_ss");
+								modeltable.addRow(regreso);
+							}
+							scrollPane.setVisible(true);
+							table.setVisible(true);
+							table.setModel(modeltable);	
+							 }
 						
 					} catch(Exception e){
 					JOptionPane.showMessageDialog(null, "Error: "+e.getMessage());
